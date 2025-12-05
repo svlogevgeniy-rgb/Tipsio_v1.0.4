@@ -135,7 +135,7 @@ export default function VenueDashboardPage() {
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="today">Today</SelectItem>
+          <SelectItem value="today">{t('today')}</SelectItem>
           <SelectItem value="week">{t('thisWeek')}</SelectItem>
           <SelectItem value="month">{t('thisMonth')}</SelectItem>
         </SelectContent>
@@ -185,16 +185,16 @@ export default function VenueDashboardPage() {
           <div className="flex items-center gap-3">
             <Users className="h-5 w-5 text-primary flex-shrink-0" />
             <div className="flex-1">
-              <div className="font-medium">Добавьте сотрудников</div>
+              <div className="font-medium">{t('addStaff')}</div>
               <div className="text-sm text-muted-foreground">
-                Для начала работы добавьте хотя бы одного сотрудника
+                {t('addStaffDesc')}
               </div>
             </div>
             <Button 
               size="sm"
               onClick={() => router.push("/venue/staff")}
             >
-              Добавить
+              {t('add')}
             </Button>
           </div>
         </Card>
@@ -227,11 +227,11 @@ export default function VenueDashboardPage() {
         <Card className="glass p-4">
           <div className="flex items-center gap-2 mb-4">
             <History className="h-5 w-5 text-primary" />
-            <h2 className="font-semibold">История чаевых</h2>
+            <h2 className="font-semibold">{t('tipHistory')}</h2>
           </div>
           {data.topStaff.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-4">
-              Нет чаевых за этот период
+              {t('noTipsYet')}
             </p>
           ) : (
             <div className="space-y-3">
@@ -257,7 +257,7 @@ export default function VenueDashboardPage() {
                     {formatCurrency(data.metrics.totalTips)}
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    {data.metrics.transactionCount} транзакций за период
+                    {t('transactionsInPeriod', { count: data.metrics.transactionCount })}
                   </div>
                 </div>
               )}
@@ -270,7 +270,7 @@ export default function VenueDashboardPage() {
           <h2 className="font-semibold mb-4">{t('topPerformers')}</h2>
           {data.topStaff.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-4">
-              No tips yet this period
+              {t('noTipsYet')}
             </p>
           ) : (
             <div className="space-y-3">

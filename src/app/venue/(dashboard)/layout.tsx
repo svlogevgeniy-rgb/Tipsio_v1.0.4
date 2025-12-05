@@ -28,7 +28,7 @@ export default function VenueLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [venueData, setVenueData] = useState<VenueData | null>(null);
-  const t = useTranslations('venue.dashboard');
+  const t = useTranslations('venue.nav');
 
   // Fetch venue data to get distribution mode
   useEffect(() => {
@@ -47,11 +47,11 @@ export default function VenueLayout({ children }: { children: React.ReactNode })
   }, []);
 
   const allNavItems = [
-    { href: "/venue/dashboard", label: t('title').split(' ')[0] || "Dashboard", icon: LayoutDashboard, showFor: ["POOLED", "PERSONAL"] },
-    { href: "/venue/staff", label: t('manageStaff').split(' ')[0] || "Staff", icon: Users, showFor: ["PERSONAL"] },
-    { href: "/venue/qr-codes", label: t('printQR').split(' ')[0] || "QR", icon: QrCode, showFor: ["POOLED", "PERSONAL"] },
-    { href: "/venue/payouts", label: t('goToPayouts').split(' ')[0] || "Payouts", icon: Wallet, showFor: ["PERSONAL"] },
-    { href: "/venue/settings", label: "Settings", icon: Settings, showFor: ["POOLED", "PERSONAL"] },
+    { href: "/venue/dashboard", label: t('dashboard'), icon: LayoutDashboard, showFor: ["POOLED", "PERSONAL"] },
+    { href: "/venue/staff", label: t('staff'), icon: Users, showFor: ["PERSONAL"] },
+    { href: "/venue/qr-codes", label: t('qrCodes'), icon: QrCode, showFor: ["POOLED", "PERSONAL"] },
+    { href: "/venue/payouts", label: t('payouts'), icon: Wallet, showFor: ["PERSONAL"] },
+    { href: "/venue/settings", label: t('settings'), icon: Settings, showFor: ["POOLED", "PERSONAL"] },
   ];
 
   // Filter nav items based on distribution mode
@@ -103,7 +103,7 @@ export default function VenueLayout({ children }: { children: React.ReactNode })
             onClick={() => signOut({ callbackUrl: "/" })}
           >
             <LogOut className="h-5 w-5" />
-            Sign Out
+            {t('signOut')}
           </Button>
         </div>
       </aside>
@@ -154,7 +154,7 @@ export default function VenueLayout({ children }: { children: React.ReactNode })
               onClick={() => signOut({ callbackUrl: "/" })}
             >
               <LogOut className="h-5 w-5" />
-              Sign Out
+              {t('signOut')}
             </Button>
           </nav>
         </div>

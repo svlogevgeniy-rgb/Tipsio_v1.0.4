@@ -245,6 +245,7 @@
     "dashboard": {
       "title": "{venue} dashboard",
       "subtitle": "Monitor digital tips and payouts for your team.",
+      "today": "Today",
       "thisWeek": "This week",
       "thisMonth": "This month",
       "totalTips": "Total tips",
@@ -256,12 +257,26 @@
       "goToPayouts": "Go to payouts",
       "topPerformers": "Top performers",
       "tips": "tips",
+      "noTipsYet": "No tips yet this period",
+      "tipHistory": "Tip history",
+      "transactionsInPeriod": "{count} transactions in this period",
+      "addStaff": "Add staff",
+      "addStaffDesc": "Add at least one staff member to get started",
+      "add": "Add",
       "printQR": "Print QR codes",
       "printQRDesc": "Download and print QR codes for staff and tables.",
       "manageStaff": "Manage staff",
       "manageStaffDesc": "Edit your team and roles.",
       "distributionRules": "Distribution rules",
       "distributionRulesDesc": "Adjust how tips are shared."
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "staff": "Staff",
+      "qrCodes": "QR Codes",
+      "payouts": "Payouts",
+      "settings": "Settings",
+      "signOut": "Sign Out"
     },
     "payouts": {
       "title": "Staff payouts",

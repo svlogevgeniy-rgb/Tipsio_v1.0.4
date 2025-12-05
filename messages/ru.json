@@ -252,6 +252,7 @@
     "dashboard": {
       "title": "Панель {venue}",
       "subtitle": "Отслеживайте цифровые чаевые и выплаты для вашей команды.",
+      "today": "Сегодня",
       "thisWeek": "Эта неделя",
       "thisMonth": "Этот месяц",
       "totalTips": "Всего чаевых",
@@ -263,12 +264,26 @@
       "goToPayouts": "К выплатам",
       "topPerformers": "Лучшие сотрудники",
       "tips": "чаевых",
+      "noTipsYet": "Нет чаевых за этот период",
+      "tipHistory": "История чаевых",
+      "transactionsInPeriod": "{count} транзакций за период",
+      "addStaff": "Добавьте сотрудников",
+      "addStaffDesc": "Для начала работы добавьте хотя бы одного сотрудника",
+      "add": "Добавить",
       "printQR": "Печать QR-кодов",
       "printQRDesc": "Скачайте и распечатайте QR-коды для сотрудников и столов.",
       "manageStaff": "Управление персоналом",
       "manageStaffDesc": "Редактируйте команду и роли.",
       "distributionRules": "Правила распределения",
       "distributionRulesDesc": "Настройте, как делятся чаевые."
+    },
+    "nav": {
+      "dashboard": "Обзор",
+      "staff": "Персонал",
+      "qrCodes": "QR-коды",
+      "payouts": "Выплаты",
+      "settings": "Настройки",
+      "signOut": "Выйти"
     },
     "payouts": {
       "title": "Выплаты персоналу",
