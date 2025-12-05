@@ -289,7 +289,7 @@
       "goToDashboard": "Go to Dashboard"
     },
     "dashboard": {
-      "title": "{venue} dashboard",
+      "title": "Dashboard",
       "subtitle": "Monitor digital tips and payouts for your team.",
       "today": "Today",
       "thisWeek": "This week",

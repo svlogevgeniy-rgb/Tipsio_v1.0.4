@@ -125,7 +125,7 @@ export default function VenueDashboardPage() {
     <div className="p-4 md:p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-heading font-bold">{t('title', { venue: data.venue.name })}</h1>
+        <h1 className="text-2xl font-heading font-bold">{data.venue.name} — {t('title')}</h1>
         <p className="text-muted-foreground">{t('subtitle')}</p>
       </div>
 
