@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { flattenCategoryTree } from '@/lib/category-tree';
 import type { MenuItem, CategoryTree } from '@/types/menu';
 
 interface ItemFormProps {
@@ -55,20 +56,10 @@ export function ItemForm({ item, categories, categoryId, onSubmit, onCancel }: I
     }
   };
 
-  // Flatten categories for selection
-  const flattenCategories = (cats: CategoryTree[]): { id: string; name: string; depth: number }[] => {
-    const result: { id: string; name: string; depth: number }[] = [];
-    const flatten = (items: CategoryTree[], depth: number) => {
-      for (const cat of items) {
-        result.push({ id: cat.id, name: cat.name, depth });
-        flatten(cat.children, depth + 1);
-      }
-    };
-    flatten(cats, 0);
-    return result;
-  };
-
-  const allCategories = flattenCategories(categories);
+  const categoryOptions = useMemo(
+    () => flattenCategoryTree(categories),
+    [categories],
+  );
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -130,7 +121,7 @@ export function ItemForm({ item, categories, categoryId, onSubmit, onCancel }: I
             onChange={(e) => setSelectedCategoryId(e.target.value)}
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
           >
-            {allCategories.map((cat) => (
+            {categoryOptions.map((cat) => (
               <option key={cat.id} value={cat.id}>
                 {'—'.repeat(cat.depth)} {cat.name}
               </option>

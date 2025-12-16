@@ -1,59 +1,39 @@
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-import { auth } from "@/lib/auth";
-import prisma from "@/lib/prisma";
-import { generateShortCode } from "@/lib/qr";
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import prisma from '@/lib/prisma';
+import { generateShortCode } from '@/lib/qr';
+import { requireAuth, requireVenueAccess, getVenueIdFromQuery } from '@/lib/api/middleware';
+import { handleApiError, validationError, successResponse } from '@/lib/api/error-handler';
+import type { ApiErrorResponse } from '@/types/api';
 
 const createQrSchema = z.object({
-  type: z.enum(["TABLE", "VENUE"]),
-  label: z.string().min(1, "Label is required"),
-  venueId: z.string().min(1, "Venue ID is required"),
+  type: z.enum(['TABLE', 'VENUE']),
+  label: z.string().min(1, 'Label is required'),
+  venueId: z.string().min(1, 'Venue ID is required'),
 });
 
 // GET /api/qr - List QR codes for a venue
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json(
-        { code: "AUTH_REQUIRED", message: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
 
-    const { searchParams } = new URL(request.url);
-    const venueId = searchParams.get("venueId");
+    // Get and validate venueId
+    const venueIdResult = getVenueIdFromQuery(request.url);
+    if ('error' in venueIdResult) return venueIdResult.error;
+    const { venueId } = venueIdResult;
 
-    if (!venueId) {
-      return NextResponse.json(
-        { code: "VALIDATION_ERROR", message: "venueId is required" },
-        { status: 400 }
-      );
-    }
+    // Check venue access
+    const venueResult = await requireVenueAccess(venueId, session);
+    if ('error' in venueResult) return venueResult.error;
 
-    // Check access
-    const venue = await prisma.venue.findUnique({
-      where: { id: venueId },
-    });
-
-    if (!venue) {
-      return NextResponse.json(
-        { code: "NOT_FOUND", message: "Venue not found" },
-        { status: 404 }
-      );
-    }
-
-    if (session.user.role !== "ADMIN" && venue.managerId !== session.user.id) {
-      return NextResponse.json(
-        { code: "FORBIDDEN", message: "Access denied" },
-        { status: 403 }
-      );
-    }
-
+    // Fetch QR codes
     const qrCodes = await prisma.qrCode.findMany({
       where: { venueId },
       include: {
@@ -68,71 +48,48 @@ export async function GET(request: NextRequest) {
           select: { tips: true },
         },
       },
-      orderBy: [{ type: "asc" }, { createdAt: "desc" }],
+      orderBy: [{ type: 'asc' }, { createdAt: 'desc' }],
     });
 
-    return NextResponse.json({ qrCodes });
+    return successResponse({ qrCodes });
   } catch (error) {
-    console.error("List QR codes error:", error);
-    return NextResponse.json(
-      { code: "INTERNAL_ERROR", message: "Internal server error" },
-      { status: 500 }
-    );
+    return handleApiError(error, 'List QR codes');
   }
 }
 
 // POST /api/qr - Create table/venue QR code
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json(
-        { code: "AUTH_REQUIRED", message: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
 
+    // Parse and validate request body
     const body = await request.json();
     const parsed = createQrSchema.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json(
-        { code: "VALIDATION_ERROR", message: parsed.error.issues[0].message },
-        { status: 400 }
-      );
+      return validationError(parsed.error.issues[0].message);
     }
 
     const { type, label, venueId } = parsed.data;
 
-    // Check access and Midtrans connection
-    const venue = await prisma.venue.findUnique({
-      where: { id: venueId },
-    });
-
-    if (!venue) {
-      return NextResponse.json(
-        { code: "NOT_FOUND", message: "Venue not found" },
-        { status: 404 }
-      );
-    }
-
-    if (session.user.role !== "ADMIN" && venue.managerId !== session.user.id) {
-      return NextResponse.json(
-        { code: "FORBIDDEN", message: "Access denied" },
-        { status: 403 }
-      );
-    }
+    // Check venue access
+    const venueResult = await requireVenueAccess(venueId, session);
+    if ('error' in venueResult) return venueResult.error;
+    const { venue } = venueResult;
 
     // Block QR creation if Midtrans not connected
     if (!venue.midtransConnected) {
-      return NextResponse.json(
-        { code: "MIDTRANS_REQUIRED", message: "Please connect Midtrans before creating QR codes" },
+      return NextResponse.json<ApiErrorResponse>(
+        { code: 'MIDTRANS_REQUIRED', message: 'Please connect Midtrans before creating QR codes' },
         { status: 400 }
       );
     }
 
+    // Create QR code
     const shortCode = generateShortCode();
-
     const qrCode = await prisma.qrCode.create({
       data: {
         type,
@@ -142,15 +99,14 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json({
-      message: "QR code created successfully",
-      qrCode,
-    }, { status: 201 });
-  } catch (error) {
-    console.error("Create QR code error:", error);
-    return NextResponse.json(
-      { code: "INTERNAL_ERROR", message: "Internal server error" },
-      { status: 500 }
+    return successResponse(
+      {
+        message: 'QR code created successfully',
+        qrCode,
+      },
+      201
     );
+  } catch (error) {
+    return handleApiError(error, 'Create QR code');
   }
 }

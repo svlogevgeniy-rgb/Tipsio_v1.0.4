@@ -1,124 +1,67 @@
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
-import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
-import prisma from "@/lib/prisma";
-import { createCategorySchema } from "@/lib/menu-validation";
-import { createCategory, getCategoriesTree } from "@/lib/menu-service";
+import { NextRequest } from 'next/server';
+import { createCategorySchema } from '@/lib/menu-validation';
+import { createCategory, getCategoriesTree } from '@/lib/menu-service';
+import { requireAuth, requireVenueAccess, getVenueIdFromQuery } from '@/lib/api/middleware';
+import { handleApiError, validationError, successResponse } from '@/lib/api/error-handler';
 
 // GET /api/menu/categories - List categories for venue
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json(
-        { code: "AUTH_REQUIRED", message: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
 
-    const { searchParams } = new URL(request.url);
-    const venueId = searchParams.get("venueId");
+    // Get and validate venueId
+    const venueIdResult = getVenueIdFromQuery(request.url);
+    if ('error' in venueIdResult) return venueIdResult.error;
+    const { venueId } = venueIdResult;
 
-    if (!venueId) {
-      return NextResponse.json(
-        { code: "VALIDATION_ERROR", message: "venueId is required" },
-        { status: 400 }
-      );
-    }
+    // Check venue access
+    const venueResult = await requireVenueAccess(venueId, session);
+    if ('error' in venueResult) return venueResult.error;
 
-    // Check access to venue
-    const venue = await prisma.venue.findUnique({
-      where: { id: venueId },
-    });
-
-    if (!venue) {
-      return NextResponse.json(
-        { code: "NOT_FOUND", message: "Venue not found" },
-        { status: 404 }
-      );
-    }
-
-    if (session.user.role !== "ADMIN" && venue.managerId !== session.user.id) {
-      return NextResponse.json(
-        { code: "FORBIDDEN", message: "Access denied" },
-        { status: 403 }
-      );
-    }
-
+    // Fetch categories tree
     const categories = await getCategoriesTree(venueId);
-    return NextResponse.json({ categories });
+    return successResponse({ categories });
   } catch (error) {
-    console.error("List categories error:", error);
-    return NextResponse.json(
-      { code: "INTERNAL_ERROR", message: "Internal server error" },
-      { status: 500 }
-    );
+    return handleApiError(error, 'List categories');
   }
 }
 
 // POST /api/menu/categories - Create category
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json(
-        { code: "AUTH_REQUIRED", message: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
 
+    // Parse request body
     const body = await request.json();
     const { venueId, ...categoryData } = body;
 
     if (!venueId) {
-      return NextResponse.json(
-        { code: "VALIDATION_ERROR", message: "venueId is required" },
-        { status: 400 }
-      );
+      return validationError('venueId is required');
     }
 
+    // Validate category data
     const parsed = createCategorySchema.safeParse(categoryData);
     if (!parsed.success) {
-      return NextResponse.json(
-        { code: "VALIDATION_ERROR", message: parsed.error.issues[0].message },
-        { status: 400 }
-      );
+      return validationError(parsed.error.issues[0].message);
     }
 
-    // Check access to venue
-    const venue = await prisma.venue.findUnique({
-      where: { id: venueId },
-    });
+    // Check venue access
+    const venueResult = await requireVenueAccess(venueId, session);
+    if ('error' in venueResult) return venueResult.error;
 
-    if (!venue) {
-      return NextResponse.json(
-        { code: "NOT_FOUND", message: "Venue not found" },
-        { status: 404 }
-      );
-    }
-
-    if (session.user.role !== "ADMIN" && venue.managerId !== session.user.id) {
-      return NextResponse.json(
-        { code: "FORBIDDEN", message: "Access denied" },
-        { status: 403 }
-      );
-    }
-
+    // Create category
     const category = await createCategory(venueId, parsed.data);
-    return NextResponse.json({ category }, { status: 201 });
+    return successResponse({ category }, 201);
   } catch (error) {
-    if (error instanceof Error && error.message.includes("Unique constraint")) {
-      return NextResponse.json(
-        { code: "CONFLICT", message: "Category with this name already exists" },
-        { status: 409 }
-      );
-    }
-    console.error("Create category error:", error);
-    return NextResponse.json(
-      { code: "INTERNAL_ERROR", message: "Internal server error" },
-      { status: 500 }
-    );
+    return handleApiError(error, 'Create category');
   }
 }

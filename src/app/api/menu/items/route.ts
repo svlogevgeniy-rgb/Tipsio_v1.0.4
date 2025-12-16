@@ -1,53 +1,35 @@
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
-import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
-import prisma from "@/lib/prisma";
-import { createItemSchema } from "@/lib/menu-validation";
-import { createItem } from "@/lib/menu-service";
+import { NextRequest } from 'next/server';
+import prisma from '@/lib/prisma';
+import { createItemSchema } from '@/lib/menu-validation';
+import { createItem } from '@/lib/menu-service';
+import { requireAuth, requireVenueAccess, getVenueIdFromQuery } from '@/lib/api/middleware';
+import { handleApiError, validationError, notFoundError, successResponse } from '@/lib/api/error-handler';
 
 // GET /api/menu/items - List items for venue
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json(
-        { code: "AUTH_REQUIRED", message: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
 
+    // Get and validate venueId
+    const venueIdResult = getVenueIdFromQuery(request.url);
+    if ('error' in venueIdResult) return venueIdResult.error;
+    const { venueId } = venueIdResult;
+
+    // Check venue access
+    const venueResult = await requireVenueAccess(venueId, session);
+    if ('error' in venueResult) return venueResult.error;
+
+    // Get optional categoryId filter
     const { searchParams } = new URL(request.url);
-    const venueId = searchParams.get("venueId");
-    const categoryId = searchParams.get("categoryId");
+    const categoryId = searchParams.get('categoryId');
 
-    if (!venueId) {
-      return NextResponse.json(
-        { code: "VALIDATION_ERROR", message: "venueId is required" },
-        { status: 400 }
-      );
-    }
-
-    // Check access to venue
-    const venue = await prisma.venue.findUnique({
-      where: { id: venueId },
-    });
-
-    if (!venue) {
-      return NextResponse.json(
-        { code: "NOT_FOUND", message: "Venue not found" },
-        { status: 404 }
-      );
-    }
-
-    if (session.user.role !== "ADMIN" && venue.managerId !== session.user.id) {
-      return NextResponse.json(
-        { code: "FORBIDDEN", message: "Access denied" },
-        { status: 403 }
-      );
-    }
-
+    // Fetch items
     const items = await prisma.menuItem.findMany({
       where: {
         category: { venueId },
@@ -58,46 +40,35 @@ export async function GET(request: NextRequest) {
           select: { id: true, name: true },
         },
       },
-      orderBy: { displayOrder: "asc" },
+      orderBy: { displayOrder: 'asc' },
     });
 
-    return NextResponse.json({ items });
+    return successResponse({ items });
   } catch (error) {
-    console.error("List items error:", error);
-    return NextResponse.json(
-      { code: "INTERNAL_ERROR", message: "Internal server error" },
-      { status: 500 }
-    );
+    return handleApiError(error, 'List items');
   }
 }
 
 // POST /api/menu/items - Create item
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json(
-        { code: "AUTH_REQUIRED", message: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
 
+    // Parse request body
     const body = await request.json();
     const { categoryId, ...itemData } = body;
 
     if (!categoryId) {
-      return NextResponse.json(
-        { code: "VALIDATION_ERROR", message: "categoryId is required" },
-        { status: 400 }
-      );
+      return validationError('categoryId is required');
     }
 
+    // Validate item data
     const parsed = createItemSchema.safeParse(itemData);
     if (!parsed.success) {
-      return NextResponse.json(
-        { code: "VALIDATION_ERROR", message: parsed.error.issues[0].message },
-        { status: 400 }
-      );
+      return validationError(parsed.error.issues[0].message);
     }
 
     // Check category exists and get venue
@@ -107,26 +78,17 @@ export async function POST(request: NextRequest) {
     });
 
     if (!category) {
-      return NextResponse.json(
-        { code: "NOT_FOUND", message: "Category not found" },
-        { status: 404 }
-      );
+      return notFoundError('Category');
     }
 
-    if (session.user.role !== "ADMIN" && category.venue.managerId !== session.user.id) {
-      return NextResponse.json(
-        { code: "FORBIDDEN", message: "Access denied" },
-        { status: 403 }
-      );
-    }
+    // Check venue access
+    const venueResult = await requireVenueAccess(category.venue.id, session);
+    if ('error' in venueResult) return venueResult.error;
 
+    // Create item
     const item = await createItem(categoryId, parsed.data);
-    return NextResponse.json({ item }, { status: 201 });
+    return successResponse({ item }, 201);
   } catch (error) {
-    console.error("Create item error:", error);
-    return NextResponse.json(
-      { code: "INTERNAL_ERROR", message: "Internal server error" },
-      { status: 500 }
-    );
+    return handleApiError(error, 'Create item');
   }
 }

@@ -1,17 +1,18 @@
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-import { auth } from "@/lib/auth";
-import prisma from "@/lib/prisma";
-import { generateShortCode } from "@/lib/qr";
+import { NextRequest } from 'next/server';
+import { z } from 'zod';
+import prisma from '@/lib/prisma';
+import { generateShortCode } from '@/lib/qr';
+import { requireAuth, requireVenueAccess, getVenueIdFromQuery } from '@/lib/api/middleware';
+import { handleApiError, validationError, successResponse } from '@/lib/api/error-handler';
 
 const createStaffSchema = z.object({
-  displayName: z.string().min(1, "Display name is required"),
+  displayName: z.string().min(1, 'Display name is required'),
   fullName: z.string().optional(),
-  role: z.enum(["WAITER", "BARTENDER", "BARISTA", "HOSTESS", "CHEF", "ADMINISTRATOR", "OTHER"]),
+  role: z.enum(['WAITER', 'BARTENDER', 'BARISTA', 'HOSTESS', 'CHEF', 'ADMINISTRATOR', 'OTHER']),
   phone: z.string().optional(),
   email: z.string().email().optional(),
   participatesInPool: z.boolean().default(true),
@@ -21,43 +22,21 @@ const createStaffSchema = z.object({
 // GET /api/staff - List staff for current venue
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json(
-        { code: "AUTH_REQUIRED", message: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
 
-    const { searchParams } = new URL(request.url);
-    const venueId = searchParams.get("venueId");
+    // Get and validate venueId
+    const venueIdResult = getVenueIdFromQuery(request.url);
+    if ('error' in venueIdResult) return venueIdResult.error;
+    const { venueId } = venueIdResult;
 
-    if (!venueId) {
-      return NextResponse.json(
-        { code: "VALIDATION_ERROR", message: "venueId is required" },
-        { status: 400 }
-      );
-    }
+    // Check venue access
+    const venueResult = await requireVenueAccess(venueId, session);
+    if ('error' in venueResult) return venueResult.error;
 
-    // Check access to venue
-    const venue = await prisma.venue.findUnique({
-      where: { id: venueId },
-    });
-
-    if (!venue) {
-      return NextResponse.json(
-        { code: "NOT_FOUND", message: "Venue not found" },
-        { status: 404 }
-      );
-    }
-
-    if (session.user.role !== "ADMIN" && venue.managerId !== session.user.id) {
-      return NextResponse.json(
-        { code: "FORBIDDEN", message: "Access denied" },
-        { status: 403 }
-      );
-    }
-
+    // Fetch staff list
     const staffList = await prisma.staff.findMany({
       where: { venueId },
       include: {
@@ -81,7 +60,7 @@ export async function GET(request: NextRequest) {
         },
         tips: {
           where: {
-            status: "PAID",
+            status: 'PAID',
           },
           select: {
             amount: true,
@@ -94,7 +73,7 @@ export async function GET(request: NextRequest) {
           },
         },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: 'desc' },
     });
 
     // Calculate totalTips and balance for each staff member
@@ -104,14 +83,15 @@ export async function GET(request: NextRequest) {
       // Total from allocations (POOLED mode)
       const totalFromAllocations = s.allocations.reduce((sum, a) => sum + a.amount, 0);
       const totalTips = totalFromTips + totalFromAllocations;
-      
+
       // Paid out = allocations that have payoutId (already paid to staff)
-      const paidOutFromAllocations = s.allocations.filter((a) => a.payoutId).reduce((sum, a) => sum + a.amount, 0);
-      
+      const paidOutFromAllocations = s.allocations
+        .filter((a) => a.payoutId)
+        .reduce((sum, a) => sum + a.amount, 0);
+
       // Balance = total earned minus paid out
-      // For direct tips, we assume they're not paid out yet unless there's an allocation
       const balance = totalTips - paidOutFromAllocations;
-      
+
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { tips, allocations, ...staffData } = s;
       return {
@@ -121,63 +101,37 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    return NextResponse.json({ staff });
+    return successResponse({ staff });
   } catch (error) {
-    console.error("List staff error:", error);
-    return NextResponse.json(
-      { code: "INTERNAL_ERROR", message: "Internal server error" },
-      { status: 500 }
-    );
+    return handleApiError(error, 'List staff');
   }
 }
 
 // POST /api/staff - Create new staff member
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json(
-        { code: "AUTH_REQUIRED", message: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
 
+    // Parse request body
     const body = await request.json();
     const { venueId, ...staffData } = body;
 
     if (!venueId) {
-      return NextResponse.json(
-        { code: "VALIDATION_ERROR", message: "venueId is required" },
-        { status: 400 }
-      );
+      return validationError('venueId is required');
     }
 
+    // Validate staff data
     const parsed = createStaffSchema.safeParse(staffData);
     if (!parsed.success) {
-      return NextResponse.json(
-        { code: "VALIDATION_ERROR", message: parsed.error.issues[0].message },
-        { status: 400 }
-      );
+      return validationError(parsed.error.issues[0].message);
     }
 
-    // Check access to venue
-    const venue = await prisma.venue.findUnique({
-      where: { id: venueId },
-    });
-
-    if (!venue) {
-      return NextResponse.json(
-        { code: "NOT_FOUND", message: "Venue not found" },
-        { status: 404 }
-      );
-    }
-
-    if (session.user.role !== "ADMIN" && venue.managerId !== session.user.id) {
-      return NextResponse.json(
-        { code: "FORBIDDEN", message: "Access denied" },
-        { status: 403 }
-      );
-    }
+    // Check venue access
+    const venueResult = await requireVenueAccess(venueId, session);
+    if ('error' in venueResult) return venueResult.error;
 
     // Create staff with personal QR code in a transaction
     const result = await prisma.$transaction(async (tx) => {
@@ -190,7 +144,7 @@ export async function POST(request: NextRequest) {
           data: {
             phone: phone || null,
             email: email || null,
-            role: "STAFF",
+            role: 'STAFF',
           },
         });
         userId = user.id;
@@ -201,7 +155,7 @@ export async function POST(request: NextRequest) {
         data: {
           displayName: restData.displayName,
           fullName: restData.fullName,
-          role: restData.role as "WAITER" | "BARTENDER" | "BARISTA" | "HOSTESS" | "OTHER",
+          role: restData.role as 'WAITER' | 'BARTENDER' | 'BARISTA' | 'HOSTESS' | 'OTHER',
           participatesInPool: restData.participatesInPool,
           avatarUrl: restData.avatarUrl,
           venue: { connect: { id: venueId } },
@@ -213,7 +167,7 @@ export async function POST(request: NextRequest) {
       const shortCode = generateShortCode();
       const qrCode = await tx.qrCode.create({
         data: {
-          type: "PERSONAL",
+          type: 'PERSONAL',
           label: staff.displayName,
           shortCode,
           venueId,
@@ -224,16 +178,15 @@ export async function POST(request: NextRequest) {
       return { staff, qrCode };
     });
 
-    return NextResponse.json({
-      message: "Staff member created successfully",
-      staff: result.staff,
-      qrCode: result.qrCode,
-    }, { status: 201 });
-  } catch (error) {
-    console.error("Create staff error:", error);
-    return NextResponse.json(
-      { code: "INTERNAL_ERROR", message: "Internal server error" },
-      { status: 500 }
+    return successResponse(
+      {
+        message: 'Staff member created successfully',
+        staff: result.staff,
+        qrCode: result.qrCode,
+      },
+      201
     );
+  } catch (error) {
+    return handleApiError(error, 'Create staff');
   }
 }

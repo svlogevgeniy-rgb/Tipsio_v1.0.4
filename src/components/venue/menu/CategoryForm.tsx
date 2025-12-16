@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { flattenCategoryTree } from '@/lib/category-tree';
 import type { CategoryTree } from '@/types/menu';
 
 interface CategoryFormProps {
@@ -38,22 +39,15 @@ export function CategoryForm({ category, categories, onSubmit, onCancel }: Categ
     }
   };
 
-  // Flatten categories for parent selection, excluding current category and its descendants
-  const flattenCategories = (cats: CategoryTree[], excludeId?: string): { id: string; name: string; depth: number }[] => {
-    const result: { id: string; name: string; depth: number }[] = [];
-    const flatten = (items: CategoryTree[], depth: number) => {
-      for (const cat of items) {
-        if (cat.id !== excludeId) {
-          result.push({ id: cat.id, name: cat.name, depth });
-          flatten(cat.children, depth + 1);
-        }
-      }
-    };
-    flatten(cats, 0);
-    return result;
-  };
-
-  const availableParents = flattenCategories(categories, category?.id);
+  const excludedCategoryId = category?.id;
+  const availableParents = useMemo(
+    () =>
+      flattenCategoryTree(categories, {
+        excludeId: excludedCategoryId,
+        skipDescendants: true,
+      }),
+    [categories, excludedCategoryId],
+  );
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
