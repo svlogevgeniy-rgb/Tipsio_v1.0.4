@@ -6,9 +6,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { DISTRIBUTION_MODE_VALUES } from "@/types/distribution";
 
 const distributionSchema = z.object({
-  distributionMode: z.enum(["PERSONAL", "POOLED"]),
+  distributionMode: z.enum(DISTRIBUTION_MODE_VALUES),
   allowStaffChoice: z.boolean(),
 });
 

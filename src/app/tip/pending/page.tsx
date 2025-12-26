@@ -119,7 +119,7 @@ export default function TipPendingPage() {
 
       {/* Footer */}
       <footer className="p-4 text-center">
-        <p className="text-[10px] text-slate-600 text-gradient">Powered by TIPSIO</p>
+        <p className="text-[10px] text-slate-600 text-gradient">{t("poweredBy")}</p>
       </footer>
     </div>
   );

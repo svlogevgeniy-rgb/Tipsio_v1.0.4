@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { AuroraBackground } from '@/components/layout/aurora-background'
 import { useTranslations } from '@/i18n/client'
+import { formatCurrencyIDRIntl } from '@/lib/i18n/formatters'
 
 interface Transaction {
   id: string
@@ -27,7 +28,7 @@ interface Transaction {
 export default function AdminTransactionsPage() {
   const t = useTranslations('admin.transactions')
   const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [midtransFilter, setMidtransFilter] = useState<string>('all')
   const [tipsioFilter, setTipsioFilter] = useState<string>('all')
@@ -35,85 +36,27 @@ export default function AdminTransactionsPage() {
 
   useEffect(() => {
     fetchTransactions()
-  }, [])
+  }, [search, midtransFilter, tipsioFilter])
 
   const fetchTransactions = async () => {
-    // Mock data for development
-    setTransactions([
-      {
-        id: '1',
-        orderId: 'TIP-1732950123456',
-        venue: 'Cafe Organic Canggu',
-        amount: 50000,
-        midtransStatus: 'capture',
-        tipsioStatus: 'RECORDED',
-        paymentMethod: 'GoPay',
-        staffName: 'Agung',
-        createdAt: '2024-11-30T10:45:00Z'
-      },
-      {
-        id: '2',
-        orderId: 'TIP-1732950234567',
-        venue: 'Potato Head Beach Club',
-        amount: 100000,
-        midtransStatus: 'capture',
-        tipsioStatus: 'RECORDED',
-        paymentMethod: 'Credit Card',
-        staffName: 'Wayan',
-        createdAt: '2024-11-30T10:42:00Z'
-      },
-      {
-        id: '3',
-        orderId: 'TIP-1732950345678',
-        venue: 'La Brisa',
-        amount: 75000,
-        midtransStatus: 'deny',
-        tipsioStatus: 'FAILED',
-        paymentMethod: 'Credit Card',
-        staffName: null,
-        createdAt: '2024-11-30T10:40:00Z',
-        errorMessage: 'Card declined by issuing bank'
-      },
-      {
-        id: '4',
-        orderId: 'TIP-1732950456789',
-        venue: 'Revolver Espresso',
-        amount: 25000,
-        midtransStatus: 'pending',
-        tipsioStatus: 'PENDING',
-        paymentMethod: 'Bank Transfer',
-        staffName: 'Ketut',
-        createdAt: '2024-11-30T10:38:00Z'
-      },
-      {
-        id: '5',
-        orderId: 'TIP-1732950567890',
-        venue: 'Cafe Organic Canggu',
-        amount: 30000,
-        midtransStatus: 'expire',
-        tipsioStatus: 'FAILED',
-        paymentMethod: 'QRIS',
-        staffName: 'Made',
-        createdAt: '2024-11-30T10:30:00Z',
-        errorMessage: 'Payment expired after 15 minutes'
+    setLoading(true)
+    try {
+      const params = new URLSearchParams()
+      if (search) params.append('search', search)
+      if (midtransFilter !== 'all') params.append('midtransStatus', midtransFilter)
+      if (tipsioFilter !== 'all') params.append('tipsioStatus', tipsioFilter)
+      
+      const res = await fetch(`/api/admin/transactions?${params.toString()}`)
+      if (res.ok) {
+        const data = await res.json()
+        setTransactions(data)
       }
-    ])
-    setLoading(false)
+    } catch (error) {
+      console.error('Failed to fetch transactions:', error)
+    } finally {
+      setLoading(false)
+    }
   }
-
-
-  const filteredTransactions = transactions.filter(tx => {
-    const matchesSearch = tx.orderId.toLowerCase().includes(search.toLowerCase()) ||
-                         tx.venue.toLowerCase().includes(search.toLowerCase())
-    const matchesMidtrans = midtransFilter === 'all' || tx.midtransStatus === midtransFilter
-    const matchesTipsio = tipsioFilter === 'all' || tx.tipsioStatus === tipsioFilter
-    return matchesSearch && matchesMidtrans && matchesTipsio
-  })
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('id-ID', { style: 'decimal' }).format(amount)
-  }
-
   const formatTime = (dateStr: string) => {
     const date = new Date(dateStr)
     return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
@@ -266,15 +209,28 @@ export default function AdminTransactionsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredTransactions.map((tx, index) => (
-                    <motion.tr
-                      key={tx.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.05 * index }}
-                      className="border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer"
-                      onClick={() => setSelectedTx(tx)}
-                    >
+                  {loading ? (
+                    <tr>
+                      <td colSpan={6} className="p-8 text-center text-muted-foreground">
+                        Loading...
+                      </td>
+                    </tr>
+                  ) : transactions.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="p-8 text-center text-muted-foreground">
+                        No transactions found
+                      </td>
+                    </tr>
+                  ) : (
+                    transactions.map((tx, index) => (
+                      <motion.tr
+                        key={tx.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.05 * index }}
+                        className="border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer"
+                        onClick={() => setSelectedTx(tx)}
+                      >
                       <td className="p-4">
                         <div>
                           <p className="font-medium text-white">{formatTime(tx.createdAt)}</p>
@@ -290,7 +246,9 @@ export default function AdminTransactionsPage() {
                         </div>
                       </td>
                       <td className="p-4">
-                        <span className="text-primary font-medium">Rp {formatCurrency(tx.amount)}</span>
+                        <span className="text-primary font-medium">
+                          {formatCurrencyIDRIntl(tx.amount)}
+                        </span>
                       </td>
                       <td className="p-4">{getMidtransStatusBadge(tx.midtransStatus)}</td>
                       <td className="p-4">{getTipsioStatusBadge(tx.tipsioStatus)}</td>
@@ -304,7 +262,8 @@ export default function AdminTransactionsPage() {
                         </Button>
                       </td>
                     </motion.tr>
-                  ))}
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
@@ -327,7 +286,9 @@ export default function AdminTransactionsPage() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">{t('amount')}</p>
-                  <p className="text-primary font-bold">Rp {formatCurrency(selectedTx.amount)}</p>
+                  <p className="text-primary font-bold">
+                    {formatCurrencyIDRIntl(selectedTx.amount)}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">{t('venue')}</p>

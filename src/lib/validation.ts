@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { DISTRIBUTION_MODE_VALUES } from "@/types/distribution";
 
 // Step 1: Basic info validation schema
 export const step1Schema = z.object({
@@ -20,7 +21,7 @@ export const step2Schema = z.object({
 
 // Step 3: Distribution mode validation schema
 export const step3Schema = z.object({
-  distributionMode: z.enum(["POOLED", "PERSONAL"]),
+  distributionMode: z.enum(DISTRIBUTION_MODE_VALUES),
 });
 
 export type Step1Form = z.infer<typeof step1Schema>;

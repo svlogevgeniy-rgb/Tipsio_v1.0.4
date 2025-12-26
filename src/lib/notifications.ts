@@ -1,9 +1,6 @@
-/**
- * Notification logic for venue dashboard
- * Determines when to show staff-related notifications
- */
+import { isPersonalMode, type DistributionMode } from "@/types/distribution";
 
-export type DistributionMode = "POOLED" | "PERSONAL";
+export type { DistributionMode } from "@/types/distribution";
 
 export interface NotificationConfig {
   showNoStaffAlert: boolean;
@@ -18,7 +15,7 @@ export function shouldShowNoStaffAlert(
   distributionMode: DistributionMode,
   activeStaffCount: number
 ): boolean {
-  return distributionMode === "PERSONAL" && activeStaffCount === 0;
+  return isPersonalMode(distributionMode) && activeStaffCount === 0;
 }
 
 /**

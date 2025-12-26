@@ -179,12 +179,12 @@ const TestLogoBar = () => {
     <section className="py-8 px-4 sm:px-6 bg-slate-50 border-y border-slate-100">
       <div className="max-w-4xl mx-auto">
         <p className="text-center text-sm text-slate-500 mb-6">Guests pay the usual way</p>
-        <div className="flex flex-wrap justify-center items-center gap-8 opacity-60 grayscale">
-          <img src="/images/payment/visa.svg" alt="Visa" className="h-6" />
-          <img src="/images/payment/mastercard.svg" alt="Mastercard" className="h-6" />
-          <img src="/images/payment/googlepay.svg" alt="Google Pay" className="h-6" />
-          <div className="text-slate-700 font-semibold">GoPay</div>
-          <div className="text-slate-700 font-semibold">OVO</div>
+        <div className="flex flex-wrap justify-center items-center gap-8">
+          <img src="/images/payment/visa-color.svg" alt="Visa" className="h-6" />
+          <img src="/images/payment/mastercard-color.svg" alt="Mastercard" className="h-6" />
+          <img src="/images/payment/google-pay-color.svg" alt="Google Pay" className="h-6" />
+          <img src="/images/payment/gopay-color.svg" alt="GoPay" className="h-6" />
+          <img src="/images/payment/ovo-color.svg" alt="OVO" className="h-6" />
         </div>
       </div>
     </section>
@@ -194,13 +194,13 @@ const TestLogoBar = () => {
 /**
  * **Feature: landing-page-improvements, Property 7: Payment method logo display**
  * 
- * *For any* payment method in the enabled list (Visa, Mastercard, Google Pay), 
+ * *For any* payment method in the enabled list (Visa, Mastercard, Google Pay, GoPay, OVO), 
  * the system should render an image element instead of text
  * 
  * **Validates: Requirements 3.2, 3.3, 3.4**
  */
 describe('Property 7: Payment method logo display', () => {
-  it('should render image elements for Visa, Mastercard, and Google Pay', () => {
+  it('should render image elements for all payment methods with colored assets', () => {
     fc.assert(
       fc.property(fc.constant(null), () => {
         const { container } = render(<TestLogoBar />);
@@ -208,17 +208,27 @@ describe('Property 7: Payment method logo display', () => {
         // Check for Visa logo
         const visaLogo = container.querySelector('img[alt="Visa"]');
         expect(visaLogo).toBeTruthy();
-        expect(visaLogo?.getAttribute('src')).toBe('/images/payment/visa.svg');
+        expect(visaLogo?.getAttribute('src')).toBe('/images/payment/visa-color.svg');
 
         // Check for Mastercard logo
         const mastercardLogo = container.querySelector('img[alt="Mastercard"]');
         expect(mastercardLogo).toBeTruthy();
-        expect(mastercardLogo?.getAttribute('src')).toBe('/images/payment/mastercard.svg');
+        expect(mastercardLogo?.getAttribute('src')).toBe('/images/payment/mastercard-color.svg');
 
         // Check for Google Pay logo
         const googlepayLogo = container.querySelector('img[alt="Google Pay"]');
         expect(googlepayLogo).toBeTruthy();
-        expect(googlepayLogo?.getAttribute('src')).toBe('/images/payment/googlepay.svg');
+        expect(googlepayLogo?.getAttribute('src')).toBe('/images/payment/google-pay-color.svg');
+
+        // Check for GoPay logo
+        const gopayLogo = container.querySelector('img[alt="GoPay"]');
+        expect(gopayLogo).toBeTruthy();
+        expect(gopayLogo?.getAttribute('src')).toBe('/images/payment/gopay-color.svg');
+
+        // Check for OVO logo
+        const ovoLogo = container.querySelector('img[alt="OVO"]');
+        expect(ovoLogo).toBeTruthy();
+        expect(ovoLogo?.getAttribute('src')).toBe('/images/payment/ovo-color.svg');
 
         // Verify QRIS is not present
         const qrisText = container.textContent;
@@ -243,9 +253,11 @@ describe('Property 8: Payment method logo size consistency', () => {
         const { container } = render(<TestLogoBar />);
 
         // Get all payment method images
-        const paymentLogos = container.querySelectorAll('img[alt*="Visa"], img[alt*="Mastercard"], img[alt*="Google Pay"]');
+        const paymentLogos = container.querySelectorAll(
+          'img[alt="Visa"], img[alt="Mastercard"], img[alt="Google Pay"], img[alt="GoPay"], img[alt="OVO"]'
+        );
 
-        expect(paymentLogos.length).toBe(3);
+        expect(paymentLogos.length).toBe(5);
 
         // Check that all logos have the same height class
         paymentLogos.forEach((logo) => {
@@ -275,7 +287,7 @@ const TestFinalCTA = () => {
     <section className="py-16 sm:py-24 px-4 sm:px-6 bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-2xl sm:text-3xl lg:text-5xl font-heading font-bold mb-6">
-          Верните чаевые в заведение уже сегодня
+          Верните <span className="italic">чаевые</span> в заведение уже сегодня
         </h2>
         <p className="text-lg text-blue-100 mb-10 max-w-2xl mx-auto">
           Настройка занимает меньше часа
@@ -283,7 +295,7 @@ const TestFinalCTA = () => {
         <div>
           <Link href="/venue/register">
             <button className="h-14 px-10 text-lg rounded-full bg-white text-blue-600 hover:bg-blue-50 shadow-xl shadow-blue-900/30">
-              Подключить заведение
+              Подключить
             </button>
           </Link>
         </div>
@@ -313,7 +325,7 @@ describe('Property 9: CTA button link functionality', () => {
         // Verify the button is inside the link
         const button = ctaLink?.querySelector('button');
         expect(button).toBeTruthy();
-        expect(button?.textContent).toContain('Подключить заведение');
+        expect(button?.textContent).toContain('Подключить');
       }),
       { numRuns: 100 }
     );
@@ -334,8 +346,8 @@ describe('Property 10: CTA button text localization', () => {
       fc.property(fc.constantFrom('ru', 'en'), (locale) => {
         // Test that translation keys are correctly defined
         const translations = {
-          ru: 'Подключить заведение',
-          en: 'Connect venue',
+          ru: 'Подключить',
+          en: 'Connect',
         };
 
         const expectedText = translations[locale as keyof typeof translations];
@@ -346,6 +358,174 @@ describe('Property 10: CTA button text localization', () => {
         
         // Verify the text is concise
         expect(expectedText.split(' ').length).toBeLessThanOrEqual(3);
+      }),
+      { numRuns: 100 }
+    );
+  });
+});
+
+/**
+ * **Feature: marketing-improvements, Property 1: Payment logo color preservation**
+ * 
+ * *For any* payment method logo element (Visa, Mastercard, GPay, OVO, GoPay) rendered in the application,
+ * the image source should point to a colored asset file and the element should not have grayscale,
+ * filter with desaturation, or opacity-reducing styles applied.
+ * 
+ * **Validates: Requirements 1.1, 1.2, 1.4**
+ */
+describe('Property 1: Payment logo color preservation', () => {
+  it('should render colored payment logos without grayscale or opacity filters', () => {
+    fc.assert(
+      fc.property(
+        fc.constantFrom('Visa', 'Mastercard', 'Google Pay', 'GoPay', 'OVO'),
+        (paymentMethod) => {
+          const { container } = render(<TestLogoBar />);
+
+          // Find the logo for this payment method
+          const logo = container.querySelector(`img[alt="${paymentMethod}"]`);
+          expect(logo).toBeTruthy();
+
+          // Verify the image source contains "-color" suffix
+          const src = logo?.getAttribute('src');
+          expect(src).toBeTruthy();
+          expect(src).toContain('-color.svg');
+
+          // Verify the parent container doesn't have grayscale class
+          const parentDiv = logo?.closest('div.flex');
+          expect(parentDiv).toBeTruthy();
+          expect(parentDiv?.className).not.toContain('grayscale');
+
+          // Verify the parent container doesn't have opacity-reducing classes
+          expect(parentDiv?.className).not.toContain('opacity-60');
+          expect(parentDiv?.className).not.toContain('opacity-50');
+          expect(parentDiv?.className).not.toContain('opacity-40');
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it('should not apply color-suppressing styles to payment logo elements', () => {
+    fc.assert(
+      fc.property(fc.constant(null), () => {
+        const { container } = render(<TestLogoBar />);
+
+        // Get all payment method images
+        const paymentLogos = container.querySelectorAll(
+          'img[alt="Visa"], img[alt="Mastercard"], img[alt="Google Pay"], img[alt="GoPay"], img[alt="OVO"]'
+        );
+
+        expect(paymentLogos.length).toBe(5);
+
+        // Check each logo doesn't have color-suppressing inline styles
+        paymentLogos.forEach((logo) => {
+          const style = (logo as HTMLElement).style;
+          
+          // Verify no grayscale filter
+          expect(style.filter).not.toContain('grayscale');
+          
+          // Verify no opacity reduction (should be 1 or empty)
+          if (style.opacity) {
+            expect(parseFloat(style.opacity)).toBeGreaterThanOrEqual(0.9);
+          }
+        });
+      }),
+      { numRuns: 100 }
+    );
+  });
+});
+
+/**
+ * **Feature: marketing-improvements, Property 2: Payment section logo completeness**
+ * 
+ * *For any* "Guests pay in familiar ways" section, all payment methods (GPay, OVO, GoPay)
+ * should be rendered as image elements with valid src attributes, not as text elements.
+ * 
+ * **Validates: Requirements 1.3**
+ */
+describe('Property 2: Payment section logo completeness', () => {
+  it('should render GPay, OVO, and GoPay as image elements with valid sources', () => {
+    fc.assert(
+      fc.property(
+        fc.constantFrom('GoPay', 'OVO', 'Google Pay'),
+        (paymentMethod) => {
+          const { container } = render(<TestLogoBar />);
+
+          // Find the image element for this payment method
+          const logo = container.querySelector(`img[alt="${paymentMethod}"]`);
+          expect(logo).toBeTruthy();
+
+          // Verify it has a valid src attribute
+          const src = logo?.getAttribute('src');
+          expect(src).toBeTruthy();
+          expect(src).toMatch(/^\/images\/payment\/.+-color\.svg$/);
+
+          // Verify it's an img element, not a div with text
+          expect(logo?.tagName.toLowerCase()).toBe('img');
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it('should not render GPay, OVO, or GoPay as text elements', () => {
+    fc.assert(
+      fc.property(fc.constant(null), () => {
+        const { container } = render(<TestLogoBar />);
+
+        // Get the payment logos container
+        const logosContainer = container.querySelector('div.flex.flex-wrap');
+        expect(logosContainer).toBeTruthy();
+
+        // Check that there are no text-only divs for these payment methods
+        const textDivs = Array.from(logosContainer?.querySelectorAll('div') || []).filter(
+          (div) => {
+            const text = div.textContent?.trim();
+            return text === 'GoPay' || text === 'OVO' || text === 'Google Pay';
+          }
+        );
+
+        // Should be zero text divs for these payment methods
+        expect(textDivs.length).toBe(0);
+
+        // Verify all five payment methods are rendered as images
+        const paymentImages = logosContainer?.querySelectorAll('img');
+        expect(paymentImages?.length).toBe(5);
+      }),
+      { numRuns: 100 }
+    );
+  });
+
+  it('should have all payment method images in the same container', () => {
+    fc.assert(
+      fc.property(fc.constant(null), () => {
+        const { container } = render(<TestLogoBar />);
+
+        // Find all payment method images
+        const visaLogo = container.querySelector('img[alt="Visa"]');
+        const mastercardLogo = container.querySelector('img[alt="Mastercard"]');
+        const googlePayLogo = container.querySelector('img[alt="Google Pay"]');
+        const gopayLogo = container.querySelector('img[alt="GoPay"]');
+        const ovoLogo = container.querySelector('img[alt="OVO"]');
+
+        // All should exist
+        expect(visaLogo).toBeTruthy();
+        expect(mastercardLogo).toBeTruthy();
+        expect(googlePayLogo).toBeTruthy();
+        expect(gopayLogo).toBeTruthy();
+        expect(ovoLogo).toBeTruthy();
+
+        // All should be in the same parent container
+        const visaParent = visaLogo?.parentElement;
+        const mastercardParent = mastercardLogo?.parentElement;
+        const googlePayParent = googlePayLogo?.parentElement;
+        const gopayParent = gopayLogo?.parentElement;
+        const ovoParent = ovoLogo?.parentElement;
+
+        expect(visaParent).toBe(mastercardParent);
+        expect(mastercardParent).toBe(googlePayParent);
+        expect(googlePayParent).toBe(gopayParent);
+        expect(gopayParent).toBe(ovoParent);
       }),
       { numRuns: 100 }
     );

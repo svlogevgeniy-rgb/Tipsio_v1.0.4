@@ -14,6 +14,7 @@ import {
 import { AuroraBackground } from "@/components/layout/aurora-background";
 import { useTranslations } from "@/i18n/client";
 import { Loader2, ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
+import { formatCurrencyIDRIntl } from "@/lib/i18n/formatters";
 
 interface TipsByDay {
   date: string;
@@ -33,15 +34,6 @@ interface Period {
 
 interface HistoryData {
   periods: Period[];
-}
-
-function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
 }
 
 function formatDateRange(start: string, end: string): string {
@@ -162,7 +154,7 @@ export default function StaffHistoryPage() {
                       {formatDateRange(period.periodStart, period.periodEnd)}
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      Total tips: {formatCurrency(period.totalAmount)}
+                      Total tips: {formatCurrencyIDRIntl(period.totalAmount)}
                     </div>
                     <div className={`text-xs mt-1 ${
                       period.status === "PAID" 
@@ -170,8 +162,8 @@ export default function StaffHistoryPage() {
                         : "text-yellow-400"
                     }`}>
                       {period.status === "PAID" 
-                        ? `Paid on ${new Date(period.paidAt!).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`
-                        : "Pending payout"
+                        ? t('paidOn', { date: new Date(period.paidAt!).toLocaleDateString("en-US", { month: "short", day: "numeric" }) })
+                        : t('pendingPayout')
                       }
                     </div>
                   </div>
@@ -187,9 +179,9 @@ export default function StaffHistoryPage() {
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="text-muted-foreground">
-                          <th className="text-left pb-2">Date</th>
-                          <th className="text-center pb-2">Tips</th>
-                          <th className="text-right pb-2">Amount</th>
+                          <th className="text-left pb-2">{t('date')}</th>
+                          <th className="text-center pb-2">{t('tips')}</th>
+                          <th className="text-right pb-2">{t('amount')}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -197,7 +189,9 @@ export default function StaffHistoryPage() {
                           <tr key={day.date} className="border-t border-white/5">
                             <td className="py-2">{formatDate(day.date)}</td>
                             <td className="py-2 text-center">{day.tipsCount}</td>
-                            <td className="py-2 text-right">{formatCurrency(day.amount)}</td>
+                            <td className="py-2 text-right">
+                              {formatCurrencyIDRIntl(day.amount)}
+                            </td>
                           </tr>
                         ))}
                       </tbody>

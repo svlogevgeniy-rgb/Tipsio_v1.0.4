@@ -5,7 +5,7 @@ import {
   LandingHeroSection,
   LandingLogoBar,
   LandingProblemSection,
-  LandingHowItWorksSection,
+  LandingProductsSection,
   LandingProductDemoSection,
   LandingBenefitsSection,
   LandingFAQSection,
@@ -20,7 +20,7 @@ export default function Home() {
       <LandingHeroSection />
       <LandingLogoBar />
       <LandingProblemSection />
-      <LandingHowItWorksSection />
+      <LandingProductsSection />
       <LandingProductDemoSection />
       <LandingBenefitsSection />
       <LandingFAQSection />

@@ -2,97 +2,119 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-import { NextResponse } from 'next/server'
-import { requireAdmin } from '@/lib/rbac'
-import prisma from '@/lib/prisma'
+import { NextRequest } from "next/server";
+import { handleApiError, successResponse } from "@/lib/api/error-handler";
+import { requireAuth, requireRole } from "@/lib/api/middleware";
+import prisma from "@/lib/prisma";
 
-export async function GET() {
-  // Check admin role
-  const { authorized, error } = await requireAdmin()
-  if (!authorized) return error
-  
+export async function GET(request: NextRequest) {
   try {
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
+
+    // Check admin role
+    const roleResult = requireRole(session, ['ADMIN']);
+    if ('error' in roleResult) return roleResult.error;
+
+    const { searchParams } = new URL(request.url);
+    const search = searchParams.get("search") || "";
+    const status = searchParams.get("status") || "all";
+
+    // Build where clause
+    const where: any = {};
+    
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { area: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    if (status !== 'all') {
+      if (status === 'live') {
+        where.midtransStatus = 'LIVE';
+        where.status = 'ACTIVE';
+      } else if (status === 'test') {
+        where.midtransStatus = 'TEST';
+      } else if (status === 'blocked') {
+        where.status = 'BLOCKED';
+      }
+    }
+
+    // Fetch venues with aggregated data
     const venues = await prisma.venue.findMany({
+      where,
       include: {
         _count: {
-          select: { staff: true }
-        }
-      },
-      orderBy: { createdAt: 'desc' }
-    })
-    
-    // Calculate total volume for each venue
-    const venuesWithVolume = await Promise.all(
-      venues.map(async (venue) => {
-        const tips = await prisma.tip.aggregate({
-          where: { 
-            venueId: venue.id,
-            status: 'PAID'
+          select: {
+            staff: true,
           },
-          _sum: { amount: true }
-        })
-        
-        const lastTip = await prisma.tip.findFirst({
-          where: { venueId: venue.id },
-          orderBy: { createdAt: 'desc' }
-        })
-        
-        return {
-          id: venue.id,
-          name: venue.name,
-          area: venue.address || 'Unknown',
-          midtransStatus: venue.midtransMerchantId ? 'LIVE' : 'NOT_CONNECTED',
-          status: venue.status,
-          totalVolume: tips._sum.amount || 0,
-          lastActivity: lastTip?.createdAt || null,
-          staffCount: venue._count.staff
-        }
-      })
-    )
-    
-    return NextResponse.json(venuesWithVolume)
+        },
+        tips: {
+          where: {
+            status: 'PAID',
+          },
+          select: {
+            netAmount: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    // Transform data
+    const venuesData = venues.map((venue) => {
+      const totalVolume = venue.tips.reduce((sum, tip) => sum + tip.netAmount, 0);
+      const lastActivity = venue.updatedAt;
+
+      return {
+        id: venue.id,
+        name: venue.name,
+        area: venue.area || 'N/A',
+        midtransStatus: venue.midtransStatus || 'NOT_CONNECTED',
+        status: venue.status,
+        totalVolume,
+        lastActivity: lastActivity.toISOString(),
+        staffCount: venue._count.staff,
+      };
+    });
+
+    return successResponse(venuesData);
   } catch (error) {
-    console.error('Error fetching venues:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch venues' },
-      { status: 500 }
-    )
+    return handleApiError(error, "Admin venues");
   }
 }
 
-export async function PATCH(request: Request) {
-  // Check admin role
-  const { authorized, error } = await requireAdmin()
-  if (!authorized) return error
-  
+export async function PATCH(request: NextRequest) {
   try {
-    const { venueId, status } = await request.json()
-    
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
+
+    // Check admin role
+    const roleResult = requireRole(session, ['ADMIN']);
+    if ('error' in roleResult) return roleResult.error;
+
+    const body = await request.json();
+    const { venueId, status } = body;
+
     if (!venueId || !status) {
-      return NextResponse.json(
-        { error: 'venueId and status are required' },
-        { status: 400 }
-      )
+      return successResponse({ error: 'venueId and status are required' }, 400);
     }
-    
-    if (!['ACTIVE', 'BLOCKED'].includes(status)) {
-      return NextResponse.json(
-        { error: 'Invalid status. Must be ACTIVE or BLOCKED' },
-        { status: 400 }
-      )
-    }
-    
+
+    // Update venue status
     const venue = await prisma.venue.update({
       where: { id: venueId },
-      data: { status }
-    })
-    
-    return NextResponse.json(venue)
+      data: { status },
+    });
+
+    return successResponse(venue);
   } catch (error) {
-    console.error('Error updating venue:', error)
-    return NextResponse.json(
-      { error: 'Failed to update venue' },
-      { status: 500 }
-    )
+    return handleApiError(error, "Admin venues update");
   }
 }

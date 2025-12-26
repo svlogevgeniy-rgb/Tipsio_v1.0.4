@@ -9,6 +9,8 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useTranslations } from "@/i18n/client";
+import { formatCurrencyIDRIntl } from "@/lib/i18n/formatters";
+import type { DistributionMode } from "@/types/distribution";
 
 import { Loader2, User, Users, Heart, ChevronRight } from "lucide-react";
 
@@ -27,7 +29,7 @@ interface QrData {
     id: string;
     name: string;
     logoUrl: string | null;
-    distributionMode: "PERSONAL" | "POOLED";
+    distributionMode: DistributionMode;
     allowStaffChoice: boolean;
   };
   staff: Staff | null;
@@ -36,15 +38,6 @@ interface QrData {
 
 const AMOUNT_PRESETS = [10000, 20000, 50000, 100000];
 const PLATFORM_FEE_PERCENT = 5;
-
-function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
 
 function formatShortAmount(amount: number): string {
   if (amount >= 1000) {
@@ -368,7 +361,7 @@ export default function TipPage() {
             <div className="flex-1">
               <div className="text-sm font-medium">{t("coverFee")}</div>
               <div className="text-xs text-slate-400">
-                +{formatCurrency(platformFee)} →{" "}
+                +{formatCurrencyIDRIntl(platformFee)} →{" "}
                 {targetStaff?.displayName || t("wholeTeam").split(" ")[0]} {t("gets100")}
               </div>
             </div>
@@ -380,20 +373,22 @@ export default function TipPage() {
           <div className="rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 p-4">
             <div className="flex justify-between items-center mb-2">
               <span className="text-slate-400 text-sm">{t("tipLabel")}</span>
-              <span className="font-medium">{formatCurrency(finalAmount)}</span>
+              <span className="font-medium">
+                {formatCurrencyIDRIntl(finalAmount)}
+              </span>
             </div>
             {coverFee && (
               <div className="flex justify-between items-center mb-2">
                 <span className="text-slate-400 text-sm">{t("feeCovered")}</span>
                 <span className="font-medium text-cyan-400">
-                  +{formatCurrency(platformFee)}
+                  +{formatCurrencyIDRIntl(platformFee)}
                 </span>
               </div>
             )}
             <div className="flex justify-between items-center pt-2 border-t border-white/10">
               <span className="font-semibold">{t("totalLabel")}</span>
               <span className="text-xl font-bold text-cyan-400">
-                {formatCurrency(totalAmount)}
+                {formatCurrencyIDRIntl(totalAmount)}
               </span>
             </div>
             <div className="text-xs text-slate-400 mt-2 text-center">
@@ -420,7 +415,8 @@ export default function TipPage() {
             <Loader2 className="h-5 w-5 animate-spin" />
           ) : (
             <>
-              {t("sendTip")} {finalAmount > 0 && `• ${formatCurrency(totalAmount)}`}
+              {t("sendTip")}{" "}
+              {finalAmount > 0 && `• ${formatCurrencyIDRIntl(totalAmount)}`}
               <ChevronRight className="ml-1 h-5 w-5" />
             </>
           )}

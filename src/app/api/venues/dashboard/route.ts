@@ -2,7 +2,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
+import { handleApiError, successResponse } from "@/lib/api/error-handler";
 import { auth } from "@/lib/auth";
 
 // Mock data for development
@@ -38,7 +39,7 @@ export async function GET(request: NextRequest) {
 
     // For development, return mock data
     if (!session) {
-      return NextResponse.json(generateMockDashboard(period));
+      return successResponse(generateMockDashboard(period));
     }
 
     // In production, fetch real data
@@ -50,10 +51,7 @@ export async function GET(request: NextRequest) {
       });
 
       if (!venue) {
-        return NextResponse.json(
-          { error: "Venue not found" },
-          { status: 404 }
-        );
+        return successResponse({ error: "Venue not found" }, 404);
       }
 
       // Calculate date range
@@ -129,7 +127,7 @@ export async function GET(request: NextRequest) {
           createdAt: tip.createdAt.toISOString(),
         }));
 
-      return NextResponse.json({
+      return successResponse({
         venue: { id: venue.id, name: venue.name, distributionMode: venue.distributionMode },
         metrics: {
           totalTips,
@@ -143,13 +141,9 @@ export async function GET(request: NextRequest) {
       });
     } catch {
       // Database not available, return mock data
-      return NextResponse.json(generateMockDashboard(period));
+      return successResponse(generateMockDashboard(period));
     }
   } catch (error) {
-    console.error("Dashboard error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return handleApiError(error, "Dashboard");
   }
 }

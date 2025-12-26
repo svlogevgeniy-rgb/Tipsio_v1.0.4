@@ -20,6 +20,9 @@ const urbanist = Urbanist({
 export const metadata: Metadata = {
   title: "TIPSIO — Digital Tips for Bali",
   description: "TIPSIO is the cashless tipping platform for modern Bali venues",
+  icons: {
+    icon: '/favicon.svg',
+  }
 };
 
 export default async function RootLayout({

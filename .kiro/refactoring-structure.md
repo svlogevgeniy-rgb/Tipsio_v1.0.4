@@ -8,11 +8,27 @@ src/
 │   └── api.ts                          # Типы API (коды ошибок, ответы, сессии)
 │
 ├── lib/
+│   ├── constants.ts                    # Централизованные константы (NEW)
 │   └── api/
 │       ├── index.ts                    # Централизованный экспорт
 │       ├── middleware.ts               # Auth & Access проверки
 │       ├── error-handler.ts            # Обработка ошибок
 │       └── client.ts                   # HTTP клиент для фронтенда
+│
+├── components/
+│   └── landing/main/sections/          # Декомпозированные компоненты (NEW)
+│       ├── LandingNavigation.tsx
+│       ├── LandingHeroSection.tsx
+│       ├── LandingLogoBar.tsx
+│       ├── LandingProblemSection.tsx
+│       ├── LandingHowItWorksSection.tsx
+│       ├── LandingProductDemoSection.tsx
+│       ├── LandingBenefitsSection.tsx
+│       ├── LandingFAQSection.tsx
+│       ├── LandingFinalCTASection.tsx
+│       ├── LandingFooter.tsx
+│       ├── animation.ts                # Shared animation variants
+│       └── index.ts                    # Barrel export
 │
 └── hooks/
     ├── use-session-storage.ts          # SessionStorage хуки
@@ -346,5 +362,84 @@ describe('GET /api/staff', () => {
 ---
 
 **Создано**: 16 декабря 2024  
-**Версия**: 1.0  
+**Обновлено**: 20 декабря 2024  
+**Версия**: 2.0  
 **Статус**: Готово к использованию
+
+## 🆕 Обновления версии 2.0
+
+### Централизованные константы (Сегмент 2)
+
+```typescript
+// src/lib/constants.ts
+export const STAFF_ROLES = ['WAITER', 'BARTENDER', ...] as const;
+export type StaffRole = (typeof STAFF_ROLES)[number];
+
+export const TIP_STATUSES = ['PENDING', 'PAID', ...] as const;
+export const QR_CODE_TYPES = ['PERSONAL', 'VENUE', 'TABLE'] as const;
+```
+
+**Использование:**
+```typescript
+import { STAFF_ROLES, type StaffRole } from '@/lib/constants';
+
+const schema = z.object({
+  role: z.enum(STAFF_ROLES), // Вместо хардкода
+});
+```
+
+### Декомпозиция компонентов (Сегмент 4)
+
+**Было**: `sections.tsx` — 739 строк, 10 компонентов в одном файле
+
+**Стало**: 
+- `sections/` — папка с 10 отдельными файлами
+- `sections/index.ts` — barrel export
+- `sections.tsx` — реэкспорт для backward compatibility
+
+**Преимущества:**
+- Легче найти нужный компонент
+- Меньше конфликтов при merge
+- Проще code review
+- Быстрее загрузка в IDE
+
+### Import Order Standardization (Сегмент 6)
+
+**ESLint конфигурация:**
+```json
+{
+  "rules": {
+    "import/order": ["warn", {
+      "groups": ["builtin", "external", "internal", ["parent", "sibling"], "index", "type"],
+      "pathGroups": [
+        { "pattern": "react", "group": "external", "position": "before" },
+        { "pattern": "next/**", "group": "external", "position": "before" },
+        { "pattern": "@/**", "group": "internal", "position": "before" }
+      ],
+      "alphabetize": { "order": "asc" }
+    }]
+  }
+}
+```
+
+**Порядок импортов:**
+1. Node.js built-ins (`fs`, `path`)
+2. External packages (`react`, `next`, `zod`)
+3. Internal aliases (`@/lib`, `@/components`)
+4. Parent/sibling (`../`, `./`)
+5. Type imports
+
+### Type Safety Enhancement (Сегмент 5)
+
+**Все экспортируемые функции имеют явные return types:**
+```typescript
+// До
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+
+// После
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs))
+}
+```

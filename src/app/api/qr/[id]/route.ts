@@ -3,9 +3,11 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { handleApiError, notFoundError, successResponse, validationError } from "@/lib/api/error-handler";
+import { requireAuth } from "@/lib/api/middleware";
 import prisma from "@/lib/prisma";
 import { buildTipUrl, generateQrPng, generateQrSvg } from "@/lib/qr";
+import type { ApiErrorResponse } from "@/types/api";
 
 // GET /api/qr/[id] - Get QR code details
 export async function GET(
@@ -13,13 +15,10 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json(
-        { code: "AUTH_REQUIRED", message: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
 
     const { id } = await params;
     const { searchParams } = new URL(request.url);
@@ -45,15 +44,12 @@ export async function GET(
     });
 
     if (!qrCode) {
-      return NextResponse.json(
-        { code: "NOT_FOUND", message: "QR code not found" },
-        { status: 404 }
-      );
+      return notFoundError("QR code");
     }
 
     // Check access
-    if (session.user.role !== "ADMIN" && qrCode.venue.managerId !== session.user.id) {
-      return NextResponse.json(
+    if (session.userRole !== "ADMIN" && qrCode.venue.managerId !== session.userId) {
+      return NextResponse.json<ApiErrorResponse>(
         { code: "FORBIDDEN", message: "Access denied" },
         { status: 403 }
       );
@@ -83,18 +79,14 @@ export async function GET(
     }
 
     // Return JSON with QR details
-    return NextResponse.json({
+    return successResponse({
       qrCode: {
         ...qrCode,
         tipUrl,
       },
     });
   } catch (error) {
-    console.error("Get QR code error:", error);
-    return NextResponse.json(
-      { code: "INTERNAL_ERROR", message: "Internal server error" },
-      { status: 500 }
-    );
+    return handleApiError(error, "Get QR code");
   }
 }
 
@@ -104,13 +96,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json(
-        { code: "AUTH_REQUIRED", message: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
 
     const { id } = await params;
 
@@ -127,15 +116,12 @@ export async function DELETE(
     });
 
     if (!qrCode) {
-      return NextResponse.json(
-        { code: "NOT_FOUND", message: "QR code not found" },
-        { status: 404 }
-      );
+      return notFoundError("QR code");
     }
 
     // Check access
-    if (session.user.role !== "ADMIN" && qrCode.venue.managerId !== session.user.id) {
-      return NextResponse.json(
+    if (session.userRole !== "ADMIN" && qrCode.venue.managerId !== session.userId) {
+      return NextResponse.json<ApiErrorResponse>(
         { code: "FORBIDDEN", message: "Access denied" },
         { status: 403 }
       );
@@ -143,10 +129,7 @@ export async function DELETE(
 
     // Cannot delete personal QR codes (they're tied to staff)
     if (qrCode.type === "PERSONAL") {
-      return NextResponse.json(
-        { code: "CANNOT_DELETE", message: "Personal QR codes cannot be deleted directly. Deactivate the staff member instead." },
-        { status: 400 }
-      );
+      return validationError("Personal QR codes cannot be deleted directly. Deactivate the staff member instead.");
     }
 
     // If has tips, soft delete (set INACTIVE)
@@ -156,7 +139,7 @@ export async function DELETE(
         data: { status: "INACTIVE" },
       });
 
-      return NextResponse.json({
+      return successResponse({
         message: "QR code deactivated (has tip history)",
         softDeleted: true,
       });
@@ -165,15 +148,11 @@ export async function DELETE(
     // Hard delete if no tips
     await prisma.qrCode.delete({ where: { id } });
 
-    return NextResponse.json({
+    return successResponse({
       message: "QR code deleted successfully",
       softDeleted: false,
     });
   } catch (error) {
-    console.error("Delete QR code error:", error);
-    return NextResponse.json(
-      { code: "INTERNAL_ERROR", message: "Internal server error" },
-      { status: 500 }
-    );
+    return handleApiError(error, "Delete QR code");
   }
 }

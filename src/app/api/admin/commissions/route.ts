@@ -2,41 +2,30 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { NextRequest } from "next/server";
+import { handleApiError, successResponse, validationError } from "@/lib/api/error-handler";
+import { requireAuth, requireRole } from "@/lib/api/middleware";
 import prisma from "@/lib/prisma";
 
 const PLATFORM_FEE_PERCENT = 5;
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
 
-    // Check admin access
-    if (!session?.user) {
-      return NextResponse.json(
-        { code: "AUTH_REQUIRED", message: "Authentication required" },
-        { status: 401 }
-      );
-    }
-
-    const userRole = (session.user as { role?: string }).role;
-    if (userRole !== "ADMIN") {
-      return NextResponse.json(
-        { code: "FORBIDDEN", message: "Admin access required" },
-        { status: 403 }
-      );
-    }
+    // Check admin role
+    const roleResult = requireRole(session, ['ADMIN']);
+    if ('error' in roleResult) return roleResult.error;
 
     const { searchParams } = new URL(request.url);
     const start = searchParams.get("start");
     const end = searchParams.get("end");
 
     if (!start || !end) {
-      return NextResponse.json(
-        { code: "VALIDATION_ERROR", message: "start and end dates required" },
-        { status: 400 }
-      );
+      return validationError("start and end dates required");
     }
 
     const startDate = new Date(start);
@@ -100,7 +89,7 @@ export async function GET(request: NextRequest) {
       0
     );
 
-    return NextResponse.json({
+    return successResponse({
       period: `${start}_${end}`,
       totalTips,
       totalPlatformFee,
@@ -108,10 +97,6 @@ export async function GET(request: NextRequest) {
       venues,
     });
   } catch (error) {
-    console.error("Admin commissions error:", error);
-    return NextResponse.json(
-      { code: "INTERNAL_ERROR", message: "Internal server error" },
-      { status: 500 }
-    );
+    return handleApiError(error, "Admin commissions");
   }
 }

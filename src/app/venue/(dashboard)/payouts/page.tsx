@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "@/i18n/client";
+import { formatCurrencyIDRIntl } from "@/lib/i18n/formatters";
 import { 
   Loader2, 
   Check,
@@ -21,15 +22,6 @@ interface StaffBalance {
   avatarUrl?: string;
   balance: number;
   tipsCount: number;
-}
-
-function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
 }
 
 // Staff Avatar Component
@@ -169,7 +161,7 @@ export default function VenuePayoutsPage() {
               <span className="text-xs">{t('toPay')}</span>
             </div>
             <div className="text-2xl font-bold text-primary">
-              {formatCurrency(totalBalance)}
+              {formatCurrencyIDRIntl(totalBalance)}
             </div>
           </CardContent>
         </Card>
@@ -234,7 +226,7 @@ export default function VenuePayoutsPage() {
                 <div className="flex items-center gap-4">
                   <div className="text-right">
                     <div className={`font-semibold ${staff.balance > 0 ? 'text-primary' : 'text-muted-foreground'}`}>
-                      {formatCurrency(staff.balance)}
+                      {formatCurrencyIDRIntl(staff.balance)}
                     </div>
                   </div>
                   
@@ -274,7 +266,7 @@ export default function VenuePayoutsPage() {
           ) : (
             <Check className="h-5 w-5 mr-2" />
           )}
-          {t('payAll')} ({formatCurrency(totalBalance)})
+          {t('payAll')} ({formatCurrencyIDRIntl(totalBalance)})
         </Button>
       )}
     </div>

@@ -5,13 +5,14 @@ export const revalidate = 0;
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
+import { STAFF_ROLES, STAFF_STATUSES } from "@/lib/constants";
 import prisma from "@/lib/prisma";
 
 const updateStaffSchema = z.object({
   displayName: z.string().min(1).optional(),
   fullName: z.string().optional(),
-  role: z.enum(["WAITER", "BARTENDER", "BARISTA", "HOSTESS", "OTHER"]).optional(),
-  status: z.enum(["ACTIVE", "INACTIVE"]).optional(),
+  role: z.enum(STAFF_ROLES).optional(),
+  status: z.enum(STAFF_STATUSES).optional(),
   participatesInPool: z.boolean().optional(),
   avatarUrl: z.string().url().optional(),
 });

@@ -14,6 +14,7 @@ import {
   Wallet,
   Clock
 } from "lucide-react";
+import { formatCurrencyIDRIntl } from "@/lib/i18n/formatters";
 
 interface DashboardData {
   staff: {
@@ -37,15 +38,6 @@ interface DashboardData {
     status: "PENDING" | "PAID";
     paidAt: string | null;
   }>;
-}
-
-function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
 }
 
 function formatDateRange(start: string, end: string): string {
@@ -131,7 +123,7 @@ export default function StaffDashboardPage() {
             <span className="text-sm">{t('currentPeriod')}</span>
           </div>
           <div className="text-4xl font-bold text-primary mb-2">
-            {formatCurrency(data.currentPeriod.amount)}
+            {formatCurrencyIDRIntl(data.currentPeriod.amount)}
           </div>
           <p className="text-sm text-muted-foreground">
             {t('tipsSince', { 
@@ -153,7 +145,9 @@ export default function StaffDashboardPage() {
               <div className="text-sm text-muted-foreground">{t('tipsReceived')}</div>
             </div>
             <div className="bg-white/5 rounded-xl p-4 text-center">
-              <div className="text-2xl font-bold">{formatCurrency(data.today.amount)}</div>
+              <div className="text-2xl font-bold">
+                {formatCurrencyIDRIntl(data.today.amount)}
+              </div>
               <div className="text-sm text-muted-foreground">{t('total')}</div>
             </div>
           </div>
@@ -184,7 +178,7 @@ export default function StaffDashboardPage() {
                       {formatDateRange(payout.periodStart, payout.periodEnd)}
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      {formatCurrency(payout.amount)}
+                      {formatCurrencyIDRIntl(payout.amount)}
                     </div>
                   </div>
                   <div className={`text-sm px-2 py-1 rounded-full ${

@@ -6,20 +6,12 @@ import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useTranslations } from "@/i18n/client";
 import { CheckCircle2, Loader2, Heart } from "lucide-react";
+import { formatCurrencyIDRIntl } from "@/lib/i18n/formatters";
 
 interface TipDetails {
   amount: number;
   staffName: string | null;
   venueName: string;
-}
-
-function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
 }
 
 export default function TipSuccessPage() {
@@ -92,7 +84,7 @@ export default function TipSuccessPage() {
             <div className="flex justify-between items-center mb-3">
               <span className="text-slate-400 text-sm">{t("amount")}</span>
               <span className="text-xl font-bold text-cyan-400">
-                {formatCurrency(tipDetails.amount)}
+                {formatCurrencyIDRIntl(tipDetails.amount)}
               </span>
             </div>
             <div className="flex justify-between items-center pt-3 border-t border-white/10">
@@ -120,7 +112,7 @@ export default function TipSuccessPage() {
 
       {/* Footer */}
       <footer className="p-4 text-center">
-        <p className="text-[10px] text-slate-600 text-gradient">Powered by TIPSIO</p>
+        <p className="text-[10px] text-slate-600 text-gradient">{t("poweredBy")}</p>
       </footer>
     </div>
   );

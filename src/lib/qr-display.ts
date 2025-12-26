@@ -1,9 +1,6 @@
-/**
- * QR display business logic
- * Determines when to show QR codes and materials
- */
+import { isPooledMode, isPersonalMode, type DistributionMode } from "@/types/distribution";
 
-export type DistributionMode = "POOLED" | "PERSONAL";
+export type { DistributionMode } from "@/types/distribution";
 
 export interface QrDisplayConfig {
   distributionMode: DistributionMode;
@@ -20,7 +17,7 @@ export interface QrDisplayConfig {
  * - PERSONAL mode: show only if there are active staff members
  */
 export function shouldShowQrCodes(config: QrDisplayConfig): boolean {
-  if (config.distributionMode === "POOLED") {
+  if (isPooledMode(config.distributionMode)) {
     return config.hasVenueQr;
   }
   
@@ -36,7 +33,7 @@ export function shouldShowQrCodes(config: QrDisplayConfig): boolean {
  * - Only when no active staff
  */
 export function shouldShowAddStaffNotification(config: QrDisplayConfig): boolean {
-  return config.distributionMode === "PERSONAL" && config.activeStaffCount === 0;
+  return isPersonalMode(config.distributionMode) && config.activeStaffCount === 0;
 }
 
 /**
@@ -47,7 +44,7 @@ export function shouldShowAddStaffNotification(config: QrDisplayConfig): boolean
  * - PERSONAL mode: available only if staff QRs exist
  */
 export function shouldShowDownloadMaterials(config: QrDisplayConfig): boolean {
-  if (config.distributionMode === "POOLED") {
+  if (isPooledMode(config.distributionMode)) {
     return config.hasVenueQr;
   }
   
@@ -58,5 +55,5 @@ export function shouldShowDownloadMaterials(config: QrDisplayConfig): boolean {
  * Get the primary QR type to display
  */
 export function getPrimaryQrType(distributionMode: DistributionMode): "VENUE" | "PERSONAL" {
-  return distributionMode === "POOLED" ? "VENUE" : "PERSONAL";
+  return isPooledMode(distributionMode) ? "VENUE" : "PERSONAL";
 }

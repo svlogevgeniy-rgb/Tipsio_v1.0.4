@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "@/i18n/client";
+import type { DistributionMode } from "@/types/distribution";
 
 const midtransSchema = z.object({
   merchantId: z.string().min(1, "Merchant ID is required"),
@@ -25,7 +26,7 @@ export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [distributionMode, setDistributionMode] = useState<"PERSONAL" | "POOLED">("PERSONAL");
+  const [distributionMode, setDistributionMode] = useState<DistributionMode>("PERSONAL");
   
   const steps = [t('profile'), t('payments'), t('distribution'), t('done')];
 

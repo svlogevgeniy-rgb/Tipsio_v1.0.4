@@ -43,15 +43,9 @@ export function LegacyNavigation() {
             <span>Поддержка</span>
           </a>
           <LanguageSwitcher />
-          <Link href="/venue/login">
-            <Button variant="ghost" size="sm" className="text-slate-700">
-              Войти
-            </Button>
-          </Link>
           <Link href="/venue/register">
             <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-5">
-              Подключить заведение
-              <ArrowRight className="ml-1 w-4 h-4" />
+              Подключить
             </Button>
           </Link>
         </div>
@@ -84,7 +78,7 @@ export function LegacyHeroSection() {
               transition={{ duration: 0.4, delay: 0.1 }}
               className="text-3xl sm:text-4xl lg:text-5xl font-heading font-extrabold text-slate-900 leading-tight mb-6"
             >
-              Не теряйте чаевые из-за того,{' '}
+              Не теряйте <span className="italic">чаевые</span> из-за того,{' '}
               <span className="text-blue-600">что у гостей нет наличных</span>
             </motion.h1>
             <motion.p
@@ -94,8 +88,8 @@ export function LegacyHeroSection() {
               transition={{ duration: 0.4, delay: 0.15 }}
               className="text-lg text-slate-600 mb-8 leading-relaxed"
             >
-              Туристы привыкли платить телефоном. Дайте им возможность оставить чаевые через QRIS, GoPay или карту за 7
-              секунд. Деньги поступают сразу на ваш счёт Midtrans.
+              Принимайте чаевые безналично с помощью Google Pay, GoPay или банковской карты. Деньги мгновенно поступают
+              на ваш счёт благодаря TIPSIO.
             </motion.p>
             <motion.div
               variants={fadeInUp}
@@ -108,11 +102,6 @@ export function LegacyHeroSection() {
                 <Button className="h-14 px-8 text-base rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25">
                   Запустить бесплатно за 1 час
                   <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
-              <Link href="/venue/login">
-                <Button variant="ghost" className="h-14 px-8 text-base rounded-full">
-                  Уже есть аккаунт
                 </Button>
               </Link>
             </motion.div>
@@ -548,7 +537,7 @@ export function LegacyFinalCTASection() {
     <section className="py-24 px-6 bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
       <div className="max-w-4xl mx-auto text-center">
         <motion.h2 variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold mb-6">
-          Верните чаевые в заведение уже сегодня
+          Верните <span className="italic">чаевые</span> в заведение уже сегодня
         </motion.h2>
         <motion.p
           variants={fadeInUp}

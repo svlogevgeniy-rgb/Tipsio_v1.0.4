@@ -1,0 +1,863 @@
+{
+  "landingV3": {
+    "nav": {
+      "support": "Dukungan",
+      "login": "Masuk",
+      "cta": "Hubungkan"
+    },
+    "hero": {
+      "badge": "Beroperasi di Bali · Biaya 0%",
+      "headlinePrefix": "Jangan kehilangan",
+      "headlineItalic": "tip",
+      "headlineSuffix": "karena",
+      "headlineHighlight": "tamu tidak punya uang tunai",
+      "subheadline": "Terima tip tanpa tunai melalui Google Pay, GoPay atau kartu bank. Uang langsung masuk ke rekening Anda berkat TIPSIO.",
+      "cta": "Mulai gratis dalam 1 jam",
+      "trust1": "Pembayaran langsung (tanpa perantara)",
+      "trust2": "Tamu tidak perlu aplikasi",
+      "imageAlt": "Antarmuka platform tip digital TIPSIO menampilkan staf dan opsi pembayaran"
+    },
+    "dashboard": {
+      "today": "Hari Ini",
+      "date": "Jumat, 6 Desember",
+      "week": "Minggu",
+      "month": "Bulan",
+      "tipsToday": "Tip hari ini",
+      "transactions": "Transaksi",
+      "avgTip": "Rata-rata tip",
+      "activeQr": "QR Aktif",
+      "dynamics": "Dinamika",
+      "newTip": "Tip baru",
+      "staff": "staf"
+    },
+    "logoBar": {
+      "title": "— mitra terpercaya",
+      "description": "Tamu membayar sesuai preferensi mereka"
+    },
+    "products": {
+      "sectionTitle": "Produk tiangé",
+      "items": {
+        "tipsReviews": {
+          "title": "Tip dan ulasan",
+          "desc": "Hubungkan platform untuk staf"
+        },
+        "digitalMenu": {
+          "title": "Menu digital",
+          "desc": "Tampilkan foto hidangan dan otomatisasi pesanan"
+        },
+        "preorders": {
+          "title": "Pra-pesan",
+          "desc": "Buat tautan untuk pembayaran pra-pesan"
+        }
+      }
+    },
+    "problem": {
+      "title": "Uang tunai semakin berkurang setiap tahun",
+      "desc1": "Tamu Anda ingin berterima kasih atas layanan tetapi merasa canggung ketika dompet mereka kosong. Tanpa cara yang nyaman untuk memberi tip, Anda kehilangan sebagian besar pendapatan staf.",
+      "desc2": "mengubah \"Terima kasih, tapi saya hanya punya kartu\" menjadi uang nyata untuk tim Anda.",
+      "phoneCta": "Bayar dengan Google Pay",
+      "phoneSecure": "Pembayaran aman via Midtrans",
+      "phoneSayThanks": "Ucapkan terima kasih!",
+      "badge1Label": "Pembayaran dalam",
+      "badge1Value": "7 detik",
+      "badge2Label": "Untuk tamu",
+      "badge2Value": "Tanpa aplikasi",
+      "badge3Label": "Pembayaran",
+      "badge3Value": "Via Midtrans",
+      "badge4Label": "Uang",
+      "badge4Value": "Langsung ke Anda"
+    },
+    "howItWorks": {
+      "title": "Kontrol penuh dan transparansi",
+      "subtitle": "Tiga langkah menuju tip digital yang aman",
+      "step1": {
+        "label": "Aman",
+        "title": "Midtrans Anda — Aturan Anda",
+        "desc": "Hubungkan akun Midtrans Anda yang sudah ada. Kami tidak menyentuh uang — transaksi langsung dari tamu ke Anda."
+      },
+      "step2": {
+        "label": "Cepat",
+        "title": "Kode QR di mana-mana",
+        "desc": "Tempatkan QR di meja, folder tagihan atau lencana. Tamu scan → pilih jumlah → bayar."
+      },
+      "step3": {
+        "label": "Adil",
+        "title": "Saldo pintar",
+        "desc": "Sistem menghitung berapa yang diperoleh setiap staf (atau pool bersama). Di akhir shift Anda melihat jumlah pembayaran yang tepat."
+      }
+    },
+    "productDemo": {
+      "title": "Dibuat untuk turis dan ekspatriat",
+      "point1": "Antarmuka bahasa Inggris",
+      "point2": "Tidak perlu registrasi untuk tamu",
+      "point3": "Jumlah preset meningkatkan rata-rata tip",
+      "statsTransactions": "Transaksi",
+      "statsAvgTip": "Rata-rata tip",
+      "statsActiveQr": "QR Aktif"
+    },
+    "benefits": {
+      "title": "Semua menang",
+      "business": {
+        "title": "Bisnis: Retensi tim",
+        "desc": "Tip yang baik adalah motivasi terbaik. Kurangi turnover dengan memberi staf cara legal untuk mendapatkan lebih dari tamu tanpa tunai."
+      },
+      "team": {
+        "title": "Tim: Keadilan",
+        "desc": "Pelayan melihat pendapatan mereka secara real time. Tidak ada perselisihan tentang siapa yang mendapat apa selama shift."
+      },
+      "guests": {
+        "title": "Tamu: Kenyamanan",
+        "desc": "Tidak ada rasa bersalah karena tidak punya uang tunai. Bayar dalam 2 klik, biaya bisa diatur untuk dibayar tamu (di atas tip)."
+      }
+    },
+    "faq": {
+      "title": "Pertanyaan pemilik",
+      "q1": {
+        "q": "Apakah saya perlu membuka rekening baru?",
+        "a": "Tidak, jika Anda sudah punya Midtrans, kami terintegrasi dengannya. Jika tidak — kami akan membantu Anda terhubung."
+      },
+      "q2": {
+        "q": "Apakah uang melewati rekening TIPSIO?",
+        "a": "Tidak pernah. Secara teknis uang mengalir: Kartu tamu → Midtrans Anda → Rekening bank Anda. Kami hanya menyediakan infrastruktur IT."
+      },
+      "q3": {
+        "q": "Berapa biaya untuk venue?",
+        "a": "Saat ini layanan sepenuhnya gratis. Di masa depan, biayanya akan 5%, tetapi Anda dapat mengaturnya untuk dibayar oleh tamu (di atas jumlah tip)."
+      },
+      "q4": {
+        "q": "Bagaimana membayar pajak?",
+        "a": "Tip (Service Charge / Gratuity) memiliki kekhususan di Indonesia. TIPSIO menyediakan laporan detail untuk akuntansi Anda agar semuanya sesuai."
+      },
+      "q5": {
+        "q": "Apakah staf perlu internet?",
+        "a": "Hanya untuk memeriksa saldo. Untuk menerima tip, hanya perlu kode QR yang dicetak."
+      }
+    },
+    "finalCta": {
+      "titlePrefix": "Kembalikan",
+      "titleItalic": "tip",
+      "titleSuffix": "ke venue Anda hari ini",
+      "subtitle": "Setup memakan waktu kurang dari satu jam. Kami akan membantu di setiap langkah via WhatsApp.",
+      "cta": "Hubungkan"
+    },
+    "footer": {
+      "whatsapp": "Dukungan WhatsApp",
+      "terms": "Syarat Layanan",
+      "privacy": "Kebijakan Privasi",
+      "copyright": "© 2025 TIPSIO Bali."
+    }
+  },
+  "landing": {
+    "betaBadge": "TIPSIO 2.0 sudah hadir",
+    "navNew": {
+      "value": "Nilai",
+      "product": "Produk",
+      "features": "Fitur",
+      "login": "Masuk",
+      "start": "Mulai"
+    },
+    "dashboard": {
+      "today": "Hari Ini",
+      "date": "Jumat, 5 Desember",
+      "week": "Minggu",
+      "month": "Bulan",
+      "tipsToday": "Tip hari ini",
+      "transactions": "Transaksi",
+      "avgTip": "Rata-rata tip",
+      "activeQr": "QR Aktif",
+      "dynamics": "Dinamika",
+      "newTip": "Tip baru",
+      "teamGrowing": "Tim berkembang!"
+    },
+    "nav": {
+      "features": "Fitur",
+      "howItWorks": "Cara kerja",
+      "reviews": "Ulasan"
+    },
+    "hero": {
+      "title": "Tip digital yang benar-benar berfungsi untuk venue Bali",
+      "subtitle": "Tamu scan QR dan meninggalkan tip dalam hitungan detik. Staf melihat setiap rupiah. Anda tetap memegang kendali — dan selama pilot Bali kami, TIPSIO gratis untuk venue (biaya platform 5% direncanakan nanti).",
+      "primaryCta": "Mulai",
+      "secondaryCta": "Lihat cara kerjanya",
+      "miniTrust": "Dibangun di Midtrans. Tamu dapat membayar dengan GoPay, OVO, kartu dan Google Pay — tanpa terminal tambahan, tanpa aplikasi baru untuk tamu."
+    },
+    "heroNew": {
+      "headline": "Tip yang",
+      "highlight": "menginspirasi pertumbuhan",
+      "subheadline": "Platform tip yang bekerja untuk venue, staf, dan tamu sekaligus: tamu membayar dalam hitungan detik, tim melihat saldo mereka, Anda tetap sepenuhnya transparan.",
+      "cta": "Mulai gratis",
+      "watchDemo": "Tonton demo",
+      "learnMore": "Pelajari lebih lanjut",
+      "trust1": "Pembayaran aman via Midtrans",
+      "trust2": "Setup dalam waktu kurang dari satu jam",
+      "trust3": "Bekerja dengan metode pembayaran apa pun"
+    },
+    "stats": {
+      "setupTime": "Waktu setup",
+      "platformFee": "Biaya platform saat ini",
+      "transparent": "Transparan",
+      "available": "Tersedia"
+    },
+    "impact": {
+      "title": "Nilai untuk tamu, staf, dan pemilik",
+      "subtitle": "Tip menjadi transparan untuk tim, mudah untuk tamu, dan terkontrol untuk pemilik.",
+      "owners": {
+        "title": "Untuk venue",
+        "pill": "15 menit untuk meluncurkan",
+        "desc": "Kontrol tip dan distribusikan secara transparan tanpa terminal tambahan."
+      },
+      "team": {
+        "title": "Untuk staf",
+        "pill": "hingga +28% dalam tip",
+        "desc": "Saldo, QR pribadi, dan pembayaran tanpa spreadsheet misterius."
+      },
+      "guests": {
+        "title": "Untuk tamu",
+        "pill": "checkout 7 detik",
+        "desc": "Scan, pilih jumlah, bayar dengan Apple/Google Pay atau QRIS — tanpa aplikasi."
+      }
+    },
+    "valueDeck": {
+      "title": "Kami mencakup setiap sisi meja",
+      "subtitle": "Setiap layar TIPSIO mencerminkan apa yang penting bagi tamu, staf, dan manajemen.",
+      "venues": {
+        "title": "Untuk venue",
+        "point1": "Aturan tip yang jelas tanpa integrasi POS atau hardware baru.",
+        "point2": "Dashboard yang mencerminkan back office: shift, pemimpin, dan jumlah per QR.",
+        "point3": "Gunakan pembayaran pool, berbasis peran, berbasis shift, atau personal — aturan Anda, terdokumentasi."
+      },
+      "staff": {
+        "title": "Untuk staf",
+        "point1": "QR dan lencana pribadi yang bisa Anda tunjukkan ke tamu dalam sekejap.",
+        "point2": "Saldo dan pembayaran mendatang tanpa spreadsheet tersembunyi.",
+        "point3": "Notifikasi push untuk setiap tip agar pertumbuhan terlihat."
+      },
+      "guests": {
+        "title": "Untuk tamu",
+        "point1": "Tanpa terminal: bekerja dengan kamera ponsel dan Apple/Google Pay.",
+        "point2": "Antarmuka dalam bahasa tamu — cepat dan tanpa formulir.",
+        "point3": "Preset pintar yang meningkatkan rata-rata tip tanpa tekanan."
+      }
+    },
+    "productShowcase": {
+      "title": "Seperti apa TIPSIO",
+      "subtitle": "Alur tamu yang ringan plus dashboard gelap yang kaya data.",
+      "guest": {
+        "title": "Layar tamu",
+        "desc": "Scan QR, pilih jumlah, dan bayar dengan Apple Pay, Google Pay, atau QRIS dalam hitungan detik."
+      },
+      "dashboard": {
+        "title": "Dashboard venue",
+        "desc": "Kartu shift, pemimpin harian, kontrol pembayaran, dan notifikasi tip instan."
+      },
+      "payouts": {
+        "title": "Alokasi",
+        "desc": "Pembayaran adil berdasarkan peran, shift, atau mode personal — terlihat oleh seluruh tim."
+      },
+      "customAmount": "Kustom",
+      "leaveTip": "Tinggalkan tip",
+      "stats": {
+        "today": "Hari Ini",
+        "shift": "Shift ini",
+        "payouts": "Pembayaran"
+      }
+    },
+    "featuresNew": {
+      "title": "Features that hold up during a real shift",
+      "subtitle": "Mobile, secure, and free of extra steps.",
+      "items": {
+        "f1": {
+          "title": "Live QRs",
+          "desc": "QRs for tables and staff with dynamic links and print-ready layouts."
+        },
+        "f2": {
+          "title": "Instant notifications",
+          "desc": "The team sees every tip right away — motivation goes up."
+        },
+        "f3": {
+          "title": "Dashboard without manual spreadsheets",
+          "desc": "See who brought what, what to pay out, and which shifts are growing."
+        },
+        "f4": {
+          "title": "Anti-fraud and safety",
+          "desc": "Payments run through Midtrans and Apple/Google Pay. We never store card data."
+        },
+        "f5": {
+          "title": "Multilingual UI",
+          "desc": "English, Indonesian, Russian — guests and staff feel taken care of."
+        },
+        "f6": {
+          "title": "Go live in an hour",
+          "desc": "Connect Midtrans, import staff, print QRs. You’re ready to accept tips."
+        }
+      }
+    },
+    "journey": {
+      "title": "Onboarding",
+      "subtitle": "How TIPSIO fits into your day — from setup to the first thank-yous.",
+      "steps": {
+        "s1": {
+          "title": "Launch",
+          "desc": "Connect Midtrans, set roles, print QRs for tables and badges."
+        },
+        "s2": {
+          "title": "Live shift",
+          "desc": "Guests pay in 7 seconds, staff get notifications, you see shift trends live."
+        },
+        "s3": {
+          "title": "Payouts and growth",
+          "desc": "Allocate by role or personally, close payouts, and spot trends to retain talent."
+        }
+      }
+    },
+    "howNew": {
+      "title": "Simple by design",
+      "subtitle": "Three steps to transform how your venue handles tips",
+      "step1": {
+        "title": "Connect your payments",
+        "desc": "Link your existing Midtrans account. Tips flow directly to you — we never hold your funds."
+      },
+      "step2": {
+        "title": "Guests scan and tip",
+        "desc": "Place QR codes on tables or staff badges. Guests pay with GoPay, OVO, cards, or QRIS in seconds."
+      },
+      "step3": {
+        "title": "Track and distribute",
+        "desc": "See real-time analytics. Know exactly who earned what. Settle payouts with confidence."
+      }
+    },
+    "features": {
+      "title": "Everything you need to grow",
+      "subtitle": "We've thought through every detail so you can earn more.",
+      "f1": {
+        "title": "Apple Pay & Google Pay",
+        "desc": "One-click payment. No card forms or SMS. 40% higher conversion."
+      },
+      "f2": {
+        "title": "Instant withdrawal",
+        "desc": "Money on your card in 30 seconds."
+      },
+      "f3": {
+        "title": "Analytics",
+        "desc": "Full control over your finances."
+      },
+      "f4": {
+        "title": "Smart QR codes",
+        "desc": "Generate codes for individual staff or tables. Print-ready materials included."
+      },
+      "f5": {
+        "title": "Transparency",
+        "desc": "100% of tips reach the recipient."
+      },
+      "f6": {
+        "title": "Multi-language support",
+        "desc": "Interface works in English and Indonesian. Perfect for mixed teams and international guests."
+      }
+    },
+    "forVenues": {
+      "title": "Built for venue owners who care about their team",
+      "desc": "TIPSIO helps you create a fair, transparent tipping system that motivates staff and delights guests — without changing your existing payment setup.",
+      "point1": "Increase tip volume with convenient cashless payments",
+      "point2": "Reduce conflicts with clear distribution rules",
+      "point3": "Retain staff with transparent earnings tracking",
+      "point4": "Make data-driven decisions with detailed analytics"
+    },
+    "ctaNew": {
+      "title": "Ready to modernize tipping at your venue?",
+      "subtitle": "Join Bali's leading restaurants and cafes. Setup takes less than an hour.",
+      "button": "Get started free"
+    },
+    "forWhom": {
+      "title": "One platform — three happy sides",
+      "owners": {
+        "title": "For venue owners",
+        "point1": "Increase staff motivation without touching menu prices.",
+        "point2": "Connect via Midtrans — no custom hardware or new terminals.",
+        "point3": "See all tips and payouts in one simple dashboard."
+      },
+      "staff": {
+        "title": "For staff",
+        "point1": "Tips go into a transparent system, not a mysterious jar.",
+        "point2": "See what you earned and when payouts happen."
+      },
+      "guests": {
+        "title": "For guests",
+        "point1": "No cash, no awkwardness at the table.",
+        "point2": "Scan, choose amount, pay in seconds — no app required."
+      }
+    },
+    "howItWorks": {
+      "title": "How TIPSIO works in 3 steps",
+      "step1": {
+        "title": "1. Your venue connects Midtrans once",
+        "description": "You enter your Midtrans Merchant ID and API keys. We don't hold your money — tips go directly to your existing payment account."
+      },
+      "step2": {
+        "title": "2. We generate QR codes for staff and tables",
+        "description": "Print them, place on tables or staff badges. Guests scan with any phone camera."
+      },
+      "step3": {
+        "title": "3. Guests leave tips, you settle payouts",
+        "description": "Guests pay with GoPay, OVO, cards or QRIS via Midtrans. TIPSIO calculates how much each staff member should get. You pay out in cash or bank transfer and mark payouts as done."
+      },
+      "flowText": "Guest → Midtrans → Your account → Staff payouts, calculated in TIPSIO"
+    },
+    "whyBali": {
+      "title": "Built for Bali, not for \"global\" headlines",
+      "point1": "Works with QRIS, GoPay, OVO and cards via Midtrans — no extra terminals or hardware.",
+      "point2": "Designed for mixed teams: local staff, expat owners, tourists from all over the world.",
+      "point3": "Mobile‑first UI that behaves well even on spotty Wi‑Fi.",
+      "point4": "Simple onboarding: connect Midtrans, add staff, print QRs — ready in under an hour."
+    },
+    "productPeek": {
+      "title": "See TIPSIO in action",
+      "guestScreen": "Guest tip screen — scan a QR, tap an amount, pay.",
+      "dashboard": "Venue dashboard — all tips and top staff at a glance.",
+      "payouts": "Payouts report — know exactly who should get how much."
+    },
+    "whereWeAre": {
+      "title": "Where we are now",
+      "description": "TIPSIO is live with early venues in Bali. We're focused on making digital tips easy for guests, transparent for staff, and low‑friction for owners.",
+      "point1": "We integrate with Midtrans and follow their best practices.",
+      "point2": "We keep staff dashboards and payouts logic simple and clear.",
+      "point3": "We work closely with early partners to refine the product."
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": {
+        "question": "Do you touch our money or hold funds?",
+        "answer": "No. All payments go directly to your Midtrans merchant account. TIPSIO only helps you track and allocate tips to staff."
+      },
+      "q2": {
+        "question": "Do guests need to install an app?",
+        "answer": "No. Guests just scan a QR code with their phone camera and pay via Midtrans — GoPay, OVO, cards or QRIS."
+      },
+      "q3": {
+        "question": "How do staff get paid?",
+        "answer": "You still pay your staff in cash or via bank transfer. TIPSIO calculates how much each staff member should get and shows it in a simple payouts report."
+      },
+      "q4": {
+        "question": "How much does TIPSIO cost?",
+        "answer": "We keep our pricing simple for early partners. Midtrans fees apply as usual. Platform fee is discussed individually based on your volume."
+      },
+      "q5": {
+        "question": "How long does setup take?",
+        "answer": "Most venues connect Midtrans, add staff and print QR codes in under 1 hour."
+      }
+    },
+    "finalCta": {
+      "title": "Ready to try digital tips at your venue?",
+      "subtitle": "Connect TIPSIO, start with a few tables or one shift, and see how your staff responds.",
+      "primaryCta": "Connect my venue",
+      "secondaryCta": "Talk to us on WhatsApp"
+    },
+    "ctaNew": {
+      "title": "The fastest way to tidy up tipping",
+      "subtitle": "Connect TIPSIO, launch on a few tables, and watch how your team responds."
+    },
+    "footer": {
+      "staffLogin": "Staff login",
+      "venueLogin": "Venue login"
+    }
+  },
+  "common": {
+    "loading": "Memuat...",
+    "error": "Terjadi kesalahan",
+    "retry": "Coba lagi",
+    "back": "Kembali",
+    "close": "Tutup",
+    "save": "Simpan",
+    "cancel": "Batal",
+    "confirm": "Konfirmasi",
+    "delete": "Hapus",
+    "edit": "Edit",
+    "view": "Lihat",
+    "search": "Cari",
+    "filter": "Filter",
+    "all": "Semua",
+    "none": "Tidak ada",
+    "yes": "Ya",
+    "no": "Tidak"
+  },
+  "currency": {
+    "idr": "IDR",
+    "prefix": "Rp"
+  },
+  "guest": {
+    "tip": {
+      "title": "Ucapkan terima kasih kepada {name}! 👋",
+      "titleTeam": "Dukung tim di {venue} ❤️",
+      "subtitle": "Suka layanannya? Kirim tip tanpa tunai dalam hitungan detik.",
+      "subtitleTeam": "Tip digital Anda membantu kami menghargai staf yang melayani Anda hari ini.",
+      "disclaimer": "Tip langsung ke venue dan dialokasikan ke staf sesuai aturan venue.",
+      "selectAmount": "Pilih jumlah (IDR)",
+      "otherAmount": "Jumlah lain",
+      "amountHint": "Kebanyakan tamu meninggalkan antara 10.000 dan 50.000 IDR untuk layanan yang baik.",
+      "whoServed": "Siapa yang melayani Anda hari ini?",
+      "wholeTeam": "Seluruh Tim (Pool)",
+      "wholeTeamDesc": "Bagikan tip Anda secara merata di antara shift hari ini.",
+      "specificStaff": "Staf Tertentu",
+      "specificStaffDesc": "Pilih seseorang dari daftar.",
+      "selectStaff": "Pilih anggota staf...",
+      "coverFee": "Tanggung biaya platform",
+      "coverFeeDesc": "Tambahkan {amount} agar {name} menerima tip penuh",
+      "sendTip": "Kirim Tip dengan Aman",
+      "securePayment": "Pembayaran aman via GoPay, OVO, kartu atau QRIS — diproses oleh penyedia pembayaran kami. Tidak perlu aplikasi.",
+      "poweredBy": "Didukung oleh TIPSIO",
+      "tipLabel": "Tip",
+      "feeCovered": "Biaya ditanggung",
+      "totalLabel": "Total",
+      "gets100": "mendapat 100%"
+    },
+    "pending": {
+      "title": "Memproses Pembayaran",
+      "subtitle": "Silakan selesaikan pembayaran di aplikasi pembayaran Anda. Kami menunggu konfirmasi...",
+      "pendingTitle": "Pembayaran Tertunda",
+      "timeoutMessage": "Verifikasi pembayaran habis waktu. Silakan periksa aplikasi pembayaran Anda.",
+      "completedNote": "Jika Anda sudah menyelesaikan pembayaran, mungkin perlu beberapa menit untuk diproses. Anda dapat menutup halaman ini.",
+      "reference": "Referensi",
+      "poweredBy": "Didukung oleh TIPSIO"
+    },
+    "success": {
+      "title": "Terima kasih! 🙌",
+      "subtitle": "Tip Anda telah berhasil dikirim.",
+      "amount": "Jumlah",
+      "to": "Kepada",
+      "theTeam": "Tim",
+      "message": "Dukungan Anda membantu kami menghargai staf dan menjaga standar layanan tetap tinggi. Kami sangat menghargainya.",
+      "leaveReview": "Tinggalkan ulasan di Google Maps",
+      "close": "Tutup",
+      "poweredBy": "Didukung oleh TIPSIO"
+    },
+    "error": {
+      "title": "Pembayaran tidak berhasil",
+      "message": "Terjadi kesalahan dan tip Anda tidak selesai. Ini bisa terjadi karena masalah jaringan atau bank.",
+      "tryAgain": "Coba lagi",
+      "backToAmount": "Kembali ke pilihan jumlah",
+      "reference": "Referensi",
+      "poweredBy": "Didukung oleh TIPSIO"
+    }
+  },
+  "staff": {
+    "login": {
+      "title": "Selamat datang di tip Anda",
+      "subtitle": "Lacak pendapatan dan riwayat pembayaran Anda di satu tempat.",
+      "phoneOrEmail": "Nomor telepon atau email",
+      "placeholder": "Masukkan kontak yang Anda berikan ke manajer.",
+      "getCode": "Dapatkan kode login",
+      "codeHint": "Kami akan mengirimkan kode 6 digit sekali pakai. Tidak perlu kata sandi.",
+      "enterCode": "Masukkan kode 6 digit yang kami kirim ke {contact}",
+      "login": "Masuk",
+      "resend": "Tidak mendapat kode? Kirim ulang."
+    },
+    "dashboard": {
+      "greeting": "Hai, {name}! 🤙",
+      "subtitle": "Begini perkembangan tip Anda.",
+      "currentPeriod": "Periode saat ini (belum dibayar)",
+      "tipsSince": "{count} tip sejak {date}",
+      "todayPerformance": "Performa hari ini",
+      "tipsReceived": "tip diterima",
+      "total": "total",
+      "lastPayouts": "Pembayaran terakhir",
+      "paid": "Dibayar",
+      "pending": "Tertunda",
+      "noPayoutsYet": "Belum ada pembayaran",
+      "seeFullHistory": "Lihat riwayat lengkap"
+    },
+    "history": {
+      "title": "Riwayat tip",
+      "subtitle": "Lihat bagaimana tip Anda bertambah selama berminggu-minggu dan pembayaran.",
+      "back": "Kembali",
+      "lastMonth": "Bulan lalu",
+      "last3Months": "3 bulan terakhir",
+      "last6Months": "6 bulan terakhir",
+      "customDates": "Tanggal kustom",
+      "totalTips": "Total tip",
+      "payoutStatus": "Status pembayaran",
+      "paidOn": "Dibayar pada {date}",
+      "pendingPayout": "Pembayaran tertunda",
+      "details": "Detail",
+      "noHistory": "Belum ada riwayat tip",
+      "date": "Tanggal",
+      "tips": "Tip",
+      "amount": "Jumlah"
+    }
+  },
+  "venue": {
+    "login": {
+      "title": "Tip tanpa tunai untuk venue modern Bali",
+      "subtitle": "Tingkatkan pendapatan staf, sederhanakan akuntansi tip, dan jaga motivasi tim Anda.",
+      "feature1": "Langsung ke akun Midtrans Anda",
+      "feature1Desc": "Tip langsung ke alur pembayaran Anda yang sudah ada.",
+      "feature2": "Aturan distribusi pintar",
+      "feature2Desc": "Atur tip personal atau pool dalam beberapa klik.",
+      "feature3": "Transparan untuk staf",
+      "feature3Desc": "Tim Anda melihat apa yang mereka peroleh dan kapan pembayaran terjadi.",
+      "email": "Email",
+      "password": "Kata Sandi",
+      "login": "Masuk",
+      "register": "Daftarkan venue baru",
+      "accountCreated": "Akun berhasil dibuat! Silakan masuk."
+    },
+    "register": {
+      "title": "Daftarkan Venue Anda",
+      "subtitle": "Mulai menerima tip digital dalam hitungan menit",
+      "step": "Langkah",
+      "step1Title": "Informasi Dasar",
+      "step1Subtitle": "Ceritakan tentang venue Anda",
+      "step2Title": "Hubungkan Midtrans",
+      "step2Subtitle": "Masukkan kredensial pembayaran Anda",
+      "step3Title": "Model Distribusi Tip",
+      "step3Subtitle": "Pilih bagaimana tip didistribusikan",
+      "venueName": "Nama Venue",
+      "venueNamePlaceholder": "Cafe Organic",
+      "email": "Email",
+      "password": "Kata Sandi",
+      "confirmPassword": "Konfirmasi Kata Sandi",
+      "clientKey": "Client Key",
+      "serverKey": "Server Key",
+      "merchantId": "Merchant ID",
+      "testConnection": "Verifikasi Akses",
+      "testing": "Memverifikasi...",
+      "connected": "Akses Terverifikasi",
+      "pooledMode": "Pool Tunggal",
+      "pooledModeDesc": "Semua tip masuk ke akun venue tanpa rincian staf",
+      "personalMode": "Tip Personal",
+      "personalModeDesc": "Tip didistribusikan di antara anggota tim",
+      "continue": "Lanjutkan",
+      "createAccount": "Buat Akun",
+      "creating": "Membuat akun...",
+      "haveAccount": "Sudah punya akun?",
+      "signIn": "Masuk"
+    },
+    "onboarding": {
+      "profile": "Profil",
+      "payments": "Pembayaran",
+      "distribution": "Distribusi",
+      "done": "Selesai",
+      "step": "Langkah",
+      "profileCreated": "Profil venue Anda telah dibuat. Mari atur pembayaran selanjutnya.",
+      "continueToPayments": "Lanjutkan ke Pembayaran",
+      "midtransInfo": "TIPSIO tidak menyimpan uang Anda. Semua tip langsung ke akun merchant Midtrans Anda.",
+      "merchantId": "Merchant ID",
+      "clientKey": "Client Key",
+      "serverKey": "Server Key",
+      "findKeys": "Di mana menemukan kunci ini di dashboard Midtrans?",
+      "testingConnection": "Menguji koneksi...",
+      "testConnection": "Uji Koneksi",
+      "chooseModel": "Pilih model yang sesuai dengan budaya tim Anda. Anda dapat mengubahnya nanti.",
+      "personalTipping": "Tip personal",
+      "personalTippingDesc": "Setiap anggota staf menyimpan tip dari kode QR pribadi mereka.",
+      "pooledTipping": "Tip pool (bersama)",
+      "pooledTippingDesc": "Semua tip masuk ke pool bersama dan dibagi rata di antara staf aktif.",
+      "continue": "Lanjutkan",
+      "readyTitle": "Anda siap menerima tip digital!",
+      "readyMessage": "Setelah tamu mulai scan dan membayar tip, Anda akan melihat semua data di dashboard.",
+      "goToDashboard": "Ke Dashboard"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Pantau tip digital dan pembayaran untuk tim Anda.",
+      "today": "Hari Ini",
+      "thisWeek": "Minggu ini",
+      "thisMonth": "Bulan ini",
+      "totalTips": "Total tip",
+      "transactions": "Transaksi",
+      "averageTip": "Rata-rata tip",
+      "activeStaff": "Staf aktif",
+      "pendingPayouts": "Pembayaran tertunda",
+      "pendingPayoutsDesc": "Anda memiliki pembayaran tertunda untuk minggu lalu.",
+      "goToPayouts": "Ke pembayaran",
+      "topPerformers": "Performa terbaik",
+      "tips": "tip",
+      "noTipsYet": "Belum ada tip periode ini",
+      "tipHistory": "Riwayat tip",
+      "transactionsInPeriod": "{count} transaksi dalam periode ini",
+      "addStaff": "Tambah staf",
+      "addStaffDesc": "Tambahkan setidaknya satu anggota staf untuk memulai",
+      "add": "Tambah",
+      "printQR": "Cetak kode QR",
+      "printQRDesc": "Unduh dan cetak kode QR untuk staf dan meja.",
+      "manageStaff": "Kelola staf",
+      "manageStaffDesc": "Edit tim dan peran Anda.",
+      "distributionRules": "Aturan distribusi",
+      "distributionRulesDesc": "Sesuaikan bagaimana tip dibagikan."
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "staff": "Staf",
+      "qrCodes": "Kode QR",
+      "menu": "Menu",
+      "payouts": "Pembayaran",
+      "settings": "Pengaturan",
+      "profile": "Profil",
+      "signOut": "Keluar"
+    },
+    "payouts": {
+      "title": "Pembayaran",
+      "subtitle": "Tandai pembayaran ke staf",
+      "toPay": "Untuk dibayar",
+      "staffWithBalance": "Staf dengan saldo",
+      "warning": "TIPSIO tidak mentransfer uang ke rekening staf",
+      "warningDesc": "Pertama bayar staf Anda secara tunai atau transfer, lalu tandai pembayaran di sini.",
+      "accumulatedTips": "Tip terkumpul",
+      "noStaff": "Tidak ada staf",
+      "paid": "Dibayar",
+      "payAll": "Bayar semua"
+    },
+    "staff": {
+      "title": "Manajemen Staf",
+      "subtitle": "Tambah dan kelola anggota tim Anda",
+      "addStaff": "+ Tambah Staf",
+      "addStaffMember": "Tambah Anggota Staf",
+      "addStaffDesc": "Tambahkan anggota tim baru. Kode QR pribadi akan dibuat secara otomatis.",
+      "displayName": "Nama Tampilan",
+      "displayNamePlaceholder": "Nama yang ditampilkan ke tamu",
+      "fullName": "Nama Lengkap",
+      "fullNamePlaceholder": "Untuk catatan internal",
+      "role": "Peran",
+      "selectRole": "Pilih peran",
+      "photo": "Foto (opsional)",
+      "addPhoto": "Tambah",
+      "photoHint": "JPEG, PNG, WebP atau GIF hingga 5MB",
+      "uploading": "Mengunggah foto...",
+      "participatesInPool": "Berpartisipasi dalam pool tip",
+      "adding": "Menambahkan...",
+      "addStaffButton": "Tambah Anggota Staf",
+      "noStaffYet": "Belum ada anggota staf",
+      "noStaffDesc": "Tambahkan anggota tim pertama Anda untuk mulai membuat kode QR dan menerima tip.",
+      "addFirstStaff": "+ Tambah Anggota Staf Pertama",
+      "active": "Aktif",
+      "inactive": "Tidak Aktif",
+      "activate": "Aktifkan",
+      "deactivate": "Nonaktifkan",
+      "deleteConfirm": "Hapus anggota staf {name}?",
+      "tipsCount": "tip",
+      "totalEarned": "Total diperoleh",
+      "balance": "Saldo",
+      "noTipsYet": "Belum ada tip",
+      "roles": {
+        "waiter": "Pelayan",
+        "bartender": "Bartender",
+        "barista": "Barista",
+        "hostess": "Hostess",
+        "chef": "Chef",
+        "administrator": "Administrator",
+        "other": "Lainnya"
+      }
+    },
+    "qr": {
+      "title": "Kode QR Venue",
+      "subtitle": "Unduh dan tempatkan kode QR untuk menerima tip",
+      "yourQr": "Kode QR Anda",
+      "yourQrDesc": "Tamu scan kode ini untuk meninggalkan tip",
+      "venueQr": "QR Venue",
+      "open": "Buka",
+      "qrWillBeCreated": "Kode QR akan dibuat secara otomatis setelah setup venue selesai",
+      "printMaterials": "Materi Cetak",
+      "printMaterialsDesc": "Desain siap pakai untuk meja, counter atau pintu masuk",
+      "horizontal": "Horizontal",
+      "vertical": "Vertikal",
+      "failedToLoad": "Gagal memuat kode QR",
+      "failedToDownload": "Gagal mengunduh kode QR",
+      "failedToDownloadMaterial": "Gagal mengunduh materi"
+    },
+    "settings": {
+      "title": "Pengaturan",
+      "subtitle": "Konfigurasi venue dan pengaturan pembayaran Anda",
+      "midtrans": {
+        "title": "Integrasi Pembayaran (Midtrans)",
+        "subtitle": "Hubungkan akun Midtrans Anda untuk menerima pembayaran",
+        "connected": "Terhubung",
+        "isConnected": "Midtrans terhubung",
+        "canAccept": "Venue Anda sekarang dapat menerima tip digital via GoPay, OVO, kartu, dan QRIS.",
+        "notConnected": "Midtrans tidak terhubung",
+        "needToConnect": "Anda perlu menghubungkan Midtrans untuk mulai menerima tip. Dapatkan kunci API Anda dari",
+        "merchantId": "Merchant ID",
+        "serverKey": "Server Key",
+        "clientKey": "Client Key",
+        "connect": "Hubungkan Midtrans",
+        "testing": "Menguji koneksi..."
+      },
+      "distribution": {
+        "title": "Model Distribusi Tip",
+        "subtitle": "Pilih bagaimana tip dari kode QR meja/venue didistribusikan",
+        "personal": "Tip Personal",
+        "personalDesc": "Setiap anggota staf menyimpan tip dari kode QR pribadi mereka.",
+        "pooled": "Tip Pool (Bersama)",
+        "pooledDesc": "Semua tip masuk ke pool bersama dan dibagi rata."
+      },
+      "saving": "Menyimpan...",
+      "saved": "Tersimpan!",
+      "saveSettings": "Simpan Pengaturan"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Dashboard Admin",
+      "subtitle": "Gambaran umum dan manajemen platform",
+      "totalVenues": "Total venue",
+      "active": "Aktif",
+      "allTimeTxns": "Transaksi sepanjang waktu",
+      "totalVolume": "Total volume",
+      "today": "Hari Ini",
+      "failedToday": "Gagal hari ini",
+      "manageVenues": "Kelola Venue",
+      "manageVenuesDesc": "Lihat, edit, dan blokir venue di platform",
+      "transactionLogs": "Log Transaksi",
+      "transactionLogsDesc": "Pantau transaksi dan debug masalah pembayaran",
+      "platformCommissions": "Komisi Platform",
+      "platformCommissionsDesc": "Laporan pendapatan dan tagihan per venue (biaya 5%)"
+    },
+    "venues": {
+      "title": "Venue",
+      "subtitle": "Kelola semua venue terdaftar di platform",
+      "searchPlaceholder": "Cari berdasarkan nama atau area...",
+      "allVenues": "Semua venue",
+      "live": "Live",
+      "testMode": "Mode test",
+      "blocked": "Diblokir",
+      "venue": "Venue",
+      "midtrans": "Midtrans",
+      "totalVolume": "Total volume",
+      "staffCount": "Staf",
+      "lastActivity": "Aktivitas terakhir",
+      "actions": "Aksi",
+      "viewDetails": "Lihat detail",
+      "block": "Blokir",
+      "unblock": "Buka blokir",
+      "liveStatus": "Live",
+      "testStatus": "Test",
+      "notConnected": "Tidak terhubung"
+    },
+    "transactions": {
+      "title": "Log Transaksi",
+      "subtitle": "Pantau semua transaksi tip di seluruh platform",
+      "searchPlaceholder": "Cari berdasarkan order ID atau venue...",
+      "allMidtrans": "Semua Midtrans",
+      "allTipsio": "Semua TIPSIO",
+      "totalToday": "Total hari ini",
+      "successful": "Berhasil",
+      "pending": "Tertunda",
+      "failed": "Gagal",
+      "time": "Waktu",
+      "venue": "Venue",
+      "amount": "Jumlah",
+      "midtransStatus": "Midtrans",
+      "tipsioStatus": "TIPSIO",
+      "action": "Aksi",
+      "viewDetails": "Lihat detail",
+      "transactionDetails": "Detail Transaksi",
+      "orderId": "Order ID",
+      "staff": "Staf",
+      "pool": "Pool",
+      "paymentMethod": "Metode Pembayaran",
+      "errorMessage": "Pesan Error",
+      "capture": "capture",
+      "deny": "deny",
+      "cancel": "cancel",
+      "expire": "expire",
+      "recorded": "recorded"
+    }
+  }
+}

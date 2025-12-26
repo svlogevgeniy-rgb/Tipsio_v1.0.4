@@ -23,7 +23,8 @@
     "db:init": "npm run db:up && npm run db:wait && npm run db:push && npm run db:seed",
     "db:reset": "npm run db:up && npm run db:wait && npm run db:reset:schema && npm run db:seed",
     "init-db": "npm run db:init",
-    "reset-db": "npm run db:reset"
+    "reset-db": "npm run db:reset",
+    "i18n:validate": "npx tsx scripts/validate-translations.ts"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"

@@ -3,16 +3,17 @@
     "nav": {
       "support": "Support",
       "login": "Login",
-      "cta": "Connect venue"
+      "cta": "Connect"
     },
     "hero": {
       "badge": "Works in Bali · 0% fee",
-      "headline": "Don't lose tips because",
-      "headlineHighlight": "guests don't have cash",
-      "subheadline": "Tourists prefer paying by phone. Let them tip via QRIS, GoPay or card in 7 seconds. Money goes directly to your Midtrans account.",
+      "headlinePrefix": "Digital",
+      "headlineItalic": "guest experience",
+      "headlineSuffix": "platform where",
+      "headlineHighlight": "people work with\u00A0people",
+      "subheadline": "Free to connect. More convenient for your guests, easier for your staff.",
       "cta": "Launch free in 1 hour",
-      "trust1": "Direct payouts (no middlemen)",
-      "trust2": "No app needed for guests"
+      "imageAlt": "TIPSIO digital tipping platform interface showing staff and payment options"
     },
     "dashboard": {
       "today": "Today",
@@ -28,12 +29,30 @@
       "staff": "staff"
     },
     "logoBar": {
-      "title": "Guests pay the way they prefer"
+      "title": "— reliable partner",
+      "description": "Guests pay the way they prefer"
+    },
+    "products": {
+      "sectionTitle": "Our products",
+      "items": {
+        "tipsReviews": {
+          "title": "Tips and reviews",
+          "desc": "Connect the platform for staff"
+        },
+        "digitalMenu": {
+          "title": "Digital menu",
+          "desc": "Show dish photos and automate orders"
+        },
+        "preorders": {
+          "title": "Pre-orders",
+          "desc": "Create links for pre-order payments"
+        }
+      }
     },
     "problem": {
       "title": "Cash is disappearing year by year",
       "desc1": "Your guests want to thank the service but feel awkward when their wallet is empty. Without a convenient way to tip, you lose a significant part of staff income.",
-      "desc2": "turns \"Thanks, but I only have a card\" into real money for your team. No terminals needed.",
+      "desc2": "turns \"Thanks, but I only have a card\" into real money for your team.",
       "phoneCta": "Pay with Google Pay",
       "phoneSecure": "Secure payment via Midtrans",
       "phoneSayThanks": "Say thanks!",
@@ -57,7 +76,7 @@
       "step2": {
         "label": "Fast",
         "title": "QR codes everywhere",
-        "desc": "Place QRs on tables, in bill folders or on badges. Guest scans → picks amount → pays in 2 taps."
+        "desc": "Place QRs on tables, in bill folders or on badges. Guest scans → picks amount → pays."
       },
       "step3": {
         "label": "Fair",
@@ -113,9 +132,11 @@
       }
     },
     "finalCta": {
-      "title": "Bring tips back to your venue today",
+      "titlePrefix": "Bring",
+      "titleItalic": "tips",
+      "titleSuffix": "back to your venue today",
       "subtitle": "Setup takes less than an hour. We'll help at every step via WhatsApp.",
-      "cta": "Connect venue"
+      "cta": "Connect"
     },
     "footer": {
       "whatsapp": "WhatsApp Support",
@@ -492,7 +513,8 @@
       "pendingTitle": "Payment Pending",
       "timeoutMessage": "Payment verification timed out. Please check your payment app.",
       "completedNote": "If you completed the payment, it may take a few minutes to process. You can close this page.",
-      "reference": "Reference"
+      "reference": "Reference",
+      "poweredBy": "Powered by TIPSIO"
     },
     "success": {
       "title": "Thank you! 🙌",
@@ -502,13 +524,16 @@
       "theTeam": "The Team",
       "message": "Your support helps us reward our staff and keep service standards high. We really appreciate it.",
       "leaveReview": "Leave a review on Google Maps",
-      "close": "Close"
+      "close": "Close",
+      "poweredBy": "Powered by TIPSIO"
     },
     "error": {
       "title": "Payment didn't go through",
       "message": "Something went wrong and your tip was not completed. This can happen due to network or bank issues.",
       "tryAgain": "Try again",
-      "backToAmount": "Back to amount selection"
+      "backToAmount": "Back to amount selection",
+      "reference": "Reference",
+      "poweredBy": "Powered by TIPSIO"
     }
   },
   "staff": {

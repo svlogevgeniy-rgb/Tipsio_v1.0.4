@@ -2,98 +2,83 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-import { NextResponse } from 'next/server'
-import { requireAdmin } from '@/lib/rbac'
-import prisma from '@/lib/prisma'
+import { NextRequest } from "next/server";
+import { handleApiError, successResponse } from "@/lib/api/error-handler";
+import { requireAuth, requireRole } from "@/lib/api/middleware";
+import prisma from "@/lib/prisma";
 
-export async function GET(request: Request) {
-  // Check admin role
-  const { authorized, error } = await requireAdmin()
-  if (!authorized) return error
-  
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const midtransStatus = searchParams.get('midtransStatus')
-    const tipsioStatus = searchParams.get('tipsioStatus')
-    const venueId = searchParams.get('venueId')
-    const limit = parseInt(searchParams.get('limit') || '100')
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
+
+    // Check admin role
+    const roleResult = requireRole(session, ['ADMIN']);
+    if ('error' in roleResult) return roleResult.error;
+
+    const { searchParams } = new URL(request.url);
+    const search = searchParams.get("search") || "";
+    const midtransFilter = searchParams.get("midtransStatus") || "all";
+    const tipsioFilter = searchParams.get("tipsioStatus") || "all";
+    const limit = parseInt(searchParams.get("limit") || "100");
+
+    // Build where clause
+    const where: any = {};
     
-    const where: Record<string, unknown> = {}
-    
-    if (tipsioStatus && tipsioStatus !== 'all') {
-      where.status = tipsioStatus
+    if (search) {
+      where.OR = [
+        { orderId: { contains: search, mode: 'insensitive' } },
+        { venue: { name: { contains: search, mode: 'insensitive' } } },
+      ];
     }
-    
-    if (venueId) {
-      where.venueId = venueId
+
+    if (midtransFilter !== 'all') {
+      where.midtransStatus = midtransFilter;
     }
-    
-    const tips = await prisma.tip.findMany({
+
+    if (tipsioFilter !== 'all') {
+      where.status = tipsioFilter === 'RECORDED' ? 'PAID' : tipsioFilter;
+    }
+
+    // Fetch transactions
+    const transactions = await prisma.tip.findMany({
       where,
       include: {
-        venue: { select: { name: true } },
-        staff: { select: { displayName: true } }
-      },
-      orderBy: { createdAt: 'desc' },
-      take: limit
-    })
-    
-    // Get webhook logs for midtrans status
-    const transactions = await Promise.all(
-      tips.map(async (tip) => {
-        // WebhookLog doesn't have orderId, so we'll use tip status directly
-        const webhookLog = await prisma.webhookLog.findFirst({
-          where: { 
-            payload: {
-              path: ['order_id'],
-              equals: tip.midtransOrderId
-            }
+        venue: {
+          select: {
+            name: true,
           },
-          orderBy: { createdAt: 'desc' }
-        })
-        
-        // Parse midtrans status from webhook payload
-        let midtransStatusValue = 'pending'
-        if (webhookLog?.payload) {
-          try {
-            const payload = typeof webhookLog.payload === 'string' 
-              ? JSON.parse(webhookLog.payload) 
-              : webhookLog.payload
-            midtransStatusValue = payload.transaction_status || 'pending'
-          } catch {
-            // Ignore parse errors
-          }
-        }
-        
-        // Filter by midtrans status if specified
-        if (midtransStatus && midtransStatus !== 'all' && midtransStatusValue !== midtransStatus) {
-          return null
-        }
-        
-        return {
-          id: tip.id,
-          orderId: tip.midtransOrderId,
-          venue: tip.venue.name,
-          amount: tip.amount,
-          midtransStatus: midtransStatusValue,
-          tipsioStatus: tip.status,
-          paymentMethod: tip.midtransPaymentType || 'Unknown',
-          staffName: tip.staff?.displayName || null,
-          createdAt: tip.createdAt.toISOString(),
-          errorMessage: tip.status === 'FAILED' ? 'Payment failed' : undefined
-        }
-      })
-    )
-    
-    // Filter out nulls (from midtrans status filter)
-    const filteredTransactions = transactions.filter(t => t !== null)
-    
-    return NextResponse.json(filteredTransactions)
+        },
+        staff: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: limit,
+    });
+
+    // Transform data
+    const transactionsData = transactions.map((tip) => ({
+      id: tip.id,
+      orderId: tip.orderId,
+      venue: tip.venue.name,
+      amount: tip.netAmount,
+      midtransStatus: tip.midtransStatus || 'pending',
+      tipsioStatus: tip.status === 'PAID' ? 'RECORDED' : tip.status === 'PENDING' ? 'PENDING' : 'FAILED',
+      paymentMethod: tip.paymentMethod || 'Unknown',
+      staffName: tip.staff?.name || null,
+      createdAt: tip.createdAt.toISOString(),
+      errorMessage: tip.status === 'FAILED' ? 'Payment failed' : undefined,
+    }));
+
+    return successResponse(transactionsData);
   } catch (error) {
-    console.error('Error fetching transactions:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch transactions' },
-      { status: 500 }
-    )
+    return handleApiError(error, "Admin transactions");
   }
 }

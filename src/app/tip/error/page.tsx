@@ -51,13 +51,13 @@ export default function TipErrorPage() {
         </div>
 
         {orderId && (
-          <p className="text-xs text-slate-600 mt-8">Reference: {orderId}</p>
+          <p className="text-xs text-slate-600 mt-8">{t("reference")}: {orderId}</p>
         )}
       </main>
 
       {/* Footer */}
       <footer className="p-4 text-center">
-        <p className="text-[10px] text-slate-600 text-gradient">Powered by TIPSIO</p>
+        <p className="text-[10px] text-slate-600 text-gradient">{t("poweredBy")}</p>
       </footer>
     </div>
   );

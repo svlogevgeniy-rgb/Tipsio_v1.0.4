@@ -17,18 +17,16 @@ import {
   LogOut,
   Menu,
   X,
-  UtensilsCrossed,
   UserCircle,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-
-type DistributionMode = "POOLED" | "PERSONAL";
+import type { DistributionMode } from "@/types/distribution";
 
 interface VenueData {
   distributionMode: DistributionMode;
 }
 
-type NavKey = "dashboard" | "staff" | "menu" | "qrCodes" | "payouts" | "settings" | "profile";
+type NavKey = "dashboard" | "staff" | "qrCodes" | "payouts" | "settings" | "profile";
 
 interface NavItem {
   href: string;
@@ -62,16 +60,18 @@ export default function VenueLayout({ children }: { children: React.ReactNode })
   const allNavItems: NavItem[] = [
     { href: "/venue/dashboard", labelKey: "dashboard", icon: LayoutDashboard, showFor: ["POOLED", "PERSONAL"] },
     { href: "/venue/staff", labelKey: "staff", icon: Users, showFor: ["PERSONAL"] },
-    { href: "/venue/menu", labelKey: "menu", icon: UtensilsCrossed, showFor: ["POOLED", "PERSONAL"] },
     { href: "/venue/qr-codes", labelKey: "qrCodes", icon: QrCode, showFor: ["POOLED", "PERSONAL"] },
     { href: "/venue/payouts", labelKey: "payouts", icon: Wallet, showFor: ["PERSONAL"] },
     { href: "/venue/settings", labelKey: "settings", icon: Settings, showFor: ["POOLED", "PERSONAL"] },
     { href: "/venue/profile", labelKey: "profile", icon: UserCircle, showFor: ["POOLED", "PERSONAL"] },
   ];
 
+  const currentDistributionMode: DistributionMode =
+    venueData?.distributionMode ?? "PERSONAL";
+
   // Filter nav items based on distribution mode
   const navItems = allNavItems.filter((item) =>
-    item.showFor.includes(venueData?.distributionMode || "PERSONAL")
+    item.showFor.includes(currentDistributionMode)
   );
 
   return (

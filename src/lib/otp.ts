@@ -18,7 +18,11 @@ export function generateOtpCode(): string {
 /**
  * Create and store OTP code for phone or email
  */
-export async function createOtp(params: { phone?: string; email?: string }) {
+export async function createOtp(params: { phone?: string; email?: string }): Promise<{
+  code: string;
+  expiresAt: Date;
+  id: string;
+}> {
   const { phone, email } = params;
 
   if (!phone && !email) {

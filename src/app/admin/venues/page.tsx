@@ -10,6 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Badge } from '@/components/ui/badge'
 import { AuroraBackground } from '@/components/layout/aurora-background'
 import { useTranslations } from '@/i18n/client'
+import { formatCurrencyIDRIntl } from '@/lib/i18n/formatters'
 
 interface Venue {
   id: string
@@ -25,90 +26,55 @@ interface Venue {
 export default function AdminVenuesPage() {
   const t = useTranslations('admin.venues')
   const [venues, setVenues] = useState<Venue[]>([])
-  const [, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
 
   useEffect(() => {
     fetchVenues()
-  }, [])
+  }, [search, statusFilter])
 
   const fetchVenues = async () => {
-    // Mock data for development
-    setVenues([
-      {
-        id: '1',
-        name: 'Cafe Organic Canggu',
-        area: 'Canggu',
-        midtransStatus: 'LIVE',
-        status: 'ACTIVE',
-        totalVolume: 45000000,
-        lastActivity: '2 mins ago',
-        staffCount: 8
-      },
-      {
-        id: '2',
-        name: 'Potato Head Beach Club',
-        area: 'Seminyak',
-        midtransStatus: 'LIVE',
-        status: 'ACTIVE',
-        totalVolume: 128500000,
-        lastActivity: '5 mins ago',
-        staffCount: 24
-      },
-      {
-        id: '3',
-        name: 'Revolver Espresso',
-        area: 'Seminyak',
-        midtransStatus: 'TEST',
-        status: 'ACTIVE',
-        totalVolume: 0,
-        lastActivity: '1 hour ago',
-        staffCount: 4
-      },
-      {
-        id: '4',
-        name: 'La Brisa',
-        area: 'Canggu',
-        midtransStatus: 'LIVE',
-        status: 'BLOCKED',
-        totalVolume: 67200000,
-        lastActivity: '3 days ago',
-        staffCount: 15
-      },
-      {
-        id: '5',
-        name: 'Milk & Madu',
-        area: 'Ubud',
-        midtransStatus: 'NOT_CONNECTED',
-        status: 'ACTIVE',
-        totalVolume: 0,
-        lastActivity: 'Never',
-        staffCount: 0
+    setLoading(true)
+    try {
+      const params = new URLSearchParams()
+      if (search) params.append('search', search)
+      if (statusFilter !== 'all') params.append('status', statusFilter)
+      
+      const res = await fetch(`/api/admin/venues?${params.toString()}`)
+      if (res.ok) {
+        const data = await res.json()
+        setVenues(data)
       }
-    ])
-    setLoading(false)
+    } catch (error) {
+      console.error('Failed to fetch venues:', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
 
   const handleBlock = async (venueId: string) => {
-    setVenues(venues.map(v => 
-      v.id === venueId ? { ...v, status: v.status === 'BLOCKED' ? 'ACTIVE' : 'BLOCKED' } : v
-    ))
-  }
+    const venue = venues.find(v => v.id === venueId)
+    if (!venue) return
 
-  const filteredVenues = venues.filter(venue => {
-    const matchesSearch = venue.name.toLowerCase().includes(search.toLowerCase()) ||
-                         venue.area.toLowerCase().includes(search.toLowerCase())
-    const matchesStatus = statusFilter === 'all' || 
-                         (statusFilter === 'live' && venue.midtransStatus === 'LIVE' && venue.status === 'ACTIVE') ||
-                         (statusFilter === 'test' && venue.midtransStatus === 'TEST') ||
-                         (statusFilter === 'blocked' && venue.status === 'BLOCKED')
-    return matchesSearch && matchesStatus
-  })
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('id-ID', { style: 'decimal' }).format(amount)
+    const newStatus = venue.status === 'BLOCKED' ? 'ACTIVE' : 'BLOCKED'
+    
+    try {
+      const res = await fetch('/api/admin/venues', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ venueId, status: newStatus })
+      })
+      
+      if (res.ok) {
+        setVenues(venues.map(v => 
+          v.id === venueId ? { ...v, status: newStatus } : v
+        ))
+      }
+    } catch (error) {
+      console.error('Failed to update venue status:', error)
+    }
   }
 
   const getMidtransStatusBadge = (status: string) => {
@@ -222,16 +188,29 @@ export default function AdminVenuesPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredVenues.map((venue, index) => (
-                    <motion.tr
-                      key={venue.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.05 * index }}
-                      className={`border-b border-white/5 hover:bg-white/5 transition-colors ${
-                        venue.status === 'BLOCKED' ? 'opacity-60' : ''
-                      }`}
-                    >
+                  {loading ? (
+                    <tr>
+                      <td colSpan={6} className="p-8 text-center text-muted-foreground">
+                        Loading...
+                      </td>
+                    </tr>
+                  ) : venues.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="p-8 text-center text-muted-foreground">
+                        No venues found
+                      </td>
+                    </tr>
+                  ) : (
+                    venues.map((venue, index) => (
+                      <motion.tr
+                        key={venue.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.05 * index }}
+                        className={`border-b border-white/5 hover:bg-white/5 transition-colors ${
+                          venue.status === 'BLOCKED' ? 'opacity-60' : ''
+                        }`}
+                      >
                       <td className="p-4">
                         <div>
                           <p className="font-medium text-white">{venue.name}</p>
@@ -240,7 +219,9 @@ export default function AdminVenuesPage() {
                       </td>
                       <td className="p-4">{getMidtransStatusBadge(venue.midtransStatus)}</td>
                       <td className="p-4">
-                        <span className="text-primary font-medium">Rp {formatCurrency(venue.totalVolume)}</span>
+                        <span className="text-primary font-medium">
+                          {formatCurrencyIDRIntl(venue.totalVolume)}
+                        </span>
                       </td>
                       <td className="p-4 text-white">{venue.staffCount}</td>
                       <td className="p-4 text-muted-foreground">{venue.lastActivity}</td>
@@ -276,7 +257,8 @@ export default function AdminVenuesPage() {
                         </DropdownMenu>
                       </td>
                     </motion.tr>
-                  ))}
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

@@ -1,9 +1,7 @@
-/**
- * Tip page business logic
- * Determines when to show staff selection
- */
+import { isPersonalMode, type DistributionMode } from "@/types/distribution";
 
-export type DistributionMode = "POOLED" | "PERSONAL";
+export type { DistributionMode } from "@/types/distribution";
+
 export type QrType = "PERSONAL" | "TABLE" | "VENUE";
 
 export interface TipPageConfig {
@@ -34,7 +32,7 @@ export function shouldShowStaffSelection(config: TipPageConfig): boolean {
   }
 
   // PERSONAL distribution mode always shows staff selection
-  if (config.distributionMode === "PERSONAL") {
+  if (isPersonalMode(config.distributionMode)) {
     return true;
   }
 

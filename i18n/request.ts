@@ -1,9 +1,23 @@
 import { getRequestConfig } from 'next-intl/server'
 import { cookies, headers } from 'next/headers'
 
-export const locales = ['en', 'ru'] as const
+export const locales = ['en', 'ru', 'id'] as const
 export type Locale = (typeof locales)[number]
 export const defaultLocale: Locale = 'en'
+
+// Human-readable locale names for UI
+export const localeNames: Record<Locale, string> = {
+  en: 'English',
+  ru: 'Русский',
+  id: 'Bahasa Indonesia'
+}
+
+// Fallback chain for missing translations
+export const localeFallbacks: Record<Locale, Locale[]> = {
+  en: [],
+  ru: ['en'],
+  id: ['en']
+}
 
 export default getRequestConfig(async () => {
   // Try to get locale from cookie first

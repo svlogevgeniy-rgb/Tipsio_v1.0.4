@@ -13,8 +13,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Loader2, CheckCircle2, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { useTranslations } from "@/i18n/client";
-
-type DistributionMode = "PERSONAL" | "POOLED";
+import type { DistributionMode } from "@/types/distribution";
 
 export default function VenueSettingsPage() {
   const [venueId, setVenueId] = useState<string | null>(null);

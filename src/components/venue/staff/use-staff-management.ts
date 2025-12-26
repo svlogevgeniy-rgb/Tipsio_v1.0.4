@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Staff, StaffForm } from './schema';
 
 export function useStaffManagement() {
   const [staff, setStaff] = useState<Staff[]>([]);
   const [venueId, setVenueId] = useState<string | null>(null);
   const [isPageLoading, setIsPageLoading] = useState(true);
+  const isMountedRef = useRef(true);
 
   const fetchStaff = useCallback(async () => {
     try {
@@ -12,22 +13,34 @@ export function useStaffManagement() {
       if (!dashRes.ok) throw new Error('Failed to load venue');
       const dashData = await dashRes.json();
 
-      if (dashData.venue?.id) {
+      if (dashData.venue?.id && isMountedRef.current) {
         setVenueId(dashData.venue.id);
         const staffRes = await fetch(`/api/staff?venueId=${dashData.venue.id}`);
         if (staffRes.ok) {
           const staffData = await staffRes.json();
-          setStaff(staffData.staff || []);
+          if (isMountedRef.current) {
+            setStaff(staffData.staff || []);
+          }
         }
       }
+    } catch (error) {
+      // Silently handle errors - component will show empty state
+      console.error('Failed to fetch staff:', error);
     } finally {
-      setIsPageLoading(false);
+      if (isMountedRef.current) {
+        setIsPageLoading(false);
+      }
     }
   }, []);
 
   useEffect(() => {
+    isMountedRef.current = true;
     fetchStaff();
-  }, [fetchStaff]);
+
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const addStaff = useCallback(
     async (data: StaffForm, avatarFile: File | null) => {
@@ -65,7 +78,9 @@ export function useStaffManagement() {
         throw new Error(result.message || 'Failed to add staff');
       }
 
-      setStaff((prev) => [result.staff, ...prev]);
+      if (isMountedRef.current) {
+        setStaff((prev) => [result.staff, ...prev]);
+      }
     },
     [venueId],
   );
@@ -79,9 +94,11 @@ export function useStaffManagement() {
     });
 
     if (response.ok) {
-      setStaff((prev) =>
-        prev.map((s) => (s.id === staffMember.id ? { ...s, status: newStatus } : s)),
-      );
+      if (isMountedRef.current) {
+        setStaff((prev) =>
+          prev.map((s) => (s.id === staffMember.id ? { ...s, status: newStatus } : s)),
+        );
+      }
     } else {
       throw new Error('Failed to update status');
     }
@@ -93,7 +110,9 @@ export function useStaffManagement() {
     });
 
     if (response.ok) {
-      setStaff((prev) => prev.filter((s) => s.id !== staffMember.id));
+      if (isMountedRef.current) {
+        setStaff((prev) => prev.filter((s) => s.id !== staffMember.id));
+      }
     } else {
       throw new Error('Failed to delete staff');
     }

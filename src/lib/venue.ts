@@ -1,8 +1,6 @@
-/**
- * Venue-related business logic
- */
+import { isPooledMode, type DistributionMode } from "@/types/distribution";
 
-export type DistributionMode = "POOLED" | "PERSONAL";
+export type { DistributionMode } from "@/types/distribution";
 
 export interface VenueCreationData {
   name: string;
@@ -20,7 +18,7 @@ export interface QrCode {
  * For POOLED mode, a venue-level QR is automatically created
  */
 export function shouldAutoGenerateVenueQr(distributionMode: DistributionMode): boolean {
-  return distributionMode === "POOLED";
+  return isPooledMode(distributionMode);
 }
 
 /**
@@ -41,7 +39,7 @@ export function validatePooledVenueHasQr(
   distributionMode: DistributionMode,
   qrCodes: QrCode[]
 ): boolean {
-  if (distributionMode !== "POOLED") {
+  if (!isPooledMode(distributionMode)) {
     return true; // Not applicable for PERSONAL mode
   }
   return qrCodes.some(qr => qr.type === "VENUE");

@@ -4,15 +4,16 @@ export const revalidate = 0;
 
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
+import { handleApiError, successResponse, validationError } from '@/lib/api/error-handler';
+import { getVenueIdFromQuery, requireAuth, requireVenueAccess } from '@/lib/api/middleware';
+import { STAFF_ROLES, type StaffRole } from '@/lib/constants';
 import prisma from '@/lib/prisma';
 import { generateShortCode } from '@/lib/qr';
-import { requireAuth, requireVenueAccess, getVenueIdFromQuery } from '@/lib/api/middleware';
-import { handleApiError, validationError, successResponse } from '@/lib/api/error-handler';
 
 const createStaffSchema = z.object({
   displayName: z.string().min(1, 'Display name is required'),
   fullName: z.string().optional(),
-  role: z.enum(['WAITER', 'BARTENDER', 'BARISTA', 'HOSTESS', 'CHEF', 'ADMINISTRATOR', 'OTHER']),
+  role: z.enum(STAFF_ROLES),
   phone: z.string().optional(),
   email: z.string().email().optional(),
   participatesInPool: z.boolean().default(true),
@@ -155,7 +156,7 @@ export async function POST(request: NextRequest) {
         data: {
           displayName: restData.displayName,
           fullName: restData.fullName,
-          role: restData.role as 'WAITER' | 'BARTENDER' | 'BARISTA' | 'HOSTESS' | 'OTHER',
+          role: restData.role as StaffRole,
           participatesInPool: restData.participatesInPool,
           avatarUrl: restData.avatarUrl,
           venue: { connect: { id: venueId } },

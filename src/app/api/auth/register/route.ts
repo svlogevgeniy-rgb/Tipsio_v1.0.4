@@ -8,13 +8,14 @@ import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
 import { encryptKey } from "@/lib/midtrans";
 import { generateShortCode } from "@/lib/qr";
+import { DISTRIBUTION_MODE_VALUES, isPooledMode } from "@/types/distribution";
 
 const registerSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   venueName: z.string().min(2, "Venue name must be at least 2 characters"),
   venueType: z.enum(["RESTAURANT", "CAFE", "BAR", "COFFEE_SHOP", "OTHER"]),
-  distributionMode: z.enum(["POOLED", "PERSONAL"]).optional(),
+  distributionMode: z.enum(DISTRIBUTION_MODE_VALUES).optional(),
   midtrans: z.object({
     clientKey: z.string(),
     serverKey: z.string(),
@@ -82,7 +83,7 @@ export async function POST(request: NextRequest) {
       });
 
       // Auto-generate venue QR for POOLED mode
-      if (distributionMode === "POOLED") {
+      if (isPooledMode(distributionMode)) {
         await tx.qrCode.create({
           data: {
             venueId: venue.id,

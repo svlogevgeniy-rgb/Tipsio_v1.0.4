@@ -1,9 +1,10 @@
 import { z } from 'zod';
+import { STAFF_ROLES } from '@/lib/constants';
 
 export const staffSchema = z.object({
   displayName: z.string().min(1, 'Display name is required'),
   fullName: z.string().optional(),
-  role: z.enum(['WAITER', 'BARTENDER', 'BARISTA', 'HOSTESS', 'CHEF', 'ADMINISTRATOR', 'OTHER']),
+  role: z.enum(STAFF_ROLES),
   avatarUrl: z.string().optional(),
 });
 

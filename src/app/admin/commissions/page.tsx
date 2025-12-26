@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { AuroraBackground } from "@/components/layout/aurora-background";
 import { Loader2, DollarSign, Building2, ArrowLeft } from "lucide-react";
+import { formatCurrencyIDRIntl } from "@/lib/i18n/formatters";
 import Link from "next/link";
 
 interface VenueCommission {
@@ -31,15 +32,6 @@ interface CommissionReport {
 }
 
 const PLATFORM_FEE_PERCENT = 5;
-
-function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
 
 // Generate available periods (last 12 weeks)
 function getAvailablePeriods() {
@@ -204,7 +196,7 @@ export default function AdminCommissionsPage() {
                     <span className="text-sm">Total Tips Volume</span>
                   </div>
                   <div className="text-2xl font-bold text-white">
-                    {formatCurrency(data.totalTips)}
+                    {formatCurrencyIDRIntl(data.totalTips)}
                   </div>
                 </Card>
 
@@ -214,7 +206,7 @@ export default function AdminCommissionsPage() {
                     <span className="text-sm">Platform Revenue (5%)</span>
                   </div>
                   <div className="text-2xl font-bold text-primary">
-                    {formatCurrency(data.totalPlatformFee)}
+                    {formatCurrencyIDRIntl(data.totalPlatformFee)}
                   </div>
                 </Card>
 
@@ -262,10 +254,10 @@ export default function AdminCommissionsPage() {
                               {venue.transactionCount}
                             </td>
                             <td className="p-4 text-right">
-                              {formatCurrency(venue.totalTips)}
+                              {formatCurrencyIDRIntl(venue.totalTips)}
                             </td>
                             <td className="p-4 text-right text-primary font-semibold">
-                              {formatCurrency(venue.platformFee)}
+                              {formatCurrencyIDRIntl(venue.platformFee)}
                             </td>
                           </tr>
                         ))}
@@ -277,10 +269,10 @@ export default function AdminCommissionsPage() {
                             {data.totalTransactions}
                           </td>
                           <td className="p-4 text-right">
-                            {formatCurrency(data.totalTips)}
+                            {formatCurrencyIDRIntl(data.totalTips)}
                           </td>
                           <td className="p-4 text-right text-primary">
-                            {formatCurrency(data.totalPlatformFee)}
+                            {formatCurrencyIDRIntl(data.totalPlatformFee)}
                           </td>
                         </tr>
                       </tfoot>

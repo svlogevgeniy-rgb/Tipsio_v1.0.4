@@ -2,10 +2,12 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { z } from "zod";
-import { auth } from "@/lib/auth";
+import { handleApiError, successResponse, validationError } from "@/lib/api/error-handler";
+import { requireAuth, requireVenueAccess } from "@/lib/api/middleware";
 import prisma from "@/lib/prisma";
+import { DISTRIBUTION_MODE_VALUES } from "@/types/distribution";
 
 const updateVenueSchema = z.object({
   name: z.string().min(2).optional(),
@@ -15,7 +17,7 @@ const updateVenueSchema = z.object({
   email: z.string().email().optional(),
   logoUrl: z.string().url().optional(),
   timezone: z.string().optional(),
-  distributionMode: z.enum(["PERSONAL", "POOLED"]).optional(),
+  distributionMode: z.enum(DISTRIBUTION_MODE_VALUES).optional(),
   allowStaffChoice: z.boolean().optional(),
 });
 
@@ -25,15 +27,16 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json(
-        { code: "AUTH_REQUIRED", message: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
 
     const { id } = await params;
+
+    // Check venue access
+    const venueResult = await requireVenueAccess(id, session);
+    if ('error' in venueResult) return venueResult.error;
 
     const venue = await prisma.venue.findUnique({
       where: { id },
@@ -56,28 +59,9 @@ export async function GET(
       },
     });
 
-    if (!venue) {
-      return NextResponse.json(
-        { code: "NOT_FOUND", message: "Venue not found" },
-        { status: 404 }
-      );
-    }
-
-    // Check access - only manager or admin can view
-    if (session.user.role !== "ADMIN" && venue.managerId !== session.user.id) {
-      return NextResponse.json(
-        { code: "FORBIDDEN", message: "Access denied" },
-        { status: 403 }
-      );
-    }
-
-    return NextResponse.json({ venue });
+    return successResponse({ venue });
   } catch (error) {
-    console.error("Get venue error:", error);
-    return NextResponse.json(
-      { code: "INTERNAL_ERROR", message: "Internal server error" },
-      { status: 500 }
-    );
+    return handleApiError(error, "Get venue");
   }
 }
 
@@ -87,43 +71,22 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json(
-        { code: "AUTH_REQUIRED", message: "Authentication required" },
-        { status: 401 }
-      );
-    }
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
 
     const { id } = await params;
 
-    // Check venue exists and user has access
-    const venue = await prisma.venue.findUnique({
-      where: { id },
-    });
-
-    if (!venue) {
-      return NextResponse.json(
-        { code: "NOT_FOUND", message: "Venue not found" },
-        { status: 404 }
-      );
-    }
-
-    if (session.user.role !== "ADMIN" && venue.managerId !== session.user.id) {
-      return NextResponse.json(
-        { code: "FORBIDDEN", message: "Access denied" },
-        { status: 403 }
-      );
-    }
+    // Check venue access
+    const venueResult = await requireVenueAccess(id, session);
+    if ('error' in venueResult) return venueResult.error;
 
     const body = await request.json();
     const parsed = updateVenueSchema.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json(
-        { code: "VALIDATION_ERROR", message: parsed.error.issues[0].message },
-        { status: 400 }
-      );
+      return validationError(parsed.error.issues[0].message);
     }
 
     const updatedVenue = await prisma.venue.update({
@@ -131,12 +94,8 @@ export async function PATCH(
       data: parsed.data,
     });
 
-    return NextResponse.json({ venue: updatedVenue });
+    return successResponse({ venue: updatedVenue });
   } catch (error) {
-    console.error("Update venue error:", error);
-    return NextResponse.json(
-      { code: "INTERNAL_ERROR", message: "Internal server error" },
-      { status: 500 }
-    );
+    return handleApiError(error, "Update venue");
   }
 }

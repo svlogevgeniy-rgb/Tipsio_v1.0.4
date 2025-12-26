@@ -1,9 +1,7 @@
-/**
- * Dashboard business logic
- * Determines which blocks to show based on distribution mode
- */
+import { isPersonalMode, isPooledMode } from "@/types/distribution";
+import type { DistributionMode } from "@/types/distribution";
 
-export type DistributionMode = "POOLED" | "PERSONAL";
+export type { DistributionMode } from "@/types/distribution";
 
 export interface DashboardBlock {
   id: string;
@@ -26,7 +24,7 @@ export const DASHBOARD_BLOCKS = {
  * PERSONAL: totalTips, transactions, averageTip, activeStaff, pendingPayouts, topStaff
  */
 export function getDashboardBlocks(distributionMode: DistributionMode): DashboardBlock[] {
-  if (distributionMode === 'POOLED') {
+  if (isPooledMode(distributionMode)) {
     return [
       DASHBOARD_BLOCKS.totalTips,
       DASHBOARD_BLOCKS.transactions,
@@ -57,19 +55,19 @@ export function isDashboardBlockVisible(blockId: string, distributionMode: Distr
  * Check if active staff metric should be shown
  */
 export function shouldShowActiveStaff(distributionMode: DistributionMode): boolean {
-  return distributionMode === 'PERSONAL';
+  return isPersonalMode(distributionMode);
 }
 
 /**
  * Check if top staff list should be shown (vs tip history)
  */
 export function shouldShowTopStaff(distributionMode: DistributionMode): boolean {
-  return distributionMode === 'PERSONAL';
+  return isPersonalMode(distributionMode);
 }
 
 /**
  * Check if tip history should be shown (vs top staff)
  */
 export function shouldShowTipHistory(distributionMode: DistributionMode): boolean {
-  return distributionMode === 'POOLED';
+  return isPooledMode(distributionMode);
 }
