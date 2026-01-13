@@ -890,7 +890,7 @@ export default function Home() {
       <footer className="py-12 px-6 border-t border-slate-200 bg-slate-50">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-sm text-slate-500">
-            © 2025 TIPSIO. All rights reserved.
+            © 2026 TIPSIO.
           </div>
           <div className="flex gap-6 text-sm">
             <Link

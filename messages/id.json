@@ -3,7 +3,19 @@
     "nav": {
       "support": "Dukungan",
       "login": "Masuk",
-      "cta": "Hubungkan"
+      "cta": "Hubungkan",
+      "loginDropdown": {
+        "title": "Masuk",
+        "forVenues": "Untuk tempat usaha",
+        "forStaff": "Untuk staf",
+        "forGuests": "Untuk tamu"
+      },
+      "productsDropdown": {
+        "title": "Produk",
+        "tipsReviews": "Tip dan ulasan",
+        "digitalMenu": "Menu digital",
+        "preorders": "Pre-order"
+      }
     },
     "hero": {
       "badge": "Beroperasi di Bali · Biaya 0%",
@@ -149,7 +161,7 @@
       "whatsapp": "Dukungan WhatsApp",
       "terms": "Syarat Layanan",
       "privacy": "Kebijakan Privasi",
-      "copyright": "© 2025 TIPSIO Bali."
+      "copyright": "© 2026 TIPSIO."
     }
   },
   "landing": {
@@ -508,11 +520,35 @@
       "coverFeeDesc": "Tambahkan {amount} agar {name} menerima tip penuh",
       "sendTip": "Kirim Tip dengan Aman",
       "securePayment": "Pembayaran aman via GoPay, OVO, kartu atau QRIS — diproses oleh penyedia pembayaran kami. Tidak perlu aplikasi.",
-      "poweredBy": "Didukung oleh TIPSIO",
+      "poweredBy": "© 2026 TIPSIO.",
       "tipLabel": "Tip",
       "feeCovered": "Biaya ditanggung",
       "totalLabel": "Total",
-      "gets100": "mendapat 100%"
+      "gets100": "mendapat 100%",
+      "staffSelection": {
+        "heading": "Siapa yang ingin Anda ucapkan terima kasih?",
+        "selectStaff": "Pilih anggota staf untuk melanjutkan"
+      },
+      "tipAmount": {
+        "heading": "Tinggalkan tip untuk {name}",
+        "amountLabel": "Jumlah tip",
+        "presetAmounts": "Jumlah cepat",
+        "customAmount": "Jumlah kustom",
+        "enterAmount": "Masukkan jumlah",
+        "experienceLabel": "Bagaimana pengalaman Anda?",
+        "experienceOptions": {
+          "poor": "Buruk",
+          "okay": "Oke",
+          "good": "Baik",
+          "great": "Bagus",
+          "excellent": "Luar biasa"
+        },
+        "messageLabel": "Tambahkan pesan (opsional)",
+        "messagePlaceholder": "Katakan sesuatu yang baik...",
+        "characterCount": "{current}/{max}",
+        "continueButton": "Kirim {amount}",
+        "minAmount": "Tip minimum adalah Rp 10"
+      }
     },
     "pending": {
       "title": "Memproses Pembayaran",
@@ -521,7 +557,7 @@
       "timeoutMessage": "Verifikasi pembayaran habis waktu. Silakan periksa aplikasi pembayaran Anda.",
       "completedNote": "Jika Anda sudah menyelesaikan pembayaran, mungkin perlu beberapa menit untuk diproses. Anda dapat menutup halaman ini.",
       "reference": "Referensi",
-      "poweredBy": "Didukung oleh TIPSIO"
+      "poweredBy": "© 2026 TIPSIO."
     },
     "success": {
       "title": "Terima kasih! 🙌",
@@ -532,7 +568,7 @@
       "message": "Dukungan Anda membantu kami menghargai staf dan menjaga standar layanan tetap tinggi. Kami sangat menghargainya.",
       "leaveReview": "Tinggalkan ulasan di Google Maps",
       "close": "Tutup",
-      "poweredBy": "Didukung oleh TIPSIO"
+      "poweredBy": "© 2026 TIPSIO."
     },
     "error": {
       "title": "Pembayaran tidak berhasil",
@@ -540,7 +576,7 @@
       "tryAgain": "Coba lagi",
       "backToAmount": "Kembali ke pilihan jumlah",
       "reference": "Referensi",
-      "poweredBy": "Didukung oleh TIPSIO"
+      "poweredBy": "© 2026 TIPSIO."
     }
   },
   "staff": {
@@ -602,7 +638,9 @@
       "password": "Kata Sandi",
       "login": "Masuk",
       "register": "Daftarkan venue baru",
-      "accountCreated": "Akun berhasil dibuat! Silakan masuk."
+      "accountCreated": "Akun berhasil dibuat! Silakan masuk.",
+      "newToTipsio": "Baru menggunakan Tipsio?",
+      "createAccount": "Buat akun"
     },
     "register": {
       "title": "Daftarkan Venue Anda",
@@ -616,6 +654,13 @@
       "step3Subtitle": "Pilih bagaimana tip didistribusikan",
       "venueName": "Nama Venue",
       "venueNamePlaceholder": "Cafe Organic",
+      "venueType": "Jenis Venue",
+      "selectType": "Pilih jenis",
+      "restaurant": "Restoran",
+      "cafe": "Kafe",
+      "bar": "Bar",
+      "coffeeShop": "Kedai Kopi",
+      "other": "Lainnya",
       "email": "Email",
       "password": "Kata Sandi",
       "confirmPassword": "Konfirmasi Kata Sandi",
@@ -689,12 +734,12 @@
       "distributionRulesDesc": "Sesuaikan bagaimana tip dibagikan."
     },
     "nav": {
-      "dashboard": "Dashboard",
+      "dashboard": "Ikhtisar",
       "staff": "Staf",
-      "qrCodes": "Kode QR",
+      "qrCodes": "QR - codes",
       "menu": "Menu",
-      "payouts": "Pembayaran",
-      "settings": "Pengaturan",
+      "payouts": "Pencairan",
+      "settings": "Integrasi",
       "profile": "Profil",
       "signOut": "Keluar"
     },
@@ -768,21 +813,34 @@
       "failedToDownloadMaterial": "Gagal mengunduh materi"
     },
     "settings": {
-      "title": "Pengaturan",
-      "subtitle": "Konfigurasi venue dan pengaturan pembayaran Anda",
+      "title": "Integrasi",
+      "subtitle": "Kelola integrasi pembayaran",
+      "integrations": {
+        "connected": "Terhubung",
+        "clickToSetup": "Klik untuk mengatur",
+        "comingSoon": "Modul segera hadir"
+      },
       "midtrans": {
         "title": "Integrasi Pembayaran (Midtrans)",
         "subtitle": "Hubungkan akun Midtrans Anda untuk menerima pembayaran",
+        "setupTitle": "Pengaturan Midtrans",
         "connected": "Terhubung",
         "isConnected": "Midtrans terhubung",
         "canAccept": "Venue Anda sekarang dapat menerima tip digital via GoPay, OVO, kartu, dan QRIS.",
+        "canUpdate": "Anda dapat memperbarui kunci di bawah",
         "notConnected": "Midtrans tidak terhubung",
         "needToConnect": "Anda perlu menghubungkan Midtrans untuk mulai menerima tip. Dapatkan kunci API Anda dari",
         "merchantId": "Merchant ID",
         "serverKey": "Server Key",
         "clientKey": "Client Key",
         "connect": "Hubungkan Midtrans",
-        "testing": "Menguji koneksi..."
+        "testing": "Menguji koneksi...",
+        "optional": "opsional",
+        "back": "Kembali",
+        "getKeysFrom": "Dapatkan kunci Anda dari",
+        "fillAllFields": "Harap isi semua bidang yang diperlukan",
+        "saveFailed": "Gagal menyimpan pengaturan",
+        "saveError": "Kesalahan saat menyimpan pengaturan"
       },
       "distribution": {
         "title": "Model Distribusi Tip",
@@ -794,7 +852,13 @@
       },
       "saving": "Menyimpan...",
       "saved": "Tersimpan!",
-      "saveSettings": "Simpan Pengaturan"
+      "saveSettings": "Simpan Pengaturan",
+      "confirmation": {
+        "title": "Konfirmasi Penyimpanan",
+        "description": "Setelah menyimpan pengaturan, informasi pembayaran Anda akan diperbarui",
+        "confirm": "Konfirmasi",
+        "cancel": "Batal"
+      }
     }
   },
   "admin": {

@@ -3,7 +3,19 @@
     "nav": {
       "support": "Support",
       "login": "Login",
-      "cta": "Connect"
+      "cta": "Connect",
+      "loginDropdown": {
+        "title": "Login",
+        "forVenues": "For venues",
+        "forStaff": "For staff",
+        "forGuests": "For guests"
+      },
+      "productsDropdown": {
+        "title": "Products",
+        "tipsReviews": "Tips and reviews",
+        "digitalMenu": "Digital menu",
+        "preorders": "Pre-orders"
+      }
     },
     "hero": {
       "badge": "Works in Bali · 0% fee",
@@ -18,7 +30,9 @@
       "dialogTitle": "Welcome!",
       "dialogDescription": "To leave a tip or review, enter staff code",
       "dialogSubmit": "Continue",
-      "imageAlt": "TIPSIO digital tipping platform interface showing staff and payment options"
+      "imageAlt": "TIPSIO digital tipping platform interface showing staff and payment options",
+      "trust1": "Secure payments via Midtrans",
+      "trust2": "No app required for guests"
     },
     "dashboard": {
       "today": "Today",
@@ -147,7 +161,7 @@
       "whatsapp": "WhatsApp Support",
       "terms": "Terms of Service",
       "privacy": "Privacy Policy",
-      "copyright": "© 2025 TIPSIO Bali."
+      "copyright": "© 2026 TIPSIO."
     }
   },
   "landing": {
@@ -506,11 +520,35 @@
       "coverFeeDesc": "Add {amount} so {name} receives the full tip",
       "sendTip": "Send Tip Securely",
       "securePayment": "Secure payment via GoPay, OVO, cards or QRIS — processed by our payment provider. No app required.",
-      "poweredBy": "Powered by TIPSIO",
+      "poweredBy": "© 2026 TIPSIO.",
       "tipLabel": "Tip",
       "feeCovered": "Fee covered",
       "totalLabel": "Total",
-      "gets100": "gets 100%"
+      "gets100": "gets 100%",
+      "staffSelection": {
+        "heading": "Who would you like to thank?",
+        "selectStaff": "Select a staff member to continue"
+      },
+      "tipAmount": {
+        "heading": "Leave a tip for {name}",
+        "amountLabel": "Tip amount",
+        "presetAmounts": "Quick amounts",
+        "customAmount": "Custom amount",
+        "enterAmount": "Enter amount",
+        "experienceLabel": "How was your experience?",
+        "experienceOptions": {
+          "poor": "Poor",
+          "okay": "Okay",
+          "good": "Good",
+          "great": "Great",
+          "excellent": "Excellent"
+        },
+        "messageLabel": "Add a message (optional)",
+        "messagePlaceholder": "Say something nice...",
+        "characterCount": "{current}/{max}",
+        "continueButton": "Send {amount}",
+        "minAmount": "Minimum tip is Rp 10"
+      }
     },
     "pending": {
       "title": "Processing Payment",
@@ -519,7 +557,7 @@
       "timeoutMessage": "Payment verification timed out. Please check your payment app.",
       "completedNote": "If you completed the payment, it may take a few minutes to process. You can close this page.",
       "reference": "Reference",
-      "poweredBy": "Powered by TIPSIO"
+      "poweredBy": "© 2026 TIPSIO."
     },
     "success": {
       "title": "Thank you! 🙌",
@@ -530,7 +568,7 @@
       "message": "Your support helps us reward our staff and keep service standards high. We really appreciate it.",
       "leaveReview": "Leave a review on Google Maps",
       "close": "Close",
-      "poweredBy": "Powered by TIPSIO"
+      "poweredBy": "© 2026 TIPSIO."
     },
     "error": {
       "title": "Payment didn't go through",
@@ -538,7 +576,7 @@
       "tryAgain": "Try again",
       "backToAmount": "Back to amount selection",
       "reference": "Reference",
-      "poweredBy": "Powered by TIPSIO"
+      "poweredBy": "© 2026 TIPSIO."
     }
   },
   "staff": {
@@ -600,7 +638,9 @@
       "password": "Password",
       "login": "Log in",
       "register": "Register new venue",
-      "accountCreated": "Account created successfully! Please sign in."
+      "accountCreated": "Account created successfully! Please sign in.",
+      "newToTipsio": "New to Tipsio?",
+      "createAccount": "Create account"
     },
     "register": {
       "title": "Register Your Venue",
@@ -614,6 +654,13 @@
       "step3Subtitle": "Choose how tips are distributed",
       "venueName": "Venue Name",
       "venueNamePlaceholder": "Cafe Organic",
+      "venueType": "Venue Type",
+      "selectType": "Select type",
+      "restaurant": "Restaurant",
+      "cafe": "Cafe",
+      "bar": "Bar",
+      "coffeeShop": "Coffee Shop",
+      "other": "Other",
       "email": "Email",
       "password": "Password",
       "confirmPassword": "Confirm Password",
@@ -687,12 +734,12 @@
       "distributionRulesDesc": "Adjust how tips are shared."
     },
     "nav": {
-      "dashboard": "Dashboard",
+      "dashboard": "Overview",
       "staff": "Staff",
-      "qrCodes": "QR codes",
+      "qrCodes": "QR - codes",
       "menu": "Menu",
       "payouts": "Payouts",
-      "settings": "Settings",
+      "settings": "Integrations",
       "profile": "Profile",
       "signOut": "Sign out"
     },
@@ -766,21 +813,34 @@
       "failedToDownloadMaterial": "Failed to download material"
     },
     "settings": {
-      "title": "Settings",
-      "subtitle": "Configure your venue and payment settings",
+      "title": "Integrations",
+      "subtitle": "Manage payment integrations",
+      "integrations": {
+        "connected": "Connected",
+        "clickToSetup": "Click to setup",
+        "comingSoon": "Module coming soon"
+      },
       "midtrans": {
         "title": "Payment Integration (Midtrans)",
         "subtitle": "Connect your Midtrans account to receive payments",
+        "setupTitle": "Midtrans Setup",
         "connected": "Connected",
         "isConnected": "Midtrans is connected",
         "canAccept": "Your venue can now accept digital tips via GoPay, OVO, cards, and QRIS.",
+        "canUpdate": "You can update the keys below",
         "notConnected": "Midtrans not connected",
         "needToConnect": "You need to connect Midtrans to start receiving tips. Get your API keys from",
         "merchantId": "Merchant ID",
         "serverKey": "Server Key",
         "clientKey": "Client Key",
         "connect": "Connect Midtrans",
-        "testing": "Testing connection..."
+        "testing": "Testing connection...",
+        "optional": "optional",
+        "back": "Back",
+        "getKeysFrom": "Get your keys from",
+        "fillAllFields": "Please fill in all required fields",
+        "saveFailed": "Failed to save settings",
+        "saveError": "Error saving settings"
       },
       "distribution": {
         "title": "Tip Distribution Model",
@@ -792,7 +852,13 @@
       },
       "saving": "Saving...",
       "saved": "Saved!",
-      "saveSettings": "Save Settings"
+      "saveSettings": "Save Settings",
+      "confirmation": {
+        "title": "Confirm Save",
+        "description": "After saving the settings, your payment information will be updated",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+      }
     }
   },
   "admin": {

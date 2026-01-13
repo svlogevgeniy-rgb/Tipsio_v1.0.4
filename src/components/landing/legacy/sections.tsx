@@ -582,7 +582,7 @@ export function LegacyFooter() {
             Privacy
           </Link>
         </div>
-        <p className="text-sm">© {new Date().getFullYear()} TIPSIO. All Rights Reserved.</p>
+        <p className="text-sm">© 2026 TIPSIO.</p>
       </div>
     </footer>
   );
