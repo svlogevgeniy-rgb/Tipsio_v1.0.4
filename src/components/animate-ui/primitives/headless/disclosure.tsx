@@ -10,7 +10,6 @@ import {
   type DisclosurePanelProps as DisclosurePanelPrimitiveProps,
 } from '@headlessui/react';
 import { motion, AnimatePresence, type HTMLMotionProps } from 'motion/react';
-
 import { getStrictContext } from '@/lib/get-strict-context';
 
 type DisclosureContextType = {

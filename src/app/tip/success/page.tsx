@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { CheckCircle2, Loader2, Heart, ArrowLeft } from "lucide-react";
+import { StaffAvatar } from "@/components/tip/StaffAvatar";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useTranslations } from "@/i18n/client";
-import { CheckCircle2, Loader2, Heart, ArrowLeft } from "lucide-react";
 import { formatCurrencyIDRIntl } from "@/lib/i18n/formatters";
-import { StaffAvatar } from "@/components/tip/StaffAvatar";
 
 interface TipDetails {
   amount: number;

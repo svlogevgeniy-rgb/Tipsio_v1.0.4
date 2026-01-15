@@ -1,10 +1,10 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
+import { XCircle, RefreshCw, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useTranslations } from "@/i18n/client";
-import { XCircle, RefreshCw, ArrowLeft } from "lucide-react";
 
 export default function TipErrorPage() {
   const searchParams = useSearchParams();

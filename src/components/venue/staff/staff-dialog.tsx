@@ -1,12 +1,9 @@
 'use client';
 
+/* eslint-disable @next/next/no-img-element */
 import { useRef } from 'react';
-import type { UseFormReturn } from 'react-hook-form';
-import Image from 'next/image';
 import { Camera, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
@@ -15,6 +12,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -24,6 +23,7 @@ import {
 } from '@/components/ui/select';
 import { useTranslations } from '@/i18n/client';
 import type { StaffForm } from './schema';
+import type { UseFormReturn } from 'react-hook-form';
 
 interface StaffDialogProps {
   form: UseFormReturn<StaffForm>;
@@ -139,7 +139,7 @@ export function StaffDialog({
 
             {avatarPreview ? (
               <div className="relative w-24 h-24 mx-auto">
-                <Image
+                <img
                   src={avatarPreview}
                   alt="Preview"
                   width={96}

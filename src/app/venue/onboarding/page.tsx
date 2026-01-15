@@ -2,15 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "@/i18n/client";
-import type { DistributionMode } from "@/types/distribution";
 
 const midtransSchema = z.object({
   merchantId: z.string().min(1, "Merchant ID is required"),
@@ -26,9 +25,9 @@ export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [distributionMode, setDistributionMode] = useState<DistributionMode>("PERSONAL");
   
-  const steps = [t('profile'), t('payments'), t('distribution'), t('done')];
+  // Removed distribution step - now only 3 steps: profile, payments, done
+  const steps = [t('profile'), t('payments'), t('done')];
 
   const midtransForm = useForm<MidtransForm>({
     resolver: zodResolver(midtransSchema),
@@ -53,21 +52,8 @@ export default function OnboardingPage() {
         return;
       }
 
+      // Skip to done step (was step 3, now step 2)
       setCurrentStep(2);
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDistributionSubmit = async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      // TODO: Update venue distribution mode
-      setCurrentStep(3);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -156,55 +142,6 @@ export default function OnboardingPage() {
         );
 
       case 2:
-        return (
-          <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              {t('chooseModel')}
-            </p>
-
-            <div className="space-y-3">
-              <button
-                type="button"
-                onClick={() => setDistributionMode("PERSONAL")}
-                className={`w-full p-4 rounded-xl border text-left transition-colors ${
-                  distributionMode === "PERSONAL"
-                    ? "border-primary bg-primary/10"
-                    : "border-white/10 bg-white/5 hover:bg-white/10"
-                }`}
-              >
-                <div className="font-heading font-semibold">{t('personalTipping')}</div>
-                <div className="text-sm text-muted-foreground">
-                  {t('personalTippingDesc')}
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setDistributionMode("POOLED")}
-                className={`w-full p-4 rounded-xl border text-left transition-colors ${
-                  distributionMode === "POOLED"
-                    ? "border-primary bg-primary/10"
-                    : "border-white/10 bg-white/5 hover:bg-white/10"
-                }`}
-              >
-                <div className="font-heading font-semibold">{t('pooledTipping')}</div>
-                <div className="text-sm text-muted-foreground">
-                  {t('pooledTippingDesc')}
-                </div>
-              </button>
-            </div>
-
-            <Button
-              onClick={handleDistributionSubmit}
-              disabled={isLoading}
-              className="w-full h-14 text-lg font-heading font-bold bg-gradient-to-r from-cyan-500 to-blue-600"
-            >
-              {t('continue')}
-            </Button>
-          </div>
-        );
-
-      case 3:
         return (
           <div className="space-y-4 text-center">
             <div className="text-6xl">🎉</div>

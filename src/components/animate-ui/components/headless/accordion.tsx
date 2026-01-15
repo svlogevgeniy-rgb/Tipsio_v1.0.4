@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { motion } from 'motion/react';
 import { ChevronDownIcon } from 'lucide-react';
-
+import { motion } from 'motion/react';
 import {
   Disclosure as DisclosurePrimitive,
   DisclosureButton as DisclosureButtonPrimitive,

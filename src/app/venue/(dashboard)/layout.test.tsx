@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
 import * as fc from 'fast-check';
+import { describe, it, expect } from 'vitest';
 
 /**
  * **Feature: marketing-improvements, Property 3: Navigation menu exclusion**

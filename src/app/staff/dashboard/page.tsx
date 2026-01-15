@@ -2,11 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { AuroraBackground } from "@/components/layout/aurora-background";
-import { LanguageSwitcher } from "@/components/ui/language-switcher";
-import { useTranslations } from "@/i18n/client";
 import { 
   Loader2, 
   Calendar, 
@@ -14,7 +9,12 @@ import {
   Wallet,
   Clock
 } from "lucide-react";
-import { formatCurrencyIDRIntl } from "@/lib/i18n/formatters";
+import { AuroraBackground } from "@/components/layout/aurora-background";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { useTranslations } from "@/i18n/client";
+import { formatCurrencyIDRIntl, formatDateRange, formatDateShort } from "@/lib/i18n/formatters";
 
 interface DashboardData {
   staff: {
@@ -38,13 +38,6 @@ interface DashboardData {
     status: "PENDING" | "PAID";
     paidAt: string | null;
   }>;
-}
-
-function formatDateRange(start: string, end: string): string {
-  const startDate = new Date(start);
-  const endDate = new Date(end);
-  const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "short" };
-  return `${startDate.toLocaleDateString("en-US", options)} – ${endDate.toLocaleDateString("en-US", options)}`;
 }
 
 export default function StaffDashboardPage() {
@@ -128,7 +121,7 @@ export default function StaffDashboardPage() {
           <p className="text-sm text-muted-foreground">
             {t('tipsSince', { 
               count: data.currentPeriod.tipsCount, 
-              date: new Date(data.currentPeriod.startDate).toLocaleDateString("en-US", { month: "short", day: "numeric" }) 
+              date: formatDateShort(data.currentPeriod.startDate)
             })}
           </p>
         </Card>

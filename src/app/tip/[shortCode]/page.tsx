@@ -1,15 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
 import Image from "next/image";
+import { useParams } from "next/navigation";
+import { Loader2, User, ArrowLeft, X, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { Textarea } from "@/components/ui/textarea";
 import { useTranslations } from "@/i18n/client";
-
-import { Loader2, User, ArrowLeft, X, AlertCircle } from "lucide-react";
 
 interface Staff {
   id: string;
@@ -72,7 +71,6 @@ function InactiveStaffPopup({
 export default function TipPage() {
   const params = useParams();
   const shortCode = params.shortCode as string;
-  const t = useTranslations("guest.tip");
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

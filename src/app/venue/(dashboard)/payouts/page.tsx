@@ -1,12 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useTranslations } from "@/i18n/client";
-import { formatCurrencyIDRIntl } from "@/lib/i18n/formatters";
+import { useRouter } from "next/navigation";
 import { 
   Loader2, 
   Check,
@@ -14,6 +10,10 @@ import {
   Users,
   AlertTriangle
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslations } from "@/i18n/client";
+import { formatCurrencyIDRIntl } from "@/lib/i18n/formatters";
 
 interface StaffBalance {
   id: string;

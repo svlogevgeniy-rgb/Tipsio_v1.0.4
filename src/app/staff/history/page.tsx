@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Card } from "@/components/ui/card";
+import { Loader2, ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
+import { AuroraBackground } from "@/components/layout/aurora-background";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -11,10 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AuroraBackground } from "@/components/layout/aurora-background";
 import { useTranslations } from "@/i18n/client";
-import { Loader2, ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
-import { formatCurrencyIDRIntl } from "@/lib/i18n/formatters";
+import { formatCurrencyIDRIntl, formatDateRange, formatDateWithWeekday, formatDateShort } from "@/lib/i18n/formatters";
 
 interface TipsByDay {
   date: string;
@@ -34,22 +34,6 @@ interface Period {
 
 interface HistoryData {
   periods: Period[];
-}
-
-function formatDateRange(start: string, end: string): string {
-  const startDate = new Date(start);
-  const endDate = new Date(end);
-  const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "short" };
-  return `${startDate.toLocaleDateString("en-US", options)} – ${endDate.toLocaleDateString("en-US", options)}`;
-}
-
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("en-US", { 
-    weekday: "short",
-    day: "numeric", 
-    month: "short" 
-  });
 }
 
 export default function StaffHistoryPage() {
@@ -162,7 +146,7 @@ export default function StaffHistoryPage() {
                         : "text-yellow-400"
                     }`}>
                       {period.status === "PAID" 
-                        ? t('paidOn', { date: new Date(period.paidAt!).toLocaleDateString("en-US", { month: "short", day: "numeric" }) })
+                        ? t('paidOn', { date: formatDateShort(period.paidAt!) })
                         : t('pendingPayout')
                       }
                     </div>
@@ -187,7 +171,7 @@ export default function StaffHistoryPage() {
                       <tbody>
                         {period.tipsByDay.map((day) => (
                           <tr key={day.date} className="border-t border-white/5">
-                            <td className="py-2">{formatDate(day.date)}</td>
+                            <td className="py-2">{formatDateWithWeekday(day.date)}</td>
                             <td className="py-2 text-center">{day.tipsCount}</td>
                             <td className="py-2 text-right">
                               {formatCurrencyIDRIntl(day.amount)}

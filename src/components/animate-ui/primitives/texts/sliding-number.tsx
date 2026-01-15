@@ -11,7 +11,6 @@ import {
   type HTMLMotionProps,
 } from 'motion/react';
 import useMeasure from 'react-use-measure';
-
 import {
   useIsInView,
   type UseIsInViewOptions,

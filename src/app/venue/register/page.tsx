@@ -3,29 +3,26 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { ArrowLeft, X, Building2, CreditCard } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import { useTheme } from 'next-themes';
-import { ArrowLeft, X, Building2, CreditCard, Users } from 'lucide-react';
+import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
-import { useTranslations } from '@/i18n/client';
-import {
-  step1Schema,
-  step2Schema,
-  step3Schema,
-  type Step1Form,
-  type Step2Form,
-  type Step3Form,
-} from '@/components/venue/register/schemas';
-import { usePersistedRegisterState } from '@/components/venue/register/use-persisted-register';
 import {
   AccountDetailsForm,
   MidtransCredentialsForm,
-  DistributionModeForm,
 } from '@/components/venue/register/forms';
+import {
+  step1Schema,
+  step2Schema,
+  type Step1Form,
+  type Step2Form,
+} from '@/components/venue/register/schemas';
+import { usePersistedRegisterState } from '@/components/venue/register/use-persisted-register';
+import { useTranslations } from '@/i18n/client';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -60,11 +57,6 @@ export default function RegisterPage() {
   const form2 = useForm<Step2Form>({
     resolver: zodResolver(step2Schema),
     defaultValues: step2Data || undefined,
-  });
-
-  const form3 = useForm<Step3Form>({
-    resolver: zodResolver(step3Schema),
-    defaultValues: { distributionMode: 'POOLED' },
   });
 
   const handleStep1Submit = (data: Step1Form) => {
@@ -107,19 +99,14 @@ export default function RegisterPage() {
     }
   };
 
-  const handleStep2Submit = (data: Step2Form) => {
+  const handleStep2Submit = async (data: Step2Form) => {
     if (!midtransValid) {
       setError('Please validate Midtrans credentials first');
       return;
     }
+    if (!step1Data) return;
+
     setStep2Data(data);
-    setStep(3);
-    setError(null);
-  };
-
-  const handleFinalSubmit = async (data: Step3Form) => {
-    if (!step1Data || !step2Data) return;
-
     setIsLoading(true);
     setError(null);
 
@@ -132,11 +119,10 @@ export default function RegisterPage() {
           password: step1Data.password,
           venueName: step1Data.venueName,
           venueType: 'OTHER',
-          distributionMode: data.distributionMode,
           midtrans: {
-            clientKey: step2Data.clientKey,
-            serverKey: step2Data.serverKey,
-            merchantId: step2Data.merchantId,
+            clientKey: data.clientKey,
+            serverKey: data.serverKey,
+            merchantId: data.merchantId,
           },
         }),
       });
@@ -195,7 +181,7 @@ export default function RegisterPage() {
             </Link>
           )}
           <span className="text-sm text-muted-foreground">
-            {t('step')} {step}/3
+            {t('step')} {step}/2
           </span>
         </div>
         <LanguageSwitcher />
@@ -206,17 +192,14 @@ export default function RegisterPage() {
           <div className="flex justify-center mb-4">
             {step === 1 && <Building2 className="h-12 w-12 text-primary" />}
             {step === 2 && <CreditCard className="h-12 w-12 text-primary" />}
-            {step === 3 && <Users className="h-12 w-12 text-primary" />}
           </div>
           <CardTitle className="text-2xl font-heading text-gradient">
             {step === 1 && t('step1Title')}
             {step === 2 && t('step2Title')}
-            {step === 3 && t('step3Title')}
           </CardTitle>
           <CardDescription>
             {step === 1 && t('step1Subtitle')}
             {step === 2 && t('step2Subtitle')}
-            {step === 3 && t('step3Subtitle')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -245,11 +228,8 @@ export default function RegisterPage() {
               onTestConnection={testMidtransConnection}
               isTesting={isTesting}
               midtransValid={midtransValid}
+              isSubmitting={isLoading}
             />
-          )}
-
-          {step === 3 && (
-            <DistributionModeForm form={form3} onSubmit={handleFinalSubmit} isSubmitting={isLoading} />
           )}
         </CardContent>
       </Card>

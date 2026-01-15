@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import * as fc from 'fast-check';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import TipSuccessPage from './page';
 
 // Mock next/navigation

@@ -1,13 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ChevronDown, Menu, X } from 'lucide-react';
-import { useTranslations } from '@/i18n/client';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { LanguageSwitcher } from '@/components/ui/language-switcher';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +13,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { LanguageSwitcher } from '@/components/ui/language-switcher';
+import { useTranslations } from '@/i18n/client';
 
 export function LandingNavigation() {
   const t = useTranslations('landingV3');
@@ -33,25 +33,25 @@ export function LandingNavigation() {
                   variant="headerCta"
                   className="gap-1"
                 >
-                  Вход
+                  {t('nav.loginDropdown.title')}
                   <ChevronDown className="h-4 w-4 opacity-70" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="min-w-[180px]">
+              <DropdownMenuContent align="start" className="min-w-[180px] bg-white border-slate-200">
                 <DropdownMenuGroup>
                   <DropdownMenuItem asChild>
-                    <Link href="/venue/login" className="cursor-pointer">
-                      Для заведений
+                    <Link href="/venue/login" className="cursor-pointer text-slate-900 hover:bg-slate-100">
+                      {t('nav.loginDropdown.forVenues')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/staff/login" className="cursor-pointer">
-                      Для персонала
+                    <Link href="/staff/login" className="cursor-pointer text-slate-900 hover:bg-slate-100">
+                      {t('nav.loginDropdown.forStaff')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="#" className="cursor-pointer">
-                      Для гостя
+                    <Link href="#" className="cursor-pointer text-slate-900 hover:bg-slate-100">
+                      {t('nav.loginDropdown.forGuests')}
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -65,25 +65,25 @@ export function LandingNavigation() {
                   variant="headerCta"
                   className="gap-1"
                 >
-                  Продукты
+                  {t('nav.productsDropdown.title')}
                   <ChevronDown className="h-4 w-4 opacity-70" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="min-w-[200px]">
+              <DropdownMenuContent align="start" className="min-w-[200px] bg-white border-slate-200">
                 <DropdownMenuGroup>
                   <DropdownMenuItem asChild>
-                    <Link href="#" className="cursor-pointer">
-                      Чаевые и отзывы
+                    <Link href="#" className="cursor-pointer text-slate-900 hover:bg-slate-100">
+                      {t('nav.productsDropdown.tipsReviews')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="#" className="cursor-pointer">
-                      Электронное меню
+                    <Link href="#" className="cursor-pointer text-slate-900 hover:bg-slate-100">
+                      {t('nav.productsDropdown.digitalMenu')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="#" className="cursor-pointer">
-                      Предзаказы
+                    <Link href="#" className="cursor-pointer text-slate-900 hover:bg-slate-100">
+                      {t('nav.productsDropdown.preorders')}
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -136,56 +136,56 @@ export function LandingNavigation() {
           {/* Login section */}
           <div className="space-y-2">
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide px-2">
-              Вход
+              {t('nav.loginDropdown.title')}
             </p>
             <Link
               href="/venue/login"
               className="block px-2 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Для заведений
+              {t('nav.loginDropdown.forVenues')}
             </Link>
             <Link
               href="/staff/login"
               className="block px-2 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Для персонала
+              {t('nav.loginDropdown.forStaff')}
             </Link>
             <Link
               href="#"
               className="block px-2 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Для гостя
+              {t('nav.loginDropdown.forGuests')}
             </Link>
           </div>
 
           {/* Products section */}
           <div className="space-y-2 pt-2 border-t border-slate-100">
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide px-2">
-              Продукты
+              {t('nav.productsDropdown.title')}
             </p>
             <Link
               href="#"
               className="block px-2 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Чаевые и отзывы
+              {t('nav.productsDropdown.tipsReviews')}
             </Link>
             <Link
               href="#"
               className="block px-2 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Электронное меню
+              {t('nav.productsDropdown.digitalMenu')}
             </Link>
             <Link
               href="#"
               className="block px-2 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Предзаказы
+              {t('nav.productsDropdown.preorders')}
             </Link>
           </div>
 

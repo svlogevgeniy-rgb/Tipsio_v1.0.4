@@ -6,13 +6,13 @@
 # Required environment variables:
 #   DEPLOY_SERVER - Server IP or hostname
 #   DEPLOY_USER - SSH user (default: deploy)
-#   DEPLOY_DOMAIN - Domain name (default: tipsio.sh1z01d.ru)
+#   DEPLOY_DOMAIN - Domain name (default: app.example.com)
 
 set -euo pipefail
 
 SERVER="${DEPLOY_SERVER:?Error: DEPLOY_SERVER environment variable is required}"
 USER="${DEPLOY_USER:-deploy}"
-DOMAIN="${DEPLOY_DOMAIN:-tipsio.sh1z01d.ru}"
+DOMAIN="${DEPLOY_DOMAIN:-app.example.com}"
 APP_DIR="/opt/tipsio"
 
 echo "🚀 Starting Tipsio deployment..."
@@ -139,7 +139,7 @@ docker run --rm \
     -v $(pwd)/certbot/www:/var/www/certbot \
     certbot/certbot certonly --webroot \
     --webroot-path=/var/www/certbot \
-    --email admin@sh1z01d.ru \
+    --email admin@example.com \
     --agree-tos \
     --no-eff-email \
     -d ${DOMAIN}

@@ -1,10 +1,10 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import type { LucideIcon } from "lucide-react";
 import { AlertCircle, History, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import type { LucideIcon } from "lucide-react";
 
 export interface MetricCardConfig {
   id: string;

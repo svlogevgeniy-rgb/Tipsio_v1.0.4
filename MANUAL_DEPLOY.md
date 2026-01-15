@@ -4,7 +4,7 @@
 
 - Server with Ubuntu/Debian
 - Root or sudo access
-- Domain configured (tipsio.sh1z01d.ru)
+- Domain configured (app.example.com)
 - Midtrans production keys
 
 ---
@@ -14,7 +14,7 @@
 ### 1.1 Connect to Server
 
 ```bash
-ssh root@91.222.236.239
+ssh root@YOUR_SERVER_IP
 ```
 
 ### 1.2 Create Deployment User
@@ -36,7 +36,7 @@ chmod 600 /home/deploy/.ssh/authorized_keys
 
 # Test new user
 exit
-ssh deploy@91.222.236.239
+ssh deploy@YOUR_SERVER_IP
 ```
 
 ### 1.3 Install Docker
@@ -57,7 +57,7 @@ docker-compose --version
 
 # Logout and login again for group changes
 exit
-ssh deploy@91.222.236.239
+ssh deploy@YOUR_SERVER_IP
 ```
 
 ### 1.4 Configure Firewall
@@ -103,14 +103,14 @@ openssl rand -base64 24
 ```bash
 # From your local machine
 rsync -avz --exclude 'node_modules' --exclude '.next' --exclude '.git' \
-  ./ deploy@91.222.236.239:/opt/tipsio/
+  ./ deploy@YOUR_SERVER_IP:/opt/tipsio/
 ```
 
 ### Option B: Using Git
 
 ```bash
 # On server
-ssh deploy@91.222.236.239
+ssh deploy@YOUR_SERVER_IP
 sudo mkdir -p /opt/tipsio
 sudo chown deploy:deploy /opt/tipsio
 cd /opt/tipsio
@@ -141,7 +141,7 @@ DB_NAME=tipsio
 
 # NextAuth
 NEXTAUTH_SECRET=<paste-generated-secret>
-NEXTAUTH_URL=https://tipsio.sh1z01d.ru
+NEXTAUTH_URL=https://app.example.com
 
 # Encryption
 ENCRYPTION_KEY=<paste-generated-key>
@@ -176,7 +176,7 @@ events {
 http {
     server {
         listen 80;
-        server_name tipsio.sh1z01d.ru;
+        server_name app.example.com;
         location /.well-known/acme-challenge/ {
             root /var/www/certbot;
         }
@@ -203,10 +203,10 @@ docker run --rm \
     -v $(pwd)/certbot/www:/var/www/certbot \
     certbot/certbot certonly --webroot \
     --webroot-path=/var/www/certbot \
-    --email admin@sh1z01d.ru \
+    --email admin@example.com \
     --agree-tos \
     --no-eff-email \
-    -d tipsio.sh1z01d.ru
+    -d app.example.com
 
 # Stop temporary nginx
 docker stop nginx-init
@@ -265,7 +265,7 @@ curl http://localhost:3000
 
 ### Test in Browser
 
-Visit: https://tipsio.sh1z01d.ru
+Visit: https://app.example.com
 
 ---
 
@@ -291,7 +291,7 @@ http {
 
     server {
         listen 80;
-        server_name tipsio.sh1z01d.ru;
+        server_name app.example.com;
         
         location /.well-known/acme-challenge/ {
             root /var/www/certbot;
@@ -304,10 +304,10 @@ http {
 
     server {
         listen 443 ssl http2;
-        server_name tipsio.sh1z01d.ru;
+        server_name app.example.com;
 
-        ssl_certificate /etc/letsencrypt/live/tipsio.sh1z01d.ru/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/tipsio.sh1z01d.ru/privkey.pem;
+        ssl_certificate /etc/letsencrypt/live/app.example.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/app.example.com/privkey.pem;
 
         # Security headers
         add_header X-Frame-Options "SAMEORIGIN" always;
@@ -383,13 +383,13 @@ docker-compose restart db
 
 ```bash
 # Check domain DNS
-dig tipsio.sh1z01d.ru
+dig app.example.com
 
 # Check certbot logs
 docker-compose logs certbot
 
 # Try manual certificate
-sudo certbot certonly --standalone -d tipsio.sh1z01d.ru
+sudo certbot certonly --standalone -d app.example.com
 ```
 
 ### Issue: Application Not Starting
@@ -492,5 +492,5 @@ cat backup-20241204.sql | docker exec -i tipsio-db-1 psql -U tipsio -d tipsio
 ---
 
 **Deployment Date**: December 4, 2025  
-**Server**: 91.222.236.239  
-**Domain**: tipsio.sh1z01d.ru
+**Server**: YOUR_SERVER_IP  
+**Domain**: app.example.com

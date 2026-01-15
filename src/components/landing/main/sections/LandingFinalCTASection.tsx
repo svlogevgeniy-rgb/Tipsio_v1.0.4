@@ -4,8 +4,8 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import { useTranslations } from '@/i18n/client';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from '@/i18n/client';
 import { fadeInUp } from './animation';
 
 export function LandingFinalCTASection() {

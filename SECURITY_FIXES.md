@@ -68,7 +68,7 @@ POSTGRES_PASSWORD=tipsio_password
 
 **Before**:
 ```bash
-SERVER="91.222.236.239"
+SERVER="your.server.example"
 USER="root"
 ```
 

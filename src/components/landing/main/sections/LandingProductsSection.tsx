@@ -3,8 +3,8 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { useTranslations } from '@/i18n/client';
 import { Card, CardContent } from '@/components/ui/card';
+import { useTranslations } from '@/i18n/client';
 import { fadeInUp } from './animation';
 
 export function LandingProductsSection() {
@@ -38,7 +38,7 @@ export function LandingProductsSection() {
           viewport={{ once: true }}
           className="text-center mb-12 lg:mb-16"
         >
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-bold text-foreground">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-bold text-slate-900">
             {t('sectionTitle')}
           </h2>
         </motion.div>
@@ -52,8 +52,8 @@ export function LandingProductsSection() {
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1, duration: 0.4 }}
             >
-              <Card className="h-full hover:shadow-md transition-shadow border-border overflow-hidden">
-                <div className="relative aspect-[4/3] bg-slate-100 border-b border-border">
+              <Card className="h-full hover:shadow-md transition-shadow border-slate-200 bg-white overflow-hidden">
+                <div className="relative aspect-[4/3] bg-slate-100 border-b border-slate-200">
                   <div className="absolute inset-0 p-6">
                     <Image
                       src={product.image}
@@ -65,8 +65,8 @@ export function LandingProductsSection() {
                   </div>
                 </div>
                 <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold text-foreground mb-2">{t(product.titleKey)}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{t(product.descKey)}</p>
+                  <h3 className="text-xl font-semibold text-slate-900 mb-2">{t(product.titleKey)}</h3>
+                  <p className="text-slate-600 leading-relaxed">{t(product.descKey)}</p>
                 </CardContent>
               </Card>
             </motion.div>

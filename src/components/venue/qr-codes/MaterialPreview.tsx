@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
-import Image from "next/image";
 import { QrDesignState } from "@/lib/qr-materials";
 
 interface MaterialPreviewProps {
@@ -25,12 +25,13 @@ export const MaterialPreview = ({
       style={bgStyle}
     >
       {showLogo && logoUrl && (
-        <Image
+        <img
           src={logoUrl}
           alt="Logo"
           width={Math.round(24 * scale)}
           height={Math.round(24 * scale)}
           className="mb-2 object-contain"
+          loading="lazy"
         />
       )}
       <h3
@@ -41,12 +42,25 @@ export const MaterialPreview = ({
       </h3>
 
       <div className="bg-white p-2 rounded-md shadow-sm">
-        <Image
-          src={qrDataUrl}
-          alt="QR Code"
-          width={Math.round(80 * scale)}
-          height={Math.round(80 * scale)}
-        />
+        {qrDataUrl ? (
+          <img
+            src={qrDataUrl}
+            alt="QR Code"
+            width={Math.round(80 * scale)}
+            height={Math.round(80 * scale)}
+            className="object-contain"
+            loading="lazy"
+          />
+        ) : (
+          <div
+            className="bg-slate-200/70"
+            style={{
+              width: Math.round(80 * scale),
+              height: Math.round(80 * scale),
+            }}
+            aria-hidden="true"
+          />
+        )}
       </div>
 
       <p

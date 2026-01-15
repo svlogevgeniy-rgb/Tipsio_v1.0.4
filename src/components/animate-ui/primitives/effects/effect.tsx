@@ -2,12 +2,11 @@
 
 import * as React from 'react';
 import { motion, type HTMLMotionProps, type Variant } from 'motion/react';
-
+import { Slot, type WithAsChild } from '@/components/animate-ui/primitives/animate/slot';
 import {
   useIsInView,
   type UseIsInViewOptions,
 } from '@/hooks/use-is-in-view';
-import { Slot, type WithAsChild } from '@/components/animate-ui/primitives/animate/slot';
 
 type SlideDirection = 'up' | 'down' | 'left' | 'right';
 

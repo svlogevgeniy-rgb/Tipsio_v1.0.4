@@ -38,9 +38,13 @@ enum StaffStatus {
 }
 
 enum QrType {
-  PERSONAL
-  TABLE
-  VENUE
+  // New types
+  INDIVIDUAL
+  TEAM
+  // Legacy types (kept for backward compatibility during migration)
+  PERSONAL  // @deprecated - migrated to INDIVIDUAL
+  TABLE     // @deprecated - migrated to TEAM
+  VENUE     // @deprecated - migrated to TEAM
 }
 
 enum QrStatus {
@@ -145,7 +149,13 @@ model Staff {
   venue       Venue           @relation(fields: [venueId], references: [id])
   userId      String?         @unique
   user        User?           @relation(fields: [userId], references: [id])
+  
+  // For INDIVIDUAL QR - direct relation
   qrCode      QrCode?         @relation("StaffQr")
+  
+  // For TEAM QR - many-to-many via QrCodeRecipient
+  teamQrCodes QrCodeRecipient[]
+  
   tips        Tip[]
   allocations TipAllocation[]
 
@@ -164,12 +174,34 @@ model QrCode {
 
   venueId String
   venue   Venue   @relation(fields: [venueId], references: [id])
+  
+  // For INDIVIDUAL QR - direct staff reference
   staffId String? @unique
   staff   Staff?  @relation("StaffQr", fields: [staffId], references: [id])
+  
+  // For TEAM QR - many-to-many via QrCodeRecipient
+  recipients QrCodeRecipient[]
+  
   tips    Tip[]
 
   @@index([venueId])
   @@index([shortCode])
+}
+
+// Many-to-many relation for TEAM QR codes to Staff
+model QrCodeRecipient {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  qrCodeId String
+  qrCode   QrCode @relation(fields: [qrCodeId], references: [id], onDelete: Cascade)
+
+  staffId String
+  staff   Staff  @relation(fields: [staffId], references: [id], onDelete: Cascade)
+
+  @@unique([qrCodeId, staffId])
+  @@index([qrCodeId])
+  @@index([staffId])
 }
 
 model Tip {

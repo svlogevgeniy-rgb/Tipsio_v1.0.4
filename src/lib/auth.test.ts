@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
 import * as fc from 'fast-check';
+import { describe, it, expect } from 'vitest';
 
 /**
  * **Feature: tipsio-refactor-v2, Property 2: Автоматическая авторизация после регистрации**

@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 import { MessageCircle } from 'lucide-react';
-import { useTranslations } from '@/i18n/client';
 import { Badge } from '@/components/ui/badge';
+import { useTranslations } from '@/i18n/client';
 
 export function LandingFooter() {
   const t = useTranslations('landingV3');

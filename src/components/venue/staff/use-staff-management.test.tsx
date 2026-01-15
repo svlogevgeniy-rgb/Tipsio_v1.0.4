@@ -1,6 +1,9 @@
-import { renderHook, waitFor } from '@testing-library/react';
 import { act } from 'react';
+import React from 'react';
+import { renderHook, waitFor } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import type { VenueDashboardData } from '@/features/venue-dashboard/api/getVenueDashboard';
+import { VenueDashboardProvider } from '@/features/venue-dashboard/context/VenueDashboardProvider';
 import { useStaffManagement } from './use-staff-management';
 import type { Staff, StaffForm } from './schema';
 
@@ -9,6 +12,22 @@ global.fetch = vi.fn();
 
 describe('useStaffManagement', () => {
   const mockVenueId = 'venue-123';
+  const mockDashboardData: VenueDashboardData = {
+    venue: {
+      id: mockVenueId,
+      name: 'Test Venue',
+      distributionMode: 'PERSONAL',
+    },
+    metrics: {
+      totalTips: 1000,
+      transactionCount: 10,
+      averageTip: 100,
+      activeStaff: 5,
+    },
+    topStaff: [],
+    hasPendingPayouts: false,
+  };
+
   const mockStaff: Staff[] = [
     {
       id: 'staff-1',
@@ -26,6 +45,13 @@ describe('useStaffManagement', () => {
     },
   ];
 
+  // Wrapper component that provides VenueDashboardProvider
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
+    <VenueDashboardProvider initialData={mockDashboardData} initialPeriod="week">
+      {children}
+    </VenueDashboardProvider>
+  );
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -35,38 +61,30 @@ describe('useStaffManagement', () => {
    * Validates: Requirements 1.1
    */
   it('should fetch staff data exactly once on mount without infinite re-renders', async () => {
-    const mockFetch = vi.fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ venue: { id: mockVenueId } }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ staff: mockStaff }),
-      });
+    const mockFetch = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ staff: mockStaff }),
+    });
 
     global.fetch = mockFetch;
 
-    const { result } = renderHook(() => useStaffManagement());
+    const { result } = renderHook(() => useStaffManagement(), { wrapper });
 
     // Initially loading
     expect(result.current.isPageLoading).toBe(true);
     expect(result.current.staff).toEqual([]);
-    expect(result.current.venueId).toBeNull();
 
     // Wait for data to load
     await waitFor(() => {
       expect(result.current.isPageLoading).toBe(false);
     });
 
-    // Verify fetch was called exactly twice (dashboard + staff)
-    expect(mockFetch).toHaveBeenCalledTimes(2);
-    expect(mockFetch).toHaveBeenNthCalledWith(1, '/api/venues/dashboard?period=week');
-    expect(mockFetch).toHaveBeenNthCalledWith(2, `/api/staff?venueId=${mockVenueId}`);
+    // Verify fetch was called exactly once (only staff, dashboard comes from context)
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(mockFetch).toHaveBeenCalledWith(`/api/staff?venueId=${mockVenueId}`);
 
     // Verify state is updated correctly
     expect(result.current.staff).toEqual(mockStaff);
-    expect(result.current.venueId).toBe(mockVenueId);
   });
 
   /**
@@ -74,17 +92,12 @@ describe('useStaffManagement', () => {
    * Validates: Requirements 1.3, 1.4
    */
   it('should set loading state to false after successful fetch', async () => {
-    global.fetch = vi.fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ venue: { id: mockVenueId } }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ staff: mockStaff }),
-      });
+    global.fetch = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ staff: mockStaff }),
+    });
 
-    const { result } = renderHook(() => useStaffManagement());
+    const { result } = renderHook(() => useStaffManagement(), { wrapper });
 
     expect(result.current.isPageLoading).toBe(true);
 
@@ -101,7 +114,7 @@ describe('useStaffManagement', () => {
 
     global.fetch = vi.fn().mockRejectedValueOnce(new Error('Network error'));
 
-    const { result } = renderHook(() => useStaffManagement());
+    const { result } = renderHook(() => useStaffManagement(), { wrapper });
 
     expect(result.current.isPageLoading).toBe(true);
 
@@ -133,17 +146,12 @@ describe('useStaffManagement', () => {
     };
 
     // Setup initial fetch
-    global.fetch = vi.fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ venue: { id: mockVenueId } }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ staff: mockStaff }),
-      });
+    global.fetch = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ staff: mockStaff }),
+    });
 
-    const { result } = renderHook(() => useStaffManagement());
+    const { result } = renderHook(() => useStaffManagement(), { wrapper });
 
     await waitFor(() => {
       expect(result.current.isPageLoading).toBe(false);
@@ -184,17 +192,12 @@ describe('useStaffManagement', () => {
     const avatarFile = new File(['avatar'], 'avatar.jpg', { type: 'image/jpeg' });
 
     // Setup initial fetch
-    global.fetch = vi.fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ venue: { id: mockVenueId } }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ staff: [] }),
-      });
+    global.fetch = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ staff: [] }),
+    });
 
-    const { result } = renderHook(() => useStaffManagement());
+    const { result } = renderHook(() => useStaffManagement(), { wrapper });
 
     await waitFor(() => {
       expect(result.current.isPageLoading).toBe(false);
@@ -233,17 +236,12 @@ describe('useStaffManagement', () => {
    */
   it('should update staff status in UI immediately after successful toggle', async () => {
     // Setup initial fetch
-    global.fetch = vi.fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ venue: { id: mockVenueId } }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ staff: mockStaff }),
-      });
+    global.fetch = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ staff: mockStaff }),
+    });
 
-    const { result } = renderHook(() => useStaffManagement());
+    const { result } = renderHook(() => useStaffManagement(), { wrapper });
 
     await waitFor(() => {
       expect(result.current.isPageLoading).toBe(false);
@@ -275,17 +273,12 @@ describe('useStaffManagement', () => {
    */
   it('should remove staff member from list after successful deletion', async () => {
     // Setup initial fetch
-    global.fetch = vi.fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ venue: { id: mockVenueId } }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ staff: mockStaff }),
-      });
+    global.fetch = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ staff: mockStaff }),
+    });
 
-    const { result } = renderHook(() => useStaffManagement());
+    const { result } = renderHook(() => useStaffManagement(), { wrapper });
 
     await waitFor(() => {
       expect(result.current.isPageLoading).toBe(false);
@@ -315,14 +308,14 @@ describe('useStaffManagement', () => {
    * Validates: Requirements 5.3
    */
   it('should not update state after component unmounts', async () => {
-    let resolveVenueFetch: (value: any) => void;
-    const venueFetchPromise = new Promise((resolve) => {
-      resolveVenueFetch = resolve;
+    let resolveStaffFetch: (value: Response) => void;
+    const staffFetchPromise = new Promise<Response>((resolve) => {
+      resolveStaffFetch = resolve;
     });
 
-    global.fetch = vi.fn().mockReturnValueOnce(venueFetchPromise);
+    global.fetch = vi.fn().mockReturnValueOnce(staffFetchPromise);
 
-    const { result, unmount } = renderHook(() => useStaffManagement());
+    const { result, unmount } = renderHook(() => useStaffManagement(), { wrapper });
 
     expect(result.current.isPageLoading).toBe(true);
 
@@ -330,9 +323,9 @@ describe('useStaffManagement', () => {
     unmount();
 
     // Resolve the fetch after unmount
-    resolveVenueFetch!({
+    resolveStaffFetch!({
       ok: true,
-      json: async () => ({ venue: { id: mockVenueId } }),
+      json: async () => ({ staff: mockStaff }),
     });
 
     // Wait a bit to ensure no state updates occur
@@ -344,17 +337,12 @@ describe('useStaffManagement', () => {
 
   it('should handle errors gracefully when adding staff fails', async () => {
     // Setup initial fetch
-    global.fetch = vi.fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ venue: { id: mockVenueId } }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ staff: mockStaff }),
-      });
+    global.fetch = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ staff: mockStaff }),
+    });
 
-    const { result } = renderHook(() => useStaffManagement());
+    const { result } = renderHook(() => useStaffManagement(), { wrapper });
 
     await waitFor(() => {
       expect(result.current.isPageLoading).toBe(false);
@@ -384,17 +372,12 @@ describe('useStaffManagement', () => {
 
   it('should handle errors gracefully when toggling status fails', async () => {
     // Setup initial fetch
-    global.fetch = vi.fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ venue: { id: mockVenueId } }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ staff: mockStaff }),
-      });
+    global.fetch = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ staff: mockStaff }),
+    });
 
-    const { result } = renderHook(() => useStaffManagement());
+    const { result } = renderHook(() => useStaffManagement(), { wrapper });
 
     await waitFor(() => {
       expect(result.current.isPageLoading).toBe(false);
@@ -423,17 +406,12 @@ describe('useStaffManagement', () => {
 
   it('should handle errors gracefully when deleting staff fails', async () => {
     // Setup initial fetch
-    global.fetch = vi.fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ venue: { id: mockVenueId } }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ staff: mockStaff }),
-      });
+    global.fetch = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ staff: mockStaff }),
+    });
 
-    const { result } = renderHook(() => useStaffManagement());
+    const { result } = renderHook(() => useStaffManagement(), { wrapper });
 
     await waitFor(() => {
       expect(result.current.isPageLoading).toBe(false);

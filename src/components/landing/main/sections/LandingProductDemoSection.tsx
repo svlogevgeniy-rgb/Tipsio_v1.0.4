@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useTranslations } from '@/i18n/client';
-import { Card, CardContent } from '@/components/ui/card';
 import { CountingNumber } from '@/components/animate-ui/primitives/texts/counting-number';
+import { Card, CardContent } from '@/components/ui/card';
+import { useTranslations } from '@/i18n/client';
 import { fadeInUp } from './animation';
 
 export function LandingProductDemoSection() {
@@ -15,7 +15,7 @@ export function LandingProductDemoSection() {
       <div className="max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-bold text-foreground mb-6">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-bold text-slate-900 mb-6">
               {t('productDemo.title')}
             </h2>
             <ul className="space-y-4">
@@ -24,7 +24,7 @@ export function LandingProductDemoSection() {
                   <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <span className="text-blue-600 text-sm">✓</span>
                   </div>
-                  <span className="text-muted-foreground">{point}</span>
+                  <span className="text-slate-600">{point}</span>
                 </li>
               ))}
             </ul>

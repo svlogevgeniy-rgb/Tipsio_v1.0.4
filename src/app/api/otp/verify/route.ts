@@ -3,10 +3,10 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-import prisma from "@/lib/prisma";
-import { verifyOtp } from "@/lib/otp";
 import { SignJWT } from "jose";
+import { z } from "zod";
+import { verifyOtp } from "@/lib/otp";
+import prisma from "@/lib/prisma";
 import {
   checkRateLimit,
   getClientIdentifier,

@@ -3,19 +3,19 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 import bcrypt from "bcryptjs";
-import prisma from "@/lib/prisma";
+import { z } from "zod";
 import { encryptKey } from "@/lib/midtrans";
+import prisma from "@/lib/prisma";
 import { generateShortCode } from "@/lib/qr";
-import { DISTRIBUTION_MODE_VALUES, isPooledMode } from "@/types/distribution";
 
 const registerSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   venueName: z.string().min(2, "Venue name must be at least 2 characters"),
   venueType: z.enum(["RESTAURANT", "CAFE", "BAR", "COFFEE_SHOP", "OTHER"]),
-  distributionMode: z.enum(DISTRIBUTION_MODE_VALUES).optional(),
+  // distributionMode is ignored - kept for backward compatibility but not used
+  distributionMode: z.string().optional(),
   midtrans: z.object({
     clientKey: z.string(),
     serverKey: z.string(),
@@ -35,7 +35,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { email, password, venueName, venueType, distributionMode, midtrans } = parsed.data;
+    const { email, password, venueName, venueType, midtrans } = parsed.data;
+    // Note: distributionMode is intentionally ignored - new flow uses QR types
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
@@ -57,23 +58,26 @@ export async function POST(request: NextRequest) {
       ? encryptKey(midtrans.serverKey) 
       : null;
 
-    // Create user and venue in transaction
+    // Create user, venue, staff profile, and individual QR in transaction
     const result = await prisma.$transaction(async (tx) => {
+      // 1. Create User with ADMIN role
       const user = await tx.user.create({
         data: {
           email,
           passwordHash,
-          role: "MANAGER",
+          role: "ADMIN",
         },
       });
 
+      // 2. Create Venue
       const venue = await tx.venue.create({
         data: {
           name: venueName,
           type: venueType,
           managerId: user.id,
           status: midtrans ? "ACTIVE" : "DRAFT",
-          distributionMode: distributionMode || "PERSONAL",
+          // Keep distributionMode as PERSONAL for backward compatibility
+          distributionMode: "PERSONAL",
           // Midtrans credentials
           midtransMerchantId: midtrans?.merchantId || null,
           midtransServerKey: encryptedServerKey,
@@ -82,20 +86,31 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // Auto-generate venue QR for POOLED mode
-      if (isPooledMode(distributionMode)) {
-        await tx.qrCode.create({
-          data: {
-            venueId: venue.id,
-            type: "VENUE",
-            label: venueName,
-            shortCode: generateShortCode(),
-            status: "ACTIVE",
-          },
-        });
-      }
+      // 3. Create Staff profile for owner
+      const staff = await tx.staff.create({
+        data: {
+          displayName: venueName,
+          role: "ADMINISTRATOR",
+          status: "ACTIVE",
+          participatesInPool: true,
+          venueId: venue.id,
+          userId: user.id,
+        },
+      });
 
-      return { user, venue };
+      // 4. Create Individual QR for owner
+      const qrCode = await tx.qrCode.create({
+        data: {
+          type: "INDIVIDUAL",
+          label: venueName,
+          shortCode: generateShortCode(),
+          status: "ACTIVE",
+          venueId: venue.id,
+          staffId: staff.id,
+        },
+      });
+
+      return { user, venue, staff, qrCode };
     });
 
     return NextResponse.json(
@@ -103,6 +118,8 @@ export async function POST(request: NextRequest) {
         message: "Registration successful",
         userId: result.user.id,
         venueId: result.venue.id,
+        staffId: result.staff.id,
+        qrCodeId: result.qrCode.id,
       },
       { status: 201 }
     );

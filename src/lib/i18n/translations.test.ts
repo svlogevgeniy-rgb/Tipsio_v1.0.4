@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest'
 import * as fc from 'fast-check'
+import { describe, it, expect } from 'vitest'
 import enMessages from '../../../messages/en.json'
-import ruMessages from '../../../messages/ru.json'
 import idMessages from '../../../messages/id.json'
+import ruMessages from '../../../messages/ru.json'
 
 type TranslationDict = Record<string, unknown>
 

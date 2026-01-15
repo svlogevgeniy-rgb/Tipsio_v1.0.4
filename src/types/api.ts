@@ -10,7 +10,22 @@ export type ApiErrorCode =
   | 'VALIDATION_ERROR'
   | 'CONFLICT'
   | 'INTERNAL_ERROR'
-  | 'MIDTRANS_REQUIRED';
+  | 'MIDTRANS_REQUIRED'
+  // QR-related error codes
+  | 'QR_NOT_FOUND'
+  | 'QR_INACTIVE'
+  | 'INVALID_QR_TYPE'
+  | 'TYPE_CHANGE_NOT_ALLOWED'
+  | 'INVALID_OPERATION'
+  | 'MIN_RECIPIENTS_REQUIRED'
+  | 'INDIVIDUAL_REQUIRES_STAFF'
+  | 'TEAM_REQUIRES_MIN_RECIPIENTS'
+  // Staff-related error codes
+  | 'STAFF_NOT_FOUND'
+  | 'STAFF_INACTIVE'
+  // Venue-related error codes
+  | 'VENUE_NOT_ACCEPTING'
+  | 'PAYMENT_NOT_CONFIGURED';
 
 // Standard API error response
 export interface ApiErrorResponse {

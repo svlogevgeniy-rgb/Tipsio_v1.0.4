@@ -3,12 +3,12 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import {
   getDecryptedCredentials,
   createSnapTransaction,
   generateTipOrderId,
 } from "@/lib/midtrans";
+import { prisma } from "@/lib/prisma";
 
 const PLATFORM_FEE_PERCENT = 5;
 
@@ -17,13 +17,13 @@ interface CreateTipRequest {
   amount: number;
   guestPaidFee: boolean;
   staffId: string | null;
-  type: "PERSONAL" | "POOL";
+  type?: "PERSONAL" | "POOL"; // Optional for backward compatibility, always use PERSONAL
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body: CreateTipRequest = await request.json();
-    const { qrCodeId, amount, guestPaidFee, staffId, type } = body;
+    const { qrCodeId, amount, guestPaidFee, staffId } = body;
 
     // Validate amount
     if (!amount || amount < 1000) {
@@ -85,21 +85,21 @@ export async function POST(request: NextRequest) {
     const totalAmount = guestPaidFee ? amount + platformFee : amount;
 
     // Determine target staff
+    // All new tips are PERSONAL type (Requirement 10.6)
     let targetStaffId: string | null = null;
-    let tipType: "PERSONAL" | "POOL" = type;
+    const tipType = "PERSONAL" as const;
 
     if (qrCode.type === "PERSONAL" && qrCode.staffId) {
       // Personal QR always goes to that staff
       targetStaffId = qrCode.staffId;
-      tipType = "PERSONAL";
-    } else if (type === "PERSONAL" && staffId) {
-      // Guest selected specific staff
+    } else if (qrCode.type === "INDIVIDUAL" && qrCode.staffId) {
+      // Individual QR always goes to that staff
+      targetStaffId = qrCode.staffId;
+    } else if (staffId) {
+      // Guest selected specific staff (from TEAM QR)
       targetStaffId = staffId;
-      tipType = "PERSONAL";
-    } else {
-      // Pool tip
-      tipType = "POOL";
     }
+    // Note: If no staffId, tip is still PERSONAL but without specific recipient
 
     // Generate order ID
     const orderId = generateTipOrderId(qrCode.venue.id);

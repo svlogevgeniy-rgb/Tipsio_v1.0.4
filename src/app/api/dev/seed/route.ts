@@ -3,9 +3,9 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { hash } from "bcryptjs";
 import { encrypt } from "@/lib/encryption";
+import { prisma } from "@/lib/prisma";
 
 // Only allow in development
 export async function POST() {

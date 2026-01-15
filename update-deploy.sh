@@ -1,23 +1,20 @@
 #!/bin/bash
 
 # Tipsio Update Deployment Script
-# Server: 5.129.242.61
 # Usage: ./update-deploy.sh
 
 set -euo pipefail
 
-SERVER="5.129.242.61"
-USER="root"
-APP_DIR="/opt/tipsio"
+SERVER="${DEPLOY_SERVER:?Error: DEPLOY_SERVER environment variable is required}"
+USER="${DEPLOY_USER:-root}"
+APP_DIR="${DEPLOY_APP_DIR:-/opt/tipsio}"
 
 echo "🚀 Starting Tipsio update deployment..."
 echo "📡 Connecting to ${SERVER}..."
 
 # Execute update commands on server
-ssh "${USER}@${SERVER}" "bash -s" << 'ENDSSH'
+ssh "${USER}@${SERVER}" "APP_DIR='${APP_DIR}' bash -s" << 'ENDSSH'
 set -euo pipefail
-
-APP_DIR="/opt/tipsio"
 
 echo "📂 Navigating to project directory..."
 cd "${APP_DIR}"

@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { useTranslations } from "@/i18n/client";
+import { useForm } from "react-hook-form";
 import { staffSchema, type StaffForm, type Staff } from "@/components/venue/staff/schema";
-import { useStaffManagement } from "@/components/venue/staff/use-staff-management";
-import { useAvatarUpload } from "@/components/venue/staff/use-avatar-upload";
 import { StaffDialog } from "@/components/venue/staff/staff-dialog";
 import { StaffList } from "@/components/venue/staff/staff-list";
+import { useAvatarUpload } from "@/components/venue/staff/use-avatar-upload";
+import { useStaffManagement } from "@/components/venue/staff/use-staff-management";
+import { useTranslations } from "@/i18n/client";
 
 export default function StaffManagementPage() {
   const t = useTranslations("venue.staff");

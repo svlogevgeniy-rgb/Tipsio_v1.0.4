@@ -4,58 +4,56 @@ export const revalidate = 0;
 
 import { NextRequest, NextResponse } from "next/server";
 
-// Mock data for development/testing when DB is not available
+// Mock data for development/testing - updated for new QR types
 const MOCK_DATA: Record<string, object> = {
   agung001: {
     id: "qr-001",
-    type: "PERSONAL",
+    type: "INDIVIDUAL",
     label: "Agung's QR",
     venue: {
       id: "venue-001",
       name: "Cafe Organic Canggu",
       logoUrl: null,
-      distributionMode: "PERSONAL",
-      allowStaffChoice: false,
     },
     staff: {
       id: "staff-001",
       displayName: "Agung",
       avatarUrl: null,
       role: "WAITER",
+      status: "ACTIVE",
     },
-    availableStaff: [],
+    recipients: [],
   },
   table01: {
     id: "qr-002",
-    type: "TABLE",
+    type: "TEAM",
     label: "Table 1",
     venue: {
       id: "venue-001",
       name: "Cafe Organic Canggu",
       logoUrl: null,
-      distributionMode: "POOLED",
-      allowStaffChoice: true,
     },
     staff: null,
-    availableStaff: [
-      { id: "staff-001", displayName: "Agung", avatarUrl: null, role: "WAITER" },
-      { id: "staff-002", displayName: "Wayan", avatarUrl: null, role: "BARISTA" },
-      { id: "staff-003", displayName: "Ketut", avatarUrl: null, role: "BARTENDER" },
+    recipients: [
+      { id: "staff-001", displayName: "Agung", avatarUrl: null, role: "WAITER", status: "ACTIVE" },
+      { id: "staff-002", displayName: "Wayan", avatarUrl: null, role: "BARISTA", status: "ACTIVE" },
+      { id: "staff-003", displayName: "Ketut", avatarUrl: null, role: "BARTENDER", status: "ACTIVE" },
     ],
   },
   organic: {
     id: "qr-003",
-    type: "VENUE",
+    type: "TEAM",
     label: "Main Entrance",
     venue: {
       id: "venue-001",
       name: "Cafe Organic Canggu",
       logoUrl: null,
-      distributionMode: "POOLED",
-      allowStaffChoice: false,
     },
     staff: null,
-    availableStaff: [],
+    recipients: [
+      { id: "staff-001", displayName: "Agung", avatarUrl: null, role: "WAITER", status: "ACTIVE" },
+      { id: "staff-002", displayName: "Wayan", avatarUrl: null, role: "BARISTA", status: "ACTIVE" },
+    ],
   },
 };
 
@@ -83,18 +81,32 @@ export async function GET(
               id: true,
               name: true,
               logoUrl: true,
-              distributionMode: true,
-              allowStaffChoice: true,
               midtransConnected: true,
               status: true,
             },
           },
+          // For INDIVIDUAL QR - direct staff
           staff: {
             select: {
               id: true,
               displayName: true,
               avatarUrl: true,
               role: true,
+              status: true,
+            },
+          },
+          // For TEAM QR - recipients via junction table
+          recipients: {
+            include: {
+              staff: {
+                select: {
+                  id: true,
+                  displayName: true,
+                  avatarUrl: true,
+                  role: true,
+                  status: true,
+                },
+              },
             },
           },
         },
@@ -102,88 +114,106 @@ export async function GET(
 
       if (!qrCode) {
         return NextResponse.json(
-          { error: "QR code not found" },
+          { code: "QR_NOT_FOUND", error: "QR code not found" },
           { status: 404 }
         );
       }
 
       if (qrCode.status !== "ACTIVE") {
         return NextResponse.json(
-          { error: "This QR code has been deactivated" },
-          { status: 404 }
+          { code: "QR_INACTIVE", error: "This QR code has been deactivated" },
+          { status: 400 }
         );
       }
 
       if (qrCode.venue.status !== "ACTIVE") {
         return NextResponse.json(
-          { error: "This venue is not accepting tips at the moment" },
-          { status: 404 }
+          { code: "VENUE_NOT_ACCEPTING", error: "This venue is not accepting tips at the moment" },
+          { status: 400 }
         );
       }
 
       if (!qrCode.venue.midtransConnected) {
         return NextResponse.json(
-          { error: "Payment is not configured for this venue" },
-          { status: 404 }
+          { code: "PAYMENT_NOT_CONFIGURED", error: "Payment is not configured for this venue" },
+          { status: 400 }
         );
       }
 
-      let availableStaff: Array<{
-        id: string;
-        displayName: string;
-        avatarUrl: string | null;
-        role: string;
-      }> = [];
+      // Determine QR type for response
+      // Handle both new types (INDIVIDUAL, TEAM) and legacy types (PERSONAL, TABLE, VENUE)
+      const isIndividualType = qrCode.type === "INDIVIDUAL" || qrCode.type === "PERSONAL";
+      const isTeamType = qrCode.type === "TEAM" || qrCode.type === "TABLE" || qrCode.type === "VENUE";
 
-      // Load available staff for non-personal QR codes when:
-      // 1. Distribution mode is PERSONAL (tips go to specific staff)
-      // 2. OR allowStaffChoice is enabled (guests can choose who to tip)
-      if (qrCode.type !== "PERSONAL" && 
-          (qrCode.venue.distributionMode === "PERSONAL" || qrCode.venue.allowStaffChoice)) {
-        const staff = await prisma.staff.findMany({
-          where: {
-            venueId: qrCode.venue.id,
-            status: "ACTIVE",
-            participatesInPool: true,
+      if (isIndividualType) {
+        // INDIVIDUAL QR - return staff directly
+        // Check if staff is active
+        if (qrCode.staff && qrCode.staff.status !== "ACTIVE") {
+          return NextResponse.json(
+            { code: "STAFF_INACTIVE", error: "Staff member is inactive" },
+            { status: 400 }
+          );
+        }
+
+        return NextResponse.json({
+          id: qrCode.id,
+          type: "INDIVIDUAL",
+          label: qrCode.label,
+          venue: {
+            id: qrCode.venue.id,
+            name: qrCode.venue.name,
+            logoUrl: qrCode.venue.logoUrl,
           },
-          select: {
-            id: true,
-            displayName: true,
-            avatarUrl: true,
-            role: true,
-          },
-          orderBy: {
-            displayName: "asc",
-          },
+          staff: qrCode.staff,
+          recipients: [],
         });
-        availableStaff = staff;
       }
 
-      return NextResponse.json({
-        id: qrCode.id,
-        type: qrCode.type,
-        label: qrCode.label,
-        venue: {
-          id: qrCode.venue.id,
-          name: qrCode.venue.name,
-          logoUrl: qrCode.venue.logoUrl,
-          distributionMode: qrCode.venue.distributionMode,
-          allowStaffChoice: qrCode.venue.allowStaffChoice,
-        },
-        staff: qrCode.staff,
-        availableStaff,
-      });
+      if (isTeamType) {
+        // TEAM QR - return only active recipients
+        const activeRecipients = qrCode.recipients
+          .map(r => r.staff)
+          .filter(staff => staff.status === "ACTIVE")
+          .sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+        // Check if all recipients are inactive
+        if (activeRecipients.length === 0) {
+          return NextResponse.json(
+            { code: "VENUE_NOT_ACCEPTING", error: "No active staff available to receive tips" },
+            { status: 400 }
+          );
+        }
+
+        return NextResponse.json({
+          id: qrCode.id,
+          type: "TEAM",
+          label: qrCode.label,
+          venue: {
+            id: qrCode.venue.id,
+            name: qrCode.venue.name,
+            logoUrl: qrCode.venue.logoUrl,
+          },
+          staff: null,
+          recipients: activeRecipients,
+        });
+      }
+
+      // Fallback for unknown type
+      return NextResponse.json(
+        { code: "INVALID_QR_TYPE", error: "Invalid QR code type" },
+        { status: 400 }
+      );
     } catch {
       // Database not available, return 404 for unknown codes
       return NextResponse.json(
-        { error: "QR code not found" },
+        { code: "QR_NOT_FOUND", error: "QR code not found" },
         { status: 404 }
       );
     }
   } catch (error) {
     console.error("Error fetching QR data:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { code: "INTERNAL_ERROR", error: "Internal server error" },
       { status: 500 }
     );
   }

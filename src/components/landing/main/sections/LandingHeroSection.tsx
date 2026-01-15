@@ -2,9 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useTranslations } from '@/i18n/client';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Dialog,
   DialogContent,
@@ -12,6 +10,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { useTranslations } from '@/i18n/client';
 
 export function LandingHeroSection() {
   const t = useTranslations('landingV3');
@@ -40,7 +40,7 @@ export function LandingHeroSection() {
 
         <div className="relative max-w-4xl mx-auto text-center">
           {/* Main heading */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-extrabold text-foreground leading-tight mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-extrabold text-slate-900 leading-tight mb-6">
             {t('hero.headlinePrefix')}{' '}
             <span className="italic">{t('hero.headlineItalic')}</span>{' '}
             {t('hero.headlineSuffix')}{' '}
@@ -48,7 +48,7 @@ export function LandingHeroSection() {
           </h1>
 
           {/* Subheadline */}
-          <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
             {t('hero.subheadline')}
           </p>
 
@@ -64,7 +64,7 @@ export function LandingHeroSection() {
             </Link>
             <Button
               variant="outline"
-              className="h-14 px-8 text-base rounded-[10px] border-slate-300 hover:bg-blue-600 hover:text-white hover:border-blue-600 min-w-[220px]"
+              className="h-14 px-8 text-base rounded-[10px] bg-white text-slate-900 border-slate-300 hover:bg-blue-600 hover:text-white hover:border-blue-600 min-w-[220px]"
               onClick={() => setIsDialogOpen(true)}
             >
               {t('hero.ctaSecondary')}

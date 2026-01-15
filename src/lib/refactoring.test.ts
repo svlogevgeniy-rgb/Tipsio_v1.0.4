@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
+import { describe, it, expect } from 'vitest';
 
 /**
  * **Feature: structural-refactoring, Property 1: Build Verification Invariant**

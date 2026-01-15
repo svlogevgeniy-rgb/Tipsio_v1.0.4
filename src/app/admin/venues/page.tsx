@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Building2, Search, MoreVertical, Ban, CheckCircle, ExternalLink } from 'lucide-react'
+import { Building2, Search, MoreVertical, Ban, CheckCircle, ExternalLink, AlertTriangle, RefreshCw } from 'lucide-react'
+import { AuroraBackground } from '@/components/layout/aurora-background'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Badge } from '@/components/ui/badge'
-import { AuroraBackground } from '@/components/layout/aurora-background'
 import { useTranslations } from '@/i18n/client'
 import { formatCurrencyIDRIntl } from '@/lib/i18n/formatters'
 
@@ -27,30 +27,42 @@ export default function AdminVenuesPage() {
   const t = useTranslations('admin.venues')
   const [venues, setVenues] = useState<Venue[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
 
   useEffect(() => {
+    const fetchVenues = async () => {
+      setLoading(true)
+      setError(null)
+      try {
+        const params = new URLSearchParams()
+        if (search) params.append('search', search)
+        if (statusFilter !== 'all') params.append('status', statusFilter)
+        
+        const res = await fetch(`/api/admin/venues?${params.toString()}`)
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: Failed to fetch venues`)
+        }
+        const data = await res.json()
+        setVenues(data)
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to fetch venues'
+        setError(message)
+        console.error('Failed to fetch venues:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
     fetchVenues()
   }, [search, statusFilter])
 
-  const fetchVenues = async () => {
+  const handleRetry = () => {
+    setError(null)
     setLoading(true)
-    try {
-      const params = new URLSearchParams()
-      if (search) params.append('search', search)
-      if (statusFilter !== 'all') params.append('status', statusFilter)
-      
-      const res = await fetch(`/api/admin/venues?${params.toString()}`)
-      if (res.ok) {
-        const data = await res.json()
-        setVenues(data)
-      }
-    } catch (error) {
-      console.error('Failed to fetch venues:', error)
-    } finally {
-      setLoading(false)
-    }
+    // Trigger re-fetch by updating a dependency
+    setSearch(prev => prev)
   }
 
 
@@ -192,6 +204,24 @@ export default function AdminVenuesPage() {
                     <tr>
                       <td colSpan={6} className="p-8 text-center text-muted-foreground">
                         Loading...
+                      </td>
+                    </tr>
+                  ) : error ? (
+                    <tr>
+                      <td colSpan={6} className="p-8">
+                        <div className="flex flex-col items-center gap-4">
+                          <AlertTriangle className="w-8 h-8 text-red-400" />
+                          <p className="text-red-400">{error}</p>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={handleRetry}
+                            className="gap-2"
+                          >
+                            <RefreshCw className="w-4 h-4" />
+                            Retry
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   ) : venues.length === 0 ? (

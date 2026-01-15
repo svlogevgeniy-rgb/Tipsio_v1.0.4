@@ -73,12 +73,12 @@ Choose one method:
 ### Option A: rsync
 ```bash
 rsync -avz --exclude 'node_modules' --exclude '.next' --exclude '.git' \
-  ./ deploy@91.222.236.239:/opt/tipsio/
+  ./ deploy@YOUR_SERVER_IP:/opt/tipsio/
 ```
 
 ### Option B: Git
 ```bash
-ssh deploy@91.222.236.239
+ssh deploy@YOUR_SERVER_IP
 cd /opt/tipsio
 git clone https://github.com/super-sh1z01d/tipsio.git .
 ```
@@ -95,7 +95,7 @@ git clone https://github.com/super-sh1z01d/tipsio.git .
 - [ ] Added DB_PASSWORD (generated)
 - [ ] Added DB_NAME=tipsio
 - [ ] Added NEXTAUTH_SECRET (generated)
-- [ ] Added NEXTAUTH_URL=https://tipsio.sh1z01d.ru
+- [ ] Added NEXTAUTH_URL=https://app.example.com
 - [ ] Added ENCRYPTION_KEY (generated)
 - [ ] Added MIDTRANS_SERVER_KEY (production)
 - [ ] Added MIDTRANS_CLIENT_KEY (production)
@@ -281,8 +281,8 @@ Use this section for deployment-specific notes:
 
 ```
 Date: December 4, 2025
-Server: 91.222.236.239
-Domain: tipsio.sh1z01d.ru
+Server: YOUR_SERVER_IP
+Domain: app.example.com
 Deployment Method: Manual
 Issues Encountered: None
 Special Configurations: None

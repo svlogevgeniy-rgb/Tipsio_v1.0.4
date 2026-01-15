@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
+import { Loader2, DollarSign, Building2, ArrowLeft } from "lucide-react";
+import { AuroraBackground } from "@/components/layout/aurora-background";
 import { Card } from "@/components/ui/card";
 import {
   Select,
@@ -10,10 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AuroraBackground } from "@/components/layout/aurora-background";
-import { Loader2, DollarSign, Building2, ArrowLeft } from "lucide-react";
-import { formatCurrencyIDRIntl } from "@/lib/i18n/formatters";
-import Link from "next/link";
+import { formatCurrencyIDRIntl, formatDateRange, formatNumber } from "@/lib/i18n/formatters";
 
 interface VenueCommission {
   venueId: string;
@@ -49,13 +49,7 @@ function getAvailablePeriods() {
 
     periods.push({
       value: `${startStr}_${endStr}`,
-      label: `${start.toLocaleDateString("en-US", {
-        day: "numeric",
-        month: "short",
-      })} – ${end.toLocaleDateString("en-US", {
-        day: "numeric",
-        month: "short",
-      })}`,
+      label: formatDateRange(start, end),
     });
   }
 
@@ -216,7 +210,7 @@ export default function AdminCommissionsPage() {
                     <span className="text-sm">Total Transactions</span>
                   </div>
                   <div className="text-2xl font-bold text-white">
-                    {data.totalTransactions.toLocaleString()}
+                    {formatNumber(data.totalTransactions)}
                   </div>
                 </Card>
               </motion.div>

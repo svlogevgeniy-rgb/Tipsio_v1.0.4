@@ -1,12 +1,12 @@
 'use client';
 
-import { type UseFormReturn } from 'react-hook-form';
 import { ArrowRight, Check, Loader2 } from 'lucide-react';
+import { type UseFormReturn } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useTranslations } from '@/i18n/client';
-import type { Step1Form, Step2Form, Step3Form } from './schemas';
+import type { Step1Form, Step2Form } from './schemas';
 
 interface AccountDetailsFormProps {
   form: UseFormReturn<Step1Form>;
@@ -87,6 +87,7 @@ interface MidtransCredentialsFormProps {
   onTestConnection: () => void;
   isTesting: boolean;
   midtransValid: boolean;
+  isSubmitting?: boolean;
 }
 
 export function MidtransCredentialsForm({
@@ -95,6 +96,7 @@ export function MidtransCredentialsForm({
   onTestConnection,
   isTesting,
   midtransValid,
+  isSubmitting = false,
 }: MidtransCredentialsFormProps) {
   const t = useTranslations('venue.register');
 
@@ -157,46 +159,7 @@ export function MidtransCredentialsForm({
         )}
       </Button>
 
-      <Button type="submit" disabled={!midtransValid} className="w-full h-14 text-lg font-heading font-bold">
-        {t('continue')}
-        <ArrowRight className="ml-2 h-5 w-5" />
-      </Button>
-    </form>
-  );
-}
-
-interface DistributionModeFormProps {
-  form: UseFormReturn<Step3Form>;
-  onSubmit: (data: Step3Form) => void;
-  isSubmitting: boolean;
-}
-
-export function DistributionModeForm({ form, onSubmit, isSubmitting }: DistributionModeFormProps) {
-  const t = useTranslations('venue.register');
-
-  return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-      <div className="space-y-3">
-        {[
-          { value: 'POOLED', title: t('pooledMode'), desc: t('pooledModeDesc') },
-          { value: 'PERSONAL', title: t('personalMode'), desc: t('personalModeDesc') },
-        ].map((option) => (
-          <label
-            key={option.value}
-            className={`flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-              form.watch('distributionMode') === option.value ? 'border-primary bg-primary/10' : 'border-white/10 hover:border-white/20'
-            }`}
-          >
-            <input type="radio" value={option.value} {...form.register('distributionMode')} className="mt-1" />
-            <div>
-              <div className="font-semibold">{option.title}</div>
-              <div className="text-sm text-muted-foreground">{option.desc}</div>
-            </div>
-          </label>
-        ))}
-      </div>
-
-      <Button type="submit" disabled={isSubmitting} className="w-full h-14 text-lg font-heading font-bold">
+      <Button type="submit" disabled={!midtransValid || isSubmitting} className="w-full h-14 text-lg font-heading font-bold">
         {isSubmitting ? (
           <>
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -212,3 +175,6 @@ export function DistributionModeForm({ form, onSubmit, isSubmitting }: Distribut
     </form>
   );
 }
+
+// Note: DistributionModeForm removed as part of QR code types refactoring
+// Distribution mode is no longer selected during registration

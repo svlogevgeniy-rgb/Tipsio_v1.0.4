@@ -3,9 +3,9 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { NextRequest, NextResponse } from "next/server";
-import { getMaterialById, getBackgroundStyles, getDimensions } from "@/lib/qr-materials";
-import { generateQrDataUrl, buildTipUrl } from "@/lib/qr";
 import sharp from "sharp";
+import { generateQrDataUrl, buildTipUrl } from "@/lib/qr";
+import { getMaterialById, getBackgroundStyles, getDimensions } from "@/lib/qr-materials";
 
 /**
  * GET /api/qr/[id]/material - Download QR material in specified design

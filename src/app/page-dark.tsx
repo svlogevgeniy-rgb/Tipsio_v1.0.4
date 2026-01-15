@@ -3,10 +3,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTranslations } from "@/i18n/client";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import {
   ArrowRight,
   Sparkles,
@@ -31,6 +27,10 @@ import {
   HeartHandshake,
   Shield,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { useTranslations } from "@/i18n/client";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },

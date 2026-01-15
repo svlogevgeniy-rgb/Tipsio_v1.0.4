@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import type { LucideIcon } from 'lucide-react';
 import { Shield, QrCode, BarChart3, Building2, Users, Heart } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import type { LucideIcon } from 'lucide-react';
 
 export interface LegacyStep {
   icon: LucideIcon;

@@ -1,10 +1,11 @@
 'use client'
 
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Building2, FileText, TrendingUp, Users, DollarSign, AlertTriangle } from 'lucide-react'
-import Link from 'next/link'
 import { AuroraBackground } from '@/components/layout/aurora-background'
 import { useTranslations } from '@/i18n/client'
+import { formatNumber } from '@/lib/i18n/formatters'
 
 export default function AdminDashboardPage() {
   const t = useTranslations('admin.dashboard')
@@ -68,7 +69,7 @@ export default function AdminDashboardPage() {
                 <FileText className="w-4 h-4 text-primary" />
                 <p className="text-sm text-muted-foreground">{t('allTimeTxns')}</p>
               </div>
-              <p className="text-2xl font-bold text-white">{stats.totalTransactions.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-white">{formatNumber(stats.totalTransactions)}</p>
             </div>
             <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-2">

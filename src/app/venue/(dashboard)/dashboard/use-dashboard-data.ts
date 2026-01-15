@@ -1,7 +1,9 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
-import type { DistributionMode } from "@/types/distribution";
+import { useEffect } from 'react';
+import type { DashboardPeriod } from '@/features/venue-dashboard/constants';
+import { useVenueDashboard } from '@/features/venue-dashboard/hooks/useVenueDashboard';
+import type { DistributionMode } from '@/types/distribution';
 
 export interface DashboardData {
   venue: {
@@ -34,47 +36,41 @@ interface UseDashboardDataOptions {
   onUnauthorized: () => void;
 }
 
-const DASHBOARD_ENDPOINT = "/api/venues/dashboard";
-const DASHBOARD_ERROR_MESSAGE = "Failed to load dashboard";
-
+/**
+ * Hook to access dashboard data from shared context
+ * Maintains backward compatibility with existing interface
+ */
 export function useDashboardData({
   period,
   onUnauthorized,
 }: UseDashboardDataOptions) {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<DashboardData | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    data: contextData,
+    isLoading,
+    error: contextError,
+    period: currentPeriod,
+    setPeriod,
+    refresh,
+  } = useVenueDashboard();
 
-  const fetchDashboard = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`${DASHBOARD_ENDPOINT}?period=${period}`);
-      if (response.status === 401) {
-        onUnauthorized();
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error(DASHBOARD_ERROR_MESSAGE);
-      }
-
-      const result: DashboardData = await response.json();
-      setData(result);
-    } catch {
-      setError(DASHBOARD_ERROR_MESSAGE);
-    } finally {
-      setLoading(false);
-    }
-  }, [onUnauthorized, period]);
-
+  // Update period when it changes
   useEffect(() => {
-    fetchDashboard();
-  }, [fetchDashboard]);
+    if (period !== currentPeriod) {
+      setPeriod(period as DashboardPeriod);
+    }
+  }, [period, currentPeriod, setPeriod]);
+
+  // Handle unauthorized (401) - check if error indicates auth issue
+  useEffect(() => {
+    if (contextError && contextError.includes('401')) {
+      onUnauthorized();
+    }
+  }, [contextError, onUnauthorized]);
 
   return {
-    loading,
-    data,
-    error,
-    refresh: fetchDashboard,
+    loading: isLoading,
+    data: contextData,
+    error: contextError,
+    refresh,
   };
 }

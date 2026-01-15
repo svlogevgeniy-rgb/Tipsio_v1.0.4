@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import { describe, it, expect, vi } from 'vitest';
+import React from 'react';
+import Link from 'next/link';
 import { render } from '@testing-library/react';
 import * as fc from 'fast-check';
-import Link from 'next/link';
-import React from 'react';
+import { describe, it, expect, vi } from 'vitest';
 import { Badge } from '@/components/ui/badge';
 
 type MockLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {

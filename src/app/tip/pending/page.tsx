@@ -2,9 +2,9 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { Loader2, Clock } from "lucide-react";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useTranslations } from "@/i18n/client";
-import { Loader2, Clock } from "lucide-react";
 
 const POLL_INTERVAL = 3000;
 const MAX_POLLS = 60;

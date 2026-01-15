@@ -1,5 +1,5 @@
-import type { LucideIcon } from 'lucide-react';
 import { Shield, QrCode, BarChart3, Building2, Users, Heart } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 export type StepIcon = LucideIcon;
 

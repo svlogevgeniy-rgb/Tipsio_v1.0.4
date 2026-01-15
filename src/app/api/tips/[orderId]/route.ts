@@ -23,6 +23,7 @@ export async function GET(
         staff: {
           select: {
             displayName: true,
+            avatarUrl: true,
           },
         },
       },
@@ -38,6 +39,7 @@ export async function GET(
     return NextResponse.json({
       amount: tip.amount,
       staffName: tip.staff?.displayName || null,
+      staffAvatarUrl: tip.staff?.avatarUrl || null,
       venueName: tip.venue.name,
       status: tip.status,
       type: tip.type,

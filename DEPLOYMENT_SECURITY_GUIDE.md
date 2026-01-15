@@ -139,9 +139,9 @@ TWILIO_PHONE_NUMBER="<your-number>"
 
 ```bash
 # Set environment variables
-export DEPLOY_SERVER="91.222.236.239"
+export DEPLOY_SERVER="YOUR_SERVER_IP"
 export DEPLOY_USER="deploy"
-export DEPLOY_DOMAIN="tipsio.sh1z01d.ru"
+export DEPLOY_DOMAIN="app.example.com"
 
 # Run deployment script
 ./deploy.sh

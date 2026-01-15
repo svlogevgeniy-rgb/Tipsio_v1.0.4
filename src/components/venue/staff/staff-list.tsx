@@ -1,11 +1,12 @@
 'use client';
 
+import { Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Trash2 } from 'lucide-react';
 import { useTranslations } from '@/i18n/client';
-import type { Staff } from './schema';
+import { formatNumber } from '@/lib/i18n/formatters';
 import { StaffAvatar } from './staff-avatar';
+import type { Staff } from './schema';
 
 interface StaffListProps {
   staff: Staff[];
@@ -74,11 +75,11 @@ export function StaffList({ staff, roleLabels, onToggleStatus, onDelete, onEmpty
             <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
               <span>💰 {member._count?.tips || 0} {t('tipsCount')}</span>
               <span>
-                📊 {t('totalEarned')}: Rp {(member.totalTips || 0).toLocaleString()}
+                📊 {t('totalEarned')}: Rp {formatNumber(member.totalTips || 0)}
               </span>
               {(member.balance || 0) > 0 && (
                 <span className="text-primary font-medium">
-                  💵 {t('balance')}: Rp {member.balance?.toLocaleString()}
+                  💵 {t('balance')}: Rp {formatNumber(member.balance || 0)}
                 </span>
               )}
             </div>

@@ -3,8 +3,8 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { getDecryptedCredentials, verifyWebhookSignature } from "@/lib/midtrans";
+import { prisma } from "@/lib/prisma";
 
 interface MidtransNotification {
   transaction_time: string;

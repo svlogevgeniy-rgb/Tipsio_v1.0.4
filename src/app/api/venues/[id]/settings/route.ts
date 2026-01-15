@@ -62,15 +62,29 @@ export async function PATCH(
     if ('error' in venueResult) return venueResult.error;
 
     const body = await request.json();
-    const { distributionMode, allowStaffChoice } = body;
+    // Note: distributionMode and allowStaffChoice are intentionally ignored
+    // as part of QR code types refactoring. These fields are kept in DB for
+    // historical data but no longer used in the new QR-based flow.
+    const { midtransMerchantId, midtransServerKey, midtransClientKey } = body;
 
-    await prisma.venue.update({
-      where: { id: venueId },
-      data: {
-        distributionMode: distributionMode || undefined,
-        allowStaffChoice: allowStaffChoice !== undefined ? allowStaffChoice : undefined,
-      },
-    });
+    // Only update Midtrans settings if provided
+    const updateData: Record<string, unknown> = {};
+    if (midtransMerchantId !== undefined) {
+      updateData.midtransMerchantId = midtransMerchantId;
+    }
+    if (midtransServerKey !== undefined) {
+      updateData.midtransServerKey = midtransServerKey;
+    }
+    if (midtransClientKey !== undefined) {
+      updateData.midtransClientKey = midtransClientKey;
+    }
+
+    if (Object.keys(updateData).length > 0) {
+      await prisma.venue.update({
+        where: { id: venueId },
+        data: updateData,
+      });
+    }
 
     return successResponse({ success: true });
   } catch (error) {

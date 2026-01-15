@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { FileText, Search, X, AlertTriangle, CheckCircle, Clock, XCircle } from 'lucide-react'
+import { FileText, Search, X, AlertTriangle, CheckCircle, Clock, XCircle, RefreshCw } from 'lucide-react'
+import { AuroraBackground } from '@/components/layout/aurora-background'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { AuroraBackground } from '@/components/layout/aurora-background'
 import { useTranslations } from '@/i18n/client'
-import { formatCurrencyIDRIntl } from '@/lib/i18n/formatters'
+import { formatCurrencyIDRIntl, formatDateShort, formatDateTime } from '@/lib/i18n/formatters'
 
 interface Transaction {
   id: string
@@ -29,42 +29,49 @@ export default function AdminTransactionsPage() {
   const t = useTranslations('admin.transactions')
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [midtransFilter, setMidtransFilter] = useState<string>('all')
   const [tipsioFilter, setTipsioFilter] = useState<string>('all')
   const [selectedTx, setSelectedTx] = useState<Transaction | null>(null)
 
   useEffect(() => {
+    const fetchTransactions = async () => {
+      setLoading(true)
+      setError(null)
+      try {
+        const params = new URLSearchParams()
+        if (search) params.append('search', search)
+        if (midtransFilter !== 'all') params.append('midtransStatus', midtransFilter)
+        if (tipsioFilter !== 'all') params.append('tipsioStatus', tipsioFilter)
+        
+        const res = await fetch(`/api/admin/transactions?${params.toString()}`)
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: Failed to fetch transactions`)
+        }
+        const data = await res.json()
+        setTransactions(data)
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to fetch transactions'
+        setError(message)
+        console.error('Failed to fetch transactions:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
     fetchTransactions()
   }, [search, midtransFilter, tipsioFilter])
 
-  const fetchTransactions = async () => {
+  const handleRetry = () => {
+    setError(null)
     setLoading(true)
-    try {
-      const params = new URLSearchParams()
-      if (search) params.append('search', search)
-      if (midtransFilter !== 'all') params.append('midtransStatus', midtransFilter)
-      if (tipsioFilter !== 'all') params.append('tipsioStatus', tipsioFilter)
-      
-      const res = await fetch(`/api/admin/transactions?${params.toString()}`)
-      if (res.ok) {
-        const data = await res.json()
-        setTransactions(data)
-      }
-    } catch (error) {
-      console.error('Failed to fetch transactions:', error)
-    } finally {
-      setLoading(false)
-    }
+    // Trigger re-fetch by updating a dependency
+    setSearch(prev => prev)
   }
   const formatTime = (dateStr: string) => {
     const date = new Date(dateStr)
     return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-  }
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr)
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }
 
   const getMidtransStatusBadge = (status: string) => {
@@ -215,6 +222,24 @@ export default function AdminTransactionsPage() {
                         Loading...
                       </td>
                     </tr>
+                  ) : error ? (
+                    <tr>
+                      <td colSpan={6} className="p-8">
+                        <div className="flex flex-col items-center gap-4">
+                          <AlertTriangle className="w-8 h-8 text-red-400" />
+                          <p className="text-red-400">{error}</p>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={handleRetry}
+                            className="gap-2"
+                          >
+                            <RefreshCw className="w-4 h-4" />
+                            Retry
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
                   ) : transactions.length === 0 ? (
                     <tr>
                       <td colSpan={6} className="p-8 text-center text-muted-foreground">
@@ -234,7 +259,7 @@ export default function AdminTransactionsPage() {
                       <td className="p-4">
                         <div>
                           <p className="font-medium text-white">{formatTime(tx.createdAt)}</p>
-                          <p className="text-sm text-muted-foreground">{formatDate(tx.createdAt)}</p>
+                          <p className="text-sm text-muted-foreground">{formatDateShort(tx.createdAt)}</p>
                         </div>
                       </td>
                       <td className="p-4">
@@ -304,7 +329,7 @@ export default function AdminTransactionsPage() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">{t('time')}</p>
-                  <p className="text-white">{new Date(selectedTx.createdAt).toLocaleString()}</p>
+                  <p className="text-white">{formatDateTime(selectedTx.createdAt)}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">{t('midtransStatus')}</p>

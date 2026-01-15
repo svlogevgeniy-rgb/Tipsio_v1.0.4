@@ -1,36 +1,39 @@
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-import { NextRequest, NextResponse } from "next/server";
-import { handleApiError, notFoundError, successResponse, validationError } from "@/lib/api/error-handler";
-import { requireAuth } from "@/lib/api/middleware";
-import prisma from "@/lib/prisma";
-import { buildTipUrl, generateQrPng, generateQrSvg } from "@/lib/qr";
-import type { ApiErrorResponse } from "@/types/api";
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { handleApiError, successResponse } from '@/lib/api/error-handler';
+import { requireAuth, requireVenueAccess } from '@/lib/api/middleware';
+import prisma from '@/lib/prisma';
+import type { ApiErrorResponse } from '@/types/api';
 
-// GET /api/qr/[id] - Get QR code details
+// Schema for updating Team QR recipients
+const updateTeamQrSchema = z.object({
+  recipientStaffIds: z.array(z.string()).min(2, 'Team QR requires at least 2 recipients'),
+});
+
+// GET /api/qr/:id - Get single QR code
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
+
     // Check authentication
     const authResult = await requireAuth();
     if ('error' in authResult) return authResult.error;
     const { session } = authResult;
 
-    const { id } = await params;
-    const { searchParams } = new URL(request.url);
-    const format = searchParams.get("format"); // png, svg, or null for JSON
-
+    // Fetch QR code
     const qrCode = await prisma.qrCode.findUnique({
       where: { id },
       include: {
         venue: {
           select: {
             id: true,
-            name: true,
             managerId: true,
           },
         },
@@ -38,76 +41,23 @@ export async function GET(
           select: {
             id: true,
             displayName: true,
+            status: true,
+            avatarUrl: true,
+            role: true,
           },
         },
-      },
-    });
-
-    if (!qrCode) {
-      return notFoundError("QR code");
-    }
-
-    // Check access
-    if (session.userRole !== "ADMIN" && qrCode.venue.managerId !== session.userId) {
-      return NextResponse.json<ApiErrorResponse>(
-        { code: "FORBIDDEN", message: "Access denied" },
-        { status: 403 }
-      );
-    }
-
-    const tipUrl = buildTipUrl(qrCode.shortCode);
-
-    // Return image if format specified
-    if (format === "png") {
-      const pngBuffer = await generateQrPng(tipUrl);
-      return new NextResponse(new Uint8Array(pngBuffer), {
-        headers: {
-          "Content-Type": "image/png",
-          "Content-Disposition": `attachment; filename="${qrCode.label || qrCode.shortCode}.png"`,
-        },
-      });
-    }
-
-    if (format === "svg") {
-      const svg = await generateQrSvg(tipUrl);
-      return new NextResponse(svg, {
-        headers: {
-          "Content-Type": "image/svg+xml",
-          "Content-Disposition": `attachment; filename="${qrCode.label || qrCode.shortCode}.svg"`,
-        },
-      });
-    }
-
-    // Return JSON with QR details
-    return successResponse({
-      qrCode: {
-        ...qrCode,
-        tipUrl,
-      },
-    });
-  } catch (error) {
-    return handleApiError(error, "Get QR code");
-  }
-}
-
-// DELETE /api/qr/[id] - Delete QR code
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    // Check authentication
-    const authResult = await requireAuth();
-    if ('error' in authResult) return authResult.error;
-    const { session } = authResult;
-
-    const { id } = await params;
-
-    const qrCode = await prisma.qrCode.findUnique({
-      where: { id },
-      include: {
-        venue: {
-          select: { managerId: true },
+        recipients: {
+          include: {
+            staff: {
+              select: {
+                id: true,
+                displayName: true,
+                status: true,
+                avatarUrl: true,
+                role: true,
+              },
+            },
+          },
         },
         _count: {
           select: { tips: true },
@@ -116,43 +66,218 @@ export async function DELETE(
     });
 
     if (!qrCode) {
-      return notFoundError("QR code");
-    }
-
-    // Check access
-    if (session.userRole !== "ADMIN" && qrCode.venue.managerId !== session.userId) {
       return NextResponse.json<ApiErrorResponse>(
-        { code: "FORBIDDEN", message: "Access denied" },
-        { status: 403 }
+        { code: 'QR_NOT_FOUND', message: 'QR code not found' },
+        { status: 404 }
       );
     }
 
-    // Cannot delete personal QR codes (they're tied to staff)
-    if (qrCode.type === "PERSONAL") {
-      return validationError("Personal QR codes cannot be deleted directly. Deactivate the staff member instead.");
+    // Check venue access
+    const venueResult = await requireVenueAccess(qrCode.venue.id, session);
+    if ('error' in venueResult) return venueResult.error;
+
+    // Transform response
+    const transformedQr = {
+      ...qrCode,
+      recipients: qrCode.recipients.map(r => r.staff),
+    };
+
+    return successResponse({ qrCode: transformedQr });
+  } catch (error) {
+    return handleApiError(error, 'Get QR code');
+  }
+}
+
+// PATCH /api/qr/:id - Update Team QR recipients
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
+
+    // Fetch QR code
+    const qrCode = await prisma.qrCode.findUnique({
+      where: { id },
+      include: {
+        venue: {
+          select: {
+            id: true,
+            managerId: true,
+          },
+        },
+      },
+    });
+
+    if (!qrCode) {
+      return NextResponse.json<ApiErrorResponse>(
+        { code: 'QR_NOT_FOUND', message: 'QR code not found' },
+        { status: 404 }
+      );
     }
 
-    // If has tips, soft delete (set INACTIVE)
-    if (qrCode._count.tips > 0) {
-      await prisma.qrCode.update({
+    // Check venue access
+    const venueResult = await requireVenueAccess(qrCode.venue.id, session);
+    if ('error' in venueResult) return venueResult.error;
+
+    // Parse request body
+    const body = await request.json();
+
+    // Check if trying to change type
+    if (body.type !== undefined && body.type !== qrCode.type) {
+      return NextResponse.json<ApiErrorResponse>(
+        { code: 'TYPE_CHANGE_NOT_ALLOWED', message: 'Cannot change QR type after creation' },
+        { status: 400 }
+      );
+    }
+
+    // Only TEAM QRs can update recipients
+    const isTeamType = qrCode.type === 'TEAM' || qrCode.type === 'TABLE' || qrCode.type === 'VENUE';
+    
+    if (!isTeamType) {
+      return NextResponse.json<ApiErrorResponse>(
+        { code: 'INVALID_OPERATION', message: 'Only Team QR codes can update recipients' },
+        { status: 400 }
+      );
+    }
+
+    // Validate request
+    const parsed = updateTeamQrSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json<ApiErrorResponse>(
+        { code: 'MIN_RECIPIENTS_REQUIRED', message: 'Team QR requires at least 2 recipients' },
+        { status: 400 }
+      );
+    }
+
+    const { recipientStaffIds } = parsed.data;
+
+    // Validate all staff exist and belong to venue
+    const staffMembers = await prisma.staff.findMany({
+      where: { id: { in: recipientStaffIds }, venueId: qrCode.venue.id },
+    });
+
+    if (staffMembers.length !== recipientStaffIds.length) {
+      return NextResponse.json<ApiErrorResponse>(
+        { code: 'STAFF_NOT_FOUND', message: 'One or more staff members not found' },
+        { status: 404 }
+      );
+    }
+
+    // Update recipients in transaction
+    const updatedQr = await prisma.$transaction(async (tx) => {
+      // Delete existing recipients
+      await tx.qrCodeRecipient.deleteMany({
+        where: { qrCodeId: id },
+      });
+
+      // Create new recipients
+      await tx.qrCodeRecipient.createMany({
+        data: recipientStaffIds.map(staffId => ({
+          qrCodeId: id,
+          staffId,
+        })),
+      });
+
+      // Fetch updated QR with recipients
+      return tx.qrCode.findUnique({
         where: { id },
-        data: { status: "INACTIVE" },
+        include: {
+          staff: {
+            select: {
+              id: true,
+              displayName: true,
+              status: true,
+              avatarUrl: true,
+              role: true,
+            },
+          },
+          recipients: {
+            include: {
+              staff: {
+                select: {
+                  id: true,
+                  displayName: true,
+                  status: true,
+                  avatarUrl: true,
+                  role: true,
+                },
+              },
+            },
+          },
+        },
       });
+    });
 
-      return successResponse({
-        message: "QR code deactivated (has tip history)",
-        softDeleted: true,
-      });
-    }
-
-    // Hard delete if no tips
-    await prisma.qrCode.delete({ where: { id } });
+    // Transform response
+    const transformedQr = {
+      ...updatedQr,
+      recipients: updatedQr?.recipients.map(r => r.staff) || [],
+    };
 
     return successResponse({
-      message: "QR code deleted successfully",
-      softDeleted: false,
+      message: 'QR code updated successfully',
+      qrCode: transformedQr,
     });
   } catch (error) {
-    return handleApiError(error, "Delete QR code");
+    return handleApiError(error, 'Update QR code');
+  }
+}
+
+// DELETE /api/qr/:id - Delete QR code
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+
+    // Check authentication
+    const authResult = await requireAuth();
+    if ('error' in authResult) return authResult.error;
+    const { session } = authResult;
+
+    // Fetch QR code
+    const qrCode = await prisma.qrCode.findUnique({
+      where: { id },
+      include: {
+        venue: {
+          select: {
+            id: true,
+            managerId: true,
+          },
+        },
+        _count: {
+          select: { tips: true },
+        },
+      },
+    });
+
+    if (!qrCode) {
+      return NextResponse.json<ApiErrorResponse>(
+        { code: 'QR_NOT_FOUND', message: 'QR code not found' },
+        { status: 404 }
+      );
+    }
+
+    // Check venue access
+    const venueResult = await requireVenueAccess(qrCode.venue.id, session);
+    if ('error' in venueResult) return venueResult.error;
+
+    // Delete QR code (cascade will delete QrCodeRecipient records)
+    await prisma.qrCode.delete({
+      where: { id },
+    });
+
+    return successResponse({
+      message: 'QR code deleted successfully',
+    });
+  } catch (error) {
+    return handleApiError(error, 'Delete QR code');
   }
 }

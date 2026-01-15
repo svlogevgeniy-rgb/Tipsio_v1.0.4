@@ -135,3 +135,53 @@ export function formatDateTimeShort(date: string | number | Date): string {
   const parsedDate = typeof date === "string" || typeof date === "number" ? new Date(date) : date;
   return shortDateTimeFormatter.format(parsedDate);
 }
+
+/**
+ * Formats a date range in short format
+ * Example: formatDateRange("2024-01-01", "2024-01-07") -> "1 Jan – 7 Jan"
+ */
+export function formatDateRange(start: string | Date, end: string | Date): string {
+  const startDate = typeof start === "string" ? new Date(start) : start;
+  const endDate = typeof end === "string" ? new Date(end) : end;
+  const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "short" };
+  return `${startDate.toLocaleDateString("en-US", options)} – ${endDate.toLocaleDateString("en-US", options)}`;
+}
+
+/**
+ * Formats a date in short format (month + day)
+ * Example: formatDateShort("2024-12-06") -> "Dec 6"
+ */
+export function formatDateShort(date: string | Date): string {
+  const parsedDate = typeof date === "string" ? new Date(date) : date;
+  return parsedDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+/**
+ * Formats a date with weekday, day, and month
+ * Example: formatDateWithWeekday("2024-12-06") -> "Fri, Dec 6"
+ */
+export function formatDateWithWeekday(date: string | Date): string {
+  const parsedDate = typeof date === "string" ? new Date(date) : date;
+  return parsedDate.toLocaleDateString("en-US", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+}
+
+/**
+ * Formats a date and time in full format
+ * Example: formatDateTime("2024-12-06T12:30:00Z") -> "Dec 6, 2024, 12:30 PM"
+ */
+export function formatDateTime(date: string | Date): string {
+  const parsedDate = typeof date === "string" ? new Date(date) : date;
+  return parsedDate.toLocaleString("en-US");
+}
+
+/**
+ * Formats a number with thousand separators using locale
+ * Example: formatNumber(1000000) -> "1,000,000"
+ */
+export function formatNumber(num: number): string {
+  return num.toLocaleString();
+}

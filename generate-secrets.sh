@@ -55,7 +55,7 @@ DB_NAME=tipsio
 
 # NextAuth
 NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-NEXTAUTH_URL=https://tipsio.sh1z01d.ru
+NEXTAUTH_URL=https://app.example.com
 
 # Encryption
 ENCRYPTION_KEY=${ENCRYPTION_KEY}
@@ -107,8 +107,8 @@ echo "🚀 Next Steps:"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo "1. Add Midtrans production keys to .env.production"
-echo "2. Copy .env.production to server:"
-echo "   scp .env.production deploy@91.222.236.239:/opt/tipsio/.env"
+echo "2. Copy .env.production to the server:"
+echo "   scp .env.production deploy@YOUR_SERVER_IP:/opt/tipsio/.env"
 echo ""
 echo "3. Follow MANUAL_DEPLOY.md for complete deployment"
 echo ""

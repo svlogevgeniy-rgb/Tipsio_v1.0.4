@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { DISTRIBUTION_MODE_VALUES } from '@/types/distribution';
 
 export const step1Schema = z
   .object({
@@ -19,10 +18,8 @@ export const step2Schema = z.object({
   merchantId: z.string().min(1, 'Merchant ID is required'),
 });
 
-export const step3Schema = z.object({
-  distributionMode: z.enum(DISTRIBUTION_MODE_VALUES),
-});
+// Note: step3Schema (distributionMode) removed as part of QR code types refactoring
+// Distribution mode is no longer selected during registration
 
 export type Step1Form = z.infer<typeof step1Schema>;
 export type Step2Form = z.infer<typeof step2Schema>;
-export type Step3Form = z.infer<typeof step3Schema>;

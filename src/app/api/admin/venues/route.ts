@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status") || "all";
 
     // Build where clause
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     
     if (search) {
       where.OR = [

@@ -1,137 +1,67 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Loader2, CheckCircle2, AlertCircle, Eye, EyeOff } from "lucide-react";
-import { useTranslations } from "@/i18n/client";
-import type { DistributionMode } from "@/types/distribution";
+import { useState, useEffect } from 'react';
+import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { IntegrationCard } from '@/components/venue/integrations/IntegrationCard';
+import { MidtransSettings } from '@/components/venue/integrations/MidtransSettings';
+import { useVenueDashboard } from '@/features/venue-dashboard/hooks/useVenueDashboard';
+import { useTranslations } from '@/i18n/client';
+
+type ViewMode = 'grid' | 'midtrans';
 
 export default function VenueSettingsPage() {
-  const [venueId, setVenueId] = useState<string | null>(null);
   const [isPageLoading, setIsPageLoading] = useState(true);
-
-  // Distribution settings
-  const [distributionMode, setDistributionMode] =
-    useState<DistributionMode>("PERSONAL");
-  const [allowStaffChoice, setAllowStaffChoice] = useState(false);
-
-  // Midtrans settings
-  const [midtransServerKey, setMidtransServerKey] = useState("");
-  const [midtransClientKey, setMidtransClientKey] = useState("");
-  const [midtransMerchantId, setMidtransMerchantId] = useState("");
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  
+  // Midtrans state
   const [midtransConnected, setMidtransConnected] = useState(false);
-  const [showServerKey, setShowServerKey] = useState(false);
+  const [midtransMerchantId, setMidtransMerchantId] = useState('');
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [isTesting, setIsTesting] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const t = useTranslations('venue.settings');
+  const tIntegrations = useTranslations('venue.settings.integrations');
+
+  // Get venue data from shared context
+  const { data: dashboardData } = useVenueDashboard();
+  const venueId = dashboardData?.venue?.id;
 
   useEffect(() => {
     async function fetchSettings() {
+      if (!venueId) {
+        setIsPageLoading(false);
+        return;
+      }
+
       try {
-        const dashRes = await fetch("/api/venues/dashboard?period=week");
-        if (!dashRes.ok) throw new Error("Failed to load venue");
-        const dashData = await dashRes.json();
-
-        if (dashData.venue?.id) {
-          setVenueId(dashData.venue.id);
-
-          // Fetch venue settings
-          const settingsRes = await fetch(
-            `/api/venues/${dashData.venue.id}/settings`
-          );
-          if (settingsRes.ok) {
-            const settings = await settingsRes.json();
-            setDistributionMode(settings.distributionMode || "PERSONAL");
-            setAllowStaffChoice(settings.allowStaffChoice || false);
-            setMidtransConnected(settings.midtransConnected || false);
-            if (settings.midtransMerchantId) {
-              setMidtransMerchantId(settings.midtransMerchantId);
-            }
+        const settingsRes = await fetch(`/api/venues/${venueId}/settings`);
+        if (settingsRes.ok) {
+          const settings = await settingsRes.json();
+          setMidtransConnected(settings.midtransConnected || false);
+          if (settings.midtransMerchantId) {
+            setMidtransMerchantId(settings.midtransMerchantId);
           }
         }
       } catch (err) {
-        console.error("Failed to load settings:", err);
+        console.error('Failed to load settings:', err);
       } finally {
         setIsPageLoading(false);
       }
     }
     fetchSettings();
-  }, []);
+  }, [venueId]);
 
-  const handleSaveDistribution = async () => {
-    if (!venueId) return;
-    setIsLoading(true);
-    setSaved(false);
+  const handleSaveSuccess = () => {
+    setSaved(true);
     setError(null);
-
-    try {
-      const response = await fetch(`/api/venues/${venueId}/settings`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ distributionMode, allowStaffChoice }),
-      });
-
-      if (response.ok) {
-        setSaved(true);
-        setTimeout(() => setSaved(false), 3000);
-      } else {
-        setError("Failed to save settings");
-      }
-    } catch {
-      setError("Failed to save settings");
-    } finally {
-      setIsLoading(false);
-    }
+    setTimeout(() => setSaved(false), 3000);
+    setMidtransConnected(true);
+    setViewMode('grid');
   };
 
-  const handleTestMidtrans = async () => {
-    if (!venueId || !midtransServerKey || !midtransClientKey) {
-      setError("Please fill in all Midtrans credentials");
-      return;
-    }
-
-    setIsTesting(true);
-    setError(null);
-
-    try {
-      const response = await fetch(`/api/venues/${venueId}/midtrans`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          serverKey: midtransServerKey,
-          clientKey: midtransClientKey,
-          merchantId: midtransMerchantId,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok && result.success) {
-        setMidtransConnected(true);
-        setMidtransServerKey("");
-        setMidtransClientKey("");
-        setSaved(true);
-        setTimeout(() => setSaved(false), 3000);
-      } else {
-        setError(result.message || "Failed to connect Midtrans");
-      }
-    } catch {
-      setError("Failed to test Midtrans connection");
-    } finally {
-      setIsTesting(false);
-    }
+  const handleError = (message: string) => {
+    setError(message);
+    setTimeout(() => setError(null), 5000);
   };
 
   if (isPageLoading) {
@@ -142,215 +72,66 @@ export default function VenueSettingsPage() {
     );
   }
 
-
   return (
-    <div className="p-4 md:p-6 space-y-6 max-w-2xl">
-      <div>
-        <h1 className="text-2xl font-heading font-bold">{t('title')}</h1>
-        <p className="text-muted-foreground">
-          {t('subtitle')}
-        </p>
-      </div>
+    <div className="p-4 md:p-6 space-y-6 max-w-4xl">
+      {viewMode === 'grid' && (
+        <>
+          <div>
+            <h1 className="text-2xl font-heading font-bold">{t('title')}</h1>
+            <p className="text-muted-foreground">
+              {t('subtitle')}
+            </p>
+          </div>
 
-      {error && (
-        <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-center gap-2">
-          <AlertCircle className="h-4 w-4" />
-          {error}
-        </div>
+          {error && (
+            <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-center gap-2">
+              <AlertCircle className="h-4 w-4" />
+              {error}
+            </div>
+          )}
+
+          {saved && (
+            <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-sm flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4" />
+              {t('saved')}
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <IntegrationCard
+              name="Midtrans"
+              logo="/images/midtrans-dark-3a5ac77cd3110b28b32cb590fc968f296d2123e686591d636bd51b276f6ed034.svg"
+              isConnected={midtransConnected}
+              onClick={() => setViewMode('midtrans')}
+            />
+            
+            <IntegrationCard
+              name="DOKU"
+              logo="/images/doku-logo.png"
+              isDisabled
+              comingSoonText={tIntegrations('comingSoon')}
+            />
+            
+            <IntegrationCard
+              name="Xendit"
+              logo="/images/xendit-logo.svg"
+              isDisabled
+              comingSoonText={tIntegrations('comingSoon')}
+            />
+          </div>
+        </>
       )}
 
-      {/* Midtrans Integration */}
-      <Card className="glass">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="font-heading">
-                {t('midtrans.title')}
-              </CardTitle>
-              <CardDescription>
-                {t('midtrans.subtitle')}
-              </CardDescription>
-            </div>
-            {midtransConnected && (
-              <span className="flex items-center gap-1 text-sm text-green-400">
-                <CheckCircle2 className="h-4 w-4" />
-                {t('midtrans.connected')}
-              </span>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {midtransConnected ? (
-            <div className="p-4 rounded-xl bg-green-500/10 border border-green-500/20">
-              <p className="text-sm text-green-400">
-                ✓ {t('midtrans.isConnected')}
-                {midtransMerchantId && ` (Merchant ID: ${midtransMerchantId})`}
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t('midtrans.canAccept')}
-              </p>
-            </div>
-          ) : (
-            <>
-              <div className="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
-                <p className="text-sm text-yellow-400 font-medium">
-                  ⚠️ {t('midtrans.notConnected')}
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {t('midtrans.needToConnect')}{" "}
-                  <a
-                    href="https://dashboard.midtrans.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary underline"
-                  >
-                    Midtrans Dashboard
-                  </a>
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="merchantId">{t('midtrans.merchantId')}</Label>
-                  <Input
-                    id="merchantId"
-                    placeholder="G123456789"
-                    value={midtransMerchantId}
-                    onChange={(e) => setMidtransMerchantId(e.target.value)}
-                    className="h-12"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="serverKey">{t('midtrans.serverKey')}</Label>
-                  <div className="relative">
-                    <Input
-                      id="serverKey"
-                      type={showServerKey ? "text" : "password"}
-                      placeholder="SB-Mid-server-..."
-                      value={midtransServerKey}
-                      onChange={(e) => setMidtransServerKey(e.target.value)}
-                      className="h-12 pr-10"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowServerKey(!showServerKey)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    >
-                      {showServerKey ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="clientKey">{t('midtrans.clientKey')}</Label>
-                  <Input
-                    id="clientKey"
-                    placeholder="SB-Mid-client-..."
-                    value={midtransClientKey}
-                    onChange={(e) => setMidtransClientKey(e.target.value)}
-                    className="h-12"
-                  />
-                </div>
-
-                <Button
-                  onClick={handleTestMidtrans}
-                  disabled={
-                    isTesting || !midtransServerKey || !midtransClientKey
-                  }
-                  className="w-full h-12 bg-gradient-to-r from-cyan-500 to-blue-600"
-                >
-                  {isTesting ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      {t('midtrans.testing')}
-                    </>
-                  ) : (
-                    t('midtrans.connect')
-                  )}
-                </Button>
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
-
-
-      {/* Tip Distribution */}
-      <Card className="glass">
-        <CardHeader>
-          <CardTitle className="font-heading">{t('distribution.title')}</CardTitle>
-          <CardDescription>
-            {t('distribution.subtitle')}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <button
-            type="button"
-            onClick={() => setDistributionMode("PERSONAL")}
-            className={`w-full p-4 rounded-xl border text-left transition-colors ${
-              distributionMode === "PERSONAL"
-                ? "border-primary bg-primary/10"
-                : "border-white/10 bg-white/5 hover:bg-white/10"
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">👤</span>
-              <div>
-                <div className="font-heading font-semibold">
-                  {t('distribution.personal')}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {t('distribution.personalDesc')}
-                </div>
-              </div>
-            </div>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setDistributionMode("POOLED")}
-            className={`w-full p-4 rounded-xl border text-left transition-colors ${
-              distributionMode === "POOLED"
-                ? "border-primary bg-primary/10"
-                : "border-white/10 bg-white/5 hover:bg-white/10"
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">👥</span>
-              <div>
-                <div className="font-heading font-semibold">
-                  {t('distribution.pooled')}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {t('distribution.pooledDesc')}
-                </div>
-              </div>
-            </div>
-          </button>
-        </CardContent>
-      </Card>
-
-      <Button
-        onClick={handleSaveDistribution}
-        disabled={isLoading}
-        className="w-full h-14 text-lg font-heading font-bold bg-gradient-to-r from-cyan-500 to-blue-600"
-      >
-        {isLoading ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-            {t('saving')}
-          </>
-        ) : saved ? (
-          `✓ ${t('saved')}`
-        ) : (
-          t('saveSettings')
-        )}
-      </Button>
+      {viewMode === 'midtrans' && venueId && (
+        <MidtransSettings
+          venueId={venueId}
+          isConnected={midtransConnected}
+          merchantId={midtransMerchantId}
+          onBack={() => setViewMode('grid')}
+          onSaveSuccess={handleSaveSuccess}
+          onError={handleError}
+        />
+      )}
     </div>
   );
 }

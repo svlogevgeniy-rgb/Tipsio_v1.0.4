@@ -45,7 +45,11 @@ COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
 # Create uploads directory with correct permissions
-RUN mkdir -p /app/public/uploads/avatars && chown -R nextjs:nodejs /app/public/uploads
+# Next.js image optimizer writes to `.next/cache`, so give runtime user access.
+RUN mkdir -p /app/public/uploads/avatars \
+    && chown -R nextjs:nodejs /app/public/uploads \
+    && mkdir -p /app/.next/cache \
+    && chown -R nextjs:nodejs /app/.next
 
 USER nextjs
 

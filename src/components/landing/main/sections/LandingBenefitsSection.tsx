@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useTranslations } from '@/i18n/client';
 import { Card, CardContent } from '@/components/ui/card';
+import { useTranslations } from '@/i18n/client';
 import { BENEFIT_CARDS } from '../content';
 import { fadeInUp } from './animation';
 

@@ -2,7 +2,7 @@
 
 **Date**: December 5, 2025  
 **Time**: 11:14 MSK  
-**Server**: 5.129.242.61  
+**Server**: YOUR_SERVER_IP  
 **Status**: ✅ LIVE
 
 ---
@@ -44,11 +44,11 @@
 ## 🌐 Access Information
 
 ### Application URLs
-- **HTTP**: http://5.129.242.61:3000
+- **HTTP**: http://YOUR_SERVER_IP:3000
 - **HTTPS**: Not yet configured (requires domain setup)
 
 ### Admin Access
-- **Database UI**: http://5.129.242.61:8080
+- **Database UI**: http://YOUR_SERVER_IP:8080
   - System: PostgreSQL
   - Server: db
   - Username: tipsio
@@ -56,9 +56,9 @@
   - Database: tipsio
 
 ### SSH Access
-- **Server**: 5.129.242.61
+- **Server**: YOUR_SERVER_IP
 - **User**: root (or deploy)
-- **Password**: rxT_E?p._6Q.gt
+- **Password**: YOUR_SECURE_PASSWORD
 
 ---
 
@@ -88,7 +88,7 @@ DB_PASSWORD=28c6a955f82e02df58c3f2c6707c7ffe
 DB_NAME=tipsio
 NEXTAUTH_SECRET=51/tYPmVyYsCBmBXZisy... (truncated)
 ENCRYPTION_KEY=7e45ab288aaa10925938... (truncated)
-NEXTAUTH_URL=https://tipsio.sh1z01d.ru
+NEXTAUTH_URL=https://app.example.com
 MIDTRANS_IS_PRODUCTION=false (sandbox mode)
 ```
 
@@ -123,7 +123,7 @@ Content: Full HTML page rendered
 
 ### Immediate (Required for Production)
 1. **Configure Domain**
-   - Point tipsio.sh1z01d.ru to 5.129.242.61
+   - Point app.example.com to YOUR_SERVER_IP
    - Wait for DNS propagation
 
 2. **Set Up SSL Certificate**
@@ -199,7 +199,7 @@ tipsio-db-ui-1   Up
 
 ### View Logs
 ```bash
-ssh root@5.129.242.61
+ssh root@YOUR_SERVER_IP
 cd /opt/tipsio
 docker-compose logs -f app
 ```
@@ -346,10 +346,10 @@ docker-compose restart
 
 ```bash
 # SSH to server
-ssh root@5.129.242.61
+ssh root@YOUR_SERVER_IP
 
 # View application
-curl http://5.129.242.61:3000
+curl http://YOUR_SERVER_IP:3000
 
 # Check status
 cd /opt/tipsio && docker-compose ps

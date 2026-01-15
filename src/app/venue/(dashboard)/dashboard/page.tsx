@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card } from "@/components/ui/card";
+import { Loader2, TrendingUp, Users, Banknote } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "@/i18n/client";
+import { Card } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -12,7 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, TrendingUp, Users, Banknote } from "lucide-react";
+import { useTranslations } from "@/i18n/client";
+import { formatCurrencyIDRIntl, formatDateTimeShort } from "@/lib/i18n/formatters";
+import { isPooledMode } from "@/types/distribution";
 import {
   MetricsGrid,
   NoStaffAlert,
@@ -20,14 +22,12 @@ import {
   TipHistoryCard,
   TopStaffCard,
 } from "./components/dashboard-panels";
+import { useDashboardData } from "./use-dashboard-data";
 import type {
   MetricCardConfig,
   TipHistoryEntry,
   TopStaffEntry,
 } from "./components/dashboard-panels";
-import { formatCurrencyIDRIntl, formatDateTimeShort } from "@/lib/i18n/formatters";
-import { useDashboardData } from "./use-dashboard-data";
-import { isPooledMode } from "@/types/distribution";
 
 export default function VenueDashboardPage() {
   const router = useRouter();

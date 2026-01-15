@@ -1,26 +1,28 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useVenueDashboard } from '@/features/venue-dashboard/hooks/useVenueDashboard';
 import type { Staff, StaffForm } from './schema';
 
 export function useStaffManagement() {
   const [staff, setStaff] = useState<Staff[]>([]);
-  const [venueId, setVenueId] = useState<string | null>(null);
   const [isPageLoading, setIsPageLoading] = useState(true);
   const isMountedRef = useRef(true);
 
-  const fetchStaff = useCallback(async () => {
-    try {
-      const dashRes = await fetch('/api/venues/dashboard?period=week');
-      if (!dashRes.ok) throw new Error('Failed to load venue');
-      const dashData = await dashRes.json();
+  // Get venue ID from shared context
+  const { data: dashboardData } = useVenueDashboard();
+  const venueId = dashboardData?.venue?.id || null;
 
-      if (dashData.venue?.id && isMountedRef.current) {
-        setVenueId(dashData.venue.id);
-        const staffRes = await fetch(`/api/staff?venueId=${dashData.venue.id}`);
-        if (staffRes.ok) {
-          const staffData = await staffRes.json();
-          if (isMountedRef.current) {
-            setStaff(staffData.staff || []);
-          }
+  const fetchStaff = useCallback(async () => {
+    if (!venueId) {
+      setIsPageLoading(false);
+      return;
+    }
+
+    try {
+      const staffRes = await fetch(`/api/staff?venueId=${venueId}`);
+      if (staffRes.ok) {
+        const staffData = await staffRes.json();
+        if (isMountedRef.current) {
+          setStaff(staffData.staff || []);
         }
       }
     } catch (error) {
@@ -31,7 +33,7 @@ export function useStaffManagement() {
         setIsPageLoading(false);
       }
     }
-  }, []);
+  }, [venueId]);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -40,7 +42,7 @@ export function useStaffManagement() {
     return () => {
       isMountedRef.current = false;
     };
-  }, []);
+  }, [fetchStaff]);
 
   const addStaff = useCallback(
     async (data: StaffForm, avatarFile: File | null) => {

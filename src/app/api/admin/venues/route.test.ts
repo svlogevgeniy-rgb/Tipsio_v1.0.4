@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { NextRequest } from 'next/server';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { GET, PATCH } from './route';
-import { NextRequest } from 'next/server';
 
 // Mock dependencies
 vi.mock('@/lib/api/middleware', () => ({

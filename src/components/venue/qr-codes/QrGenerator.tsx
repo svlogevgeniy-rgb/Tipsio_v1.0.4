@@ -1,6 +1,20 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { Download, Upload } from "lucide-react";
+import QRCode from "qrcode";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import {
   QrDesignState,
   MaterialType,
@@ -9,20 +23,6 @@ import {
 } from "@/lib/qr-materials";
 import { MaterialPreview } from "./MaterialPreview";
 import { QrPdfDocument } from "./PdfTemplates";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import QRCode from "qrcode";
-import { Download, Upload } from "lucide-react";
 
 interface QrGeneratorProps {
   shortCode: string;

@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
 import { Inter, Urbanist } from "next/font/google";
-import { SessionProvider } from "@/components/providers/session-provider";
-import { ThemeProvider } from "@/components/providers/theme-provider";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { SessionProvider } from "@/components/providers/session-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
+import type { Metadata } from "next";
 import "./globals.css";
 
 const inter = Inter({

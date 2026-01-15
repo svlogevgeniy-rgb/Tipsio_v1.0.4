@@ -15,10 +15,10 @@ import {
   Smartphone,
   CreditCard,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { CountingNumber } from '@/components/animate-ui/primitives/texts/counting-number';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { LEGACY_STEPS, LEGACY_BENEFITS, LEGACY_FAQS } from './content';
 
 const fadeInUp = {
