@@ -19,6 +19,8 @@ interface TipDetails {
 export default function TipSuccessPage() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("order_id");
+  const transactionStatus = searchParams.get("transaction_status");
+  const statusCode = searchParams.get("status_code");
   const t = useTranslations("guest.success");
 
   const [loading, setLoading] = useState(true);
@@ -27,13 +29,48 @@ export default function TipSuccessPage() {
 
   useEffect(() => {
     if (orderId) {
-      fetchTipDetails();
+      // If we have transaction_status in URL, try to update status first (fallback if webhook didn't work)
+      if (transactionStatus && (transactionStatus === "capture" || transactionStatus === "settlement")) {
+        updateTipStatus();
+      } else {
+        fetchTipDetails();
+      }
     } else {
       setError("Missing order information");
       setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderId]);
+  }, [orderId, transactionStatus]);
+
+  async function updateTipStatus() {
+    if (!orderId || !transactionStatus) {
+      fetchTipDetails();
+      return;
+    }
+
+    try {
+      // Update status via API (fallback if webhook didn't work)
+      const updateRes = await fetch(`/api/tips/${orderId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          transaction_status: transactionStatus,
+          status_code: statusCode,
+          fraud_status: searchParams.get("fraud_status") || undefined,
+          transaction_id: searchParams.get("transaction_id") || undefined,
+          payment_type: searchParams.get("payment_type") || undefined,
+          transaction_time: searchParams.get("transaction_time") || undefined,
+        }),
+      });
+
+      // Then fetch tip details
+      await fetchTipDetails();
+    } catch (err) {
+      console.error("Failed to update tip status:", err);
+      // Continue to fetch details anyway
+      await fetchTipDetails();
+    }
+  }
 
   async function fetchTipDetails() {
     try {

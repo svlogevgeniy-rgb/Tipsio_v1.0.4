@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useParams } from "next/navigation";
-import { Loader2, User, ArrowLeft, X, AlertCircle } from "lucide-react";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
+import { Loader2, User, AlertCircle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
-import { Textarea } from "@/components/ui/textarea";
+import { StarRating } from "@/components/tip/StarRating";
 import { useTranslations } from "@/i18n/client";
 
 interface Staff {
@@ -59,7 +59,7 @@ function InactiveStaffPopup({
         </p>
         <Button
           onClick={onClose}
-          className="w-full h-12 bg-green-700 hover:bg-green-800"
+          className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white"
         >
           {t('selectAnother') || 'Select Another'}
         </Button>
@@ -70,6 +70,8 @@ function InactiveStaffPopup({
 
 export default function TipPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const shortCode = params.shortCode as string;
 
   const [loading, setLoading] = useState(true);
@@ -78,15 +80,23 @@ export default function TipPage() {
 
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
   const [customAmount, setCustomAmount] = useState("");
-  const [selectedStaffId, setSelectedStaffId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [experienceRating, setExperienceRating] = useState<string | null>(null);
-  const [message, setMessage] = useState("");
+  const [rating, setRating] = useState<number>(0);
   const [showInactivePopup, setShowInactivePopup] = useState(false);
-  const MAX_MESSAGE_LENGTH = 99;
 
-  // Step: 'staff' for staff selection, 'amount' for tip amount
-  const [step, setStep] = useState<"staff" | "amount">("staff");
+  // Get step and staffId from URL params (persists across refresh)
+  const urlStaffId = searchParams.get('staff');
+  const selectedStaffId = urlStaffId;
+  const step = urlStaffId ? "amount" : "staff";
+
+  // Function to update URL with staff selection
+  const setSelectedStaff = (staffId: string | null) => {
+    if (staffId) {
+      router.replace(`/tip/${shortCode}?staff=${staffId}`, { scroll: false });
+    } else {
+      router.replace(`/tip/${shortCode}`, { scroll: false });
+    }
+  };
 
   useEffect(() => {
     fetchQrData();
@@ -117,17 +127,14 @@ export default function TipPage() {
       const data = await res.json();
       setQrData(data);
 
-      // If Individual QR with active staff, skip staff selection
-      if (isIndividualQr(data.type) && data.staff) {
+      // If Individual QR with active staff, auto-select and go to amount (only if no staff in URL)
+      if (isIndividualQr(data.type) && data.staff && !urlStaffId) {
         if (data.staff.status === 'INACTIVE') {
-          // Show inactive popup for individual QR
           setShowInactivePopup(true);
         } else {
-          setSelectedStaffId(data.staff.id);
-          setStep("amount");
+          setSelectedStaff(data.staff.id);
         }
       } else if (isTeamQr(data.type)) {
-        // For Team QR, check if there are active recipients
         const activeRecipients = (data.recipients || []).filter(
           (s: Staff) => s.status !== 'INACTIVE'
         );
@@ -155,8 +162,11 @@ export default function TipPage() {
     (s) => s.status !== 'INACTIVE'
   ) || [];
 
+  // Check if we should show back button (Team QR on amount screen)
+  const showBackButton = qrData && isTeamQr(qrData.type) && step === "amount";
+
   async function handleSubmit() {
-    if (!finalAmount || finalAmount < 1000) return;
+    if (!finalAmount || finalAmount < 10000) return;
 
     setSubmitting(true);
     try {
@@ -168,8 +178,8 @@ export default function TipPage() {
           amount: finalAmount,
           staffId: selectedStaffId,
           type: "PERSONAL", // Always PERSONAL for new tips
-          experienceRating: experienceRating,
-          message: message.trim() || null,
+          experienceRating: rating > 0 ? rating : null,
+          message: null,
         }),
       });
 
@@ -202,27 +212,37 @@ export default function TipPage() {
       setShowInactivePopup(true);
       return;
     }
-    setSelectedStaffId(staffId);
-    setStep("amount");
+    setSelectedStaff(staffId);
   }
 
   function handleInactivePopupClose() {
     setShowInactivePopup(false);
-    // For Individual QR with inactive staff, show error
     if (qrData && isIndividualQr(qrData.type)) {
       setError("This staff member is not available. Please try another QR code.");
     } else {
-      // For Team QR, go back to selection
-      setStep("staff");
-      setSelectedStaffId(null);
+      setSelectedStaff(null);
     }
+  }
+
+  function handleBack() {
+    setSelectedStaff(null);
+    setSelectedAmount(null);
+    setCustomAmount("");
+    setRating(0);
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="w-full max-w-[759px] mx-auto flex items-center justify-center min-h-screen">
-          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+      <div className="min-h-screen bg-white flex items-center justify-center px-4 relative overflow-hidden">
+        {/* Background pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        />
+        <div className="w-full md:min-w-[672px] md:w-[672px] md:mx-auto flex items-center justify-center min-h-screen relative">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
         </div>
       </div>
     );
@@ -230,8 +250,15 @@ export default function TipPage() {
 
   if (error || !qrData) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-[759px] mx-auto">
+      <div className="min-h-screen bg-white flex items-center justify-center px-4 relative overflow-hidden">
+        {/* Background pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        />
+        <div className="w-full md:min-w-[672px] md:w-[672px] md:mx-auto relative">
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center max-w-sm mx-auto">
             <h1 className="text-xl font-semibold mb-2 text-gray-900">Oops!</h1>
             <p className="text-gray-500">{error || "QR code not found"}</p>
@@ -244,25 +271,40 @@ export default function TipPage() {
   // Staff Selection Screen (for Team QR)
   if (step === "staff" && isTeamQr(qrData.type) && activeRecipients.length > 0) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen bg-white flex flex-col relative overflow-hidden">
+        {/* Background pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        />
         <InactiveStaffPopup 
           isOpen={showInactivePopup} 
           onClose={handleInactivePopupClose} 
         />
-        <div className="w-full max-w-[759px] mx-auto flex flex-col min-h-screen">
+        <div className="w-full md:min-w-[672px] md:w-[672px] md:mx-auto flex flex-col min-h-screen relative">
         {/* Header */}
-        <header className="bg-white border-b border-gray-100 px-4 py-3 flex items-center gap-4">
-          <button className="text-gray-600 hover:text-gray-900">
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <span className="text-green-700 font-semibold text-lg">tipsio</span>
-          <div className="ml-auto">
+        <header className="bg-white border-b border-gray-100 px-4 md:px-6 py-6 flex items-center justify-between relative rounded-b-[15px]">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/images/Logo_1.svg"
+              alt="TIPSIO Logo"
+              width={32}
+              height={32}
+              className="h-8 w-8"
+            />
+            <span className="text-xl font-heading font-bold text-gradient">
+              TIPSIO
+            </span>
+          </div>
+          <div className="absolute right-4 md:right-6">
             <LanguageSwitcher />
           </div>
         </header>
 
         {/* Venue Info */}
-        <div className="bg-white px-4 py-4 border-b border-gray-100">
+        <div className="bg-white px-4 md:px-6 py-4 border border-gray-100 rounded-[15px] mx-4 md:mx-6 mt-4">
           <div className="flex items-center gap-3">
             {qrData.venue.logoUrl ? (
               <Image
@@ -284,20 +326,20 @@ export default function TipPage() {
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 px-4 py-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">
+        <main className="flex-1 px-4 md:px-6 py-6">
+          <h2 className="text-lg font-medium text-gray-900 mb-4 text-center">
             Who would you like to thank?
           </h2>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="flex flex-col gap-3">
             {activeRecipients.map((staff) => (
               <button
                 key={staff.id}
                 onClick={() => handleStaffSelect(staff.id)}
-                className={`p-4 rounded-xl border-2 text-left transition-all bg-white hover:border-green-500 ${
+                className={`p-4 rounded-xl border-2 text-left transition-all bg-white min-h-[88px] ${
                   selectedStaffId === staff.id
-                    ? "border-green-500 bg-green-50"
-                    : "border-gray-200"
+                    ? "border-blue-600 bg-blue-50"
+                    : "border-gray-200 hover:border-blue-600 hover:bg-blue-50"
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -327,11 +369,6 @@ export default function TipPage() {
             ))}
           </div>
         </main>
-
-        {/* Footer */}
-        <footer className="bg-white border-t border-gray-100 p-4 text-center">
-          <p className="text-sm text-gray-400">© 2026 TIPSIO.</p>
-        </footer>
         </div>
       </div>
     );
@@ -339,29 +376,50 @@ export default function TipPage() {
 
   // Tip Amount Screen
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col relative overflow-hidden">
+      {/* Background pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }}
+      />
       <InactiveStaffPopup 
         isOpen={showInactivePopup} 
         onClose={handleInactivePopupClose} 
       />
-      <div className="w-full max-w-[759px] mx-auto flex flex-col min-h-screen">
+      <div className="w-full md:min-w-[672px] md:w-[672px] md:mx-auto flex flex-col min-h-screen relative">
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 px-4 py-3 flex items-center gap-4">
-        <button 
-          onClick={() => isTeamQr(qrData.type) && activeRecipients.length > 0 ? setStep("staff") : null}
-          className="text-gray-600 hover:text-gray-900"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </button>
-        <span className="text-green-700 font-semibold text-lg">tipsio</span>
-        <div className="ml-auto">
+      <header className="bg-white border-b border-gray-100 px-4 md:px-6 py-6 flex items-center justify-between relative rounded-b-[15px]">
+        <div className="flex items-center gap-2">
+          {showBackButton && (
+            <button
+              onClick={handleBack}
+              className="p-2 -ml-2 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label="Back to staff selection"
+            >
+              <ArrowLeft className="w-5 h-5 text-gray-700" />
+            </button>
+          )}
+          <Image
+            src="/images/Logo_1.svg"
+            alt="TIPSIO Logo"
+            width={32}
+            height={32}
+            className="h-8 w-8"
+          />
+          <span className="text-xl font-heading font-bold text-gradient">
+            TIPSIO
+          </span>
+        </div>
+        <div className="absolute right-4 md:right-6">
           <LanguageSwitcher />
         </div>
       </header>
 
       {/* Staff Info */}
       {selectedStaff && (
-        <div className="bg-white px-4 py-4 border-b border-gray-100">
+        <div className="bg-white px-4 md:px-6 py-4 border border-gray-100 rounded-[15px] mx-4 md:mx-6 mt-4">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-xl font-semibold text-gray-900">{selectedStaff.displayName}</h1>
@@ -389,19 +447,25 @@ export default function TipPage() {
       )}
 
       {/* Main Content */}
-      <main className="flex-1 px-4 py-6 pb-32">
+      <main className="flex-1 px-4 md:px-6 py-6 pb-32">{/* Increased pb for two buttons */}
         {/* Tip Amount */}
         <div className="mb-6">
           <h2 className="text-lg font-medium text-gray-900 mb-3">Tip Amount</h2>
           <Input
             type="number"
+            inputMode="numeric"
+            min="0"
             placeholder="Amount"
             value={customAmount}
             onChange={(e) => {
-              setCustomAmount(e.target.value);
-              setSelectedAmount(null);
+              const value = e.target.value;
+              // Prevent negative values
+              if (value === "" || parseInt(value) >= 0) {
+                setCustomAmount(value);
+                setSelectedAmount(null);
+              }
             }}
-            className="bg-white border-gray-200 h-12 text-gray-900 placeholder:text-gray-400 mb-3"
+            className="bg-white border-gray-200 h-12 text-gray-900 placeholder:text-gray-400 mb-3 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
           <div className="grid grid-cols-3 gap-2">
             {AMOUNT_PRESETS.map((amount) => (
@@ -413,8 +477,8 @@ export default function TipPage() {
                 }}
                 className={`h-12 rounded-xl border-2 font-medium transition-all ${
                   selectedAmount === amount
-                    ? "border-green-600 bg-green-600 text-white"
-                    : "border-gray-200 bg-white text-gray-900 hover:border-green-500"
+                    ? "border-blue-600 bg-blue-600 text-white"
+                    : "border-gray-200 bg-white text-gray-900 hover:border-blue-600 hover:bg-blue-50"
                 }`}
               >
                 Rp {(amount / 1000).toFixed(0)}
@@ -425,70 +489,59 @@ export default function TipPage() {
 
         {/* Experience Rating */}
         <div className="mb-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-3">Your Experience</h2>
-          <div className="flex gap-2">
-            {[
-              { key: "okay", emoji: "🙂" },
-              { key: "good", emoji: "😊" },
-              { key: "great", emoji: "😀" },
-              { key: "excellent", emoji: "😍" },
-            ].map(({ key, emoji }) => (
-              <button
-                key={key}
-                onClick={() => setExperienceRating(experienceRating === key ? null : key)}
-                className={`flex-1 h-14 rounded-xl border-2 text-2xl transition-all ${
-                  experienceRating === key
-                    ? "border-green-500 bg-green-50"
-                    : "border-gray-200 bg-white hover:border-green-300"
-                }`}
-              >
-                {emoji}
-              </button>
-            ))}
-            <button
-              onClick={() => setExperienceRating(null)}
-              className="w-14 h-14 rounded-xl border-2 border-gray-200 bg-white hover:border-gray-300 transition-all flex items-center justify-center"
-            >
-              <X className="w-5 h-5 text-gray-400" />
-            </button>
-          </div>
-        </div>
-
-        {/* Message */}
-        <div className="mb-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-3">Message</h2>
-          <div className="relative">
-            <Textarea
-              placeholder="Add a message..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value.slice(0, MAX_MESSAGE_LENGTH))}
-              className="bg-white border-gray-200 text-gray-900 placeholder:text-gray-400 min-h-[100px] resize-none pr-16"
-              maxLength={MAX_MESSAGE_LENGTH}
-            />
-            <span className="absolute bottom-3 right-3 text-sm text-gray-400">
-              {message.length}/{MAX_MESSAGE_LENGTH}
-            </span>
+          <h2 className="text-lg font-medium text-gray-900 mb-3 text-center">Your Experience</h2>
+          <div className="flex justify-center">
+            <StarRating value={rating} onChange={setRating} />
           </div>
         </div>
       </main>
 
       {/* Fixed Bottom CTA */}
       <div className="fixed bottom-0 left-0 right-0 flex justify-center">
-        <div className="w-full max-w-[759px] bg-white border-t border-gray-100 p-4">
-          <p className="text-sm text-gray-400 text-center mb-3">
-            © 2026 TIPSIO.
-          </p>
+        <div className="w-full md:min-w-[672px] md:w-[672px] bg-white border-t border-gray-100 p-4 space-y-3">
           <Button
             onClick={handleSubmit}
-            disabled={!finalAmount || finalAmount < 1000 || submitting}
-            className="w-full h-14 text-lg font-semibold bg-green-700 hover:bg-green-800 disabled:opacity-50 rounded-xl"
+            disabled={!finalAmount || finalAmount < 10000 || submitting}
+            className="w-full h-14 text-lg font-semibold bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:opacity-50 rounded-xl text-white"
           >
             {submitting ? (
               <Loader2 className="h-5 w-5 animate-spin" />
             ) : (
-              <>Send {finalAmount > 0 ? (finalAmount / 1000).toFixed(0) : ""}</>
+              <>Send Rp {finalAmount > 0 ? (finalAmount / 1000).toFixed(0) : "0"}</>
             )}
           </Button>
+          
+          {/* Google Pay Button */}
+          <button
+            id="google-pay-button"
+            onClick={() => {
+              // TODO: Implement Google Pay integration
+              console.log("Google Pay clicked");
+            }}
+            disabled={!finalAmount || finalAmount < 10000 || submitting}
+            className="w-full h-14 bg-black hover:bg-gray-900 active:bg-gray-800 disabled:opacity-50 rounded-xl border-0 flex items-center justify-center overflow-hidden"
+            style={{
+              background: 'black',
+              backgroundOrigin: 'content-box',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: 'contain',
+              border: '0',
+              borderRadius: '12px',
+              boxShadow: 'none',
+              height: '56px',
+              minHeight: '56px',
+              padding: '12px 24px',
+            }}
+          >
+            <div style={{
+              background: 'no-repeat center/contain',
+              backgroundImage: 'url(https://www.gstatic.com/instantbuy/svg/dark_gpay.svg)',
+              height: '100%',
+              width: '100%',
+              minWidth: '90px',
+            }} />
+          </button>
         </div>
       </div>
       </div>

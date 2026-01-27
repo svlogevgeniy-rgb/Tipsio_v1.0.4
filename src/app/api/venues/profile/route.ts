@@ -16,11 +16,13 @@ export async function GET() {
       );
     }
 
+    // Сначала получаем пользователя без новых полей, чтобы проверить, существуют ли они
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
       select: {
         id: true,
         email: true,
+        phone: true,
         role: true,
         createdAt: true,
         updatedAt: true,
@@ -33,6 +35,32 @@ export async function GET() {
         },
       },
     });
+
+    // Пытаемся получить новые поля отдельно через raw query
+    let firstName: string | null = null;
+    let lastName: string | null = null;
+    let avatarUrl: string | null = null;
+
+    try {
+      const userWithNewFields = await prisma.$queryRaw<Array<{
+        firstName: string | null;
+        lastName: string | null;
+        avatarUrl: string | null;
+      }>>`
+        SELECT "firstName", "lastName", "avatarUrl"
+        FROM "User"
+        WHERE id = ${session.user.id}
+        LIMIT 1
+      `;
+      if (userWithNewFields && userWithNewFields.length > 0) {
+        firstName = userWithNewFields[0].firstName;
+        lastName = userWithNewFields[0].lastName;
+        avatarUrl = userWithNewFields[0].avatarUrl;
+      }
+    } catch (fieldError) {
+      // Поля не существуют в БД - используем null значения
+      console.warn("New profile fields not available in database:", fieldError);
+    }
 
     if (!user) {
       return NextResponse.json(
@@ -48,25 +76,48 @@ export async function GET() {
       success: true,
       data: {
         email: user.email,
+        phone: user.phone,
+        firstName,
+        lastName,
+        avatarUrl,
         companyName,
         role: user.role,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       },
     });
-  } catch (error) {
-    console.error("Error fetching venue profile:", error);
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 }
-    );
-  }
+    } catch (error) {
+      console.error("Error fetching venue profile:", error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      // Проверяем, не связана ли ошибка с отсутствием полей в БД
+      if (errorMessage.includes("Unknown column") || (errorMessage.includes("column") && errorMessage.includes("does not exist"))) {
+        return NextResponse.json(
+          { 
+            message: "Database migration required. Please run: npx prisma db push",
+            error: "Migration not applied"
+          },
+          { status: 500 }
+        );
+      }
+      return NextResponse.json(
+        { message: "Internal server error", error: errorMessage },
+        { status: 500 }
+      );
+    }
 }
 
 // Схема валидации для обновления профиля
 const updateProfileSchema = z.object({
   companyName: z.string().min(2, "Company name must be at least 2 characters").optional(),
   email: z.string().email("Invalid email address").optional(),
+  phone: z.string().optional(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  avatarUrl: z.union([
+    z.string().url("Invalid avatar URL"),
+    z.literal(""),
+    z.null(),
+  ]).optional(),
   password: z.string().min(6, "Password must be at least 6 characters").optional(),
   confirmPassword: z.string().optional(),
 }).refine(
@@ -120,7 +171,7 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const { companyName, email, password } = validation.data;
+    const { companyName, email, phone, firstName, lastName, avatarUrl, password } = validation.data;
 
     // Проверяем, не занят ли email другим пользователем
     if (email && email !== session.user.email) {
@@ -140,9 +191,31 @@ export async function PATCH(request: NextRequest) {
       }
     }
 
+    // Проверяем, не занят ли телефон другим пользователем
+    if (phone && phone.trim() !== '') {
+      const existingUser = await prisma.user.findUnique({
+        where: { phone },
+      });
+
+      if (existingUser && existingUser.id !== session.user.id) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Phone already in use",
+            errors: { phone: "This phone is already registered" },
+          },
+          { status: 400 }
+        );
+      }
+    }
+
     // Подготавливаем данные для обновления
     const updateData: {
       email?: string;
+      phone?: string | null;
+      firstName?: string | null;
+      lastName?: string | null;
+      avatarUrl?: string | null;
       passwordHash?: string;
       updatedAt: Date;
     } = {
@@ -151,6 +224,34 @@ export async function PATCH(request: NextRequest) {
 
     if (email) {
       updateData.email = email;
+    }
+
+    if (phone !== undefined) {
+      updateData.phone = phone || null;
+    }
+
+    // Пытаемся обновить новые поля только если они существуют в БД
+    try {
+      // Проверяем, существуют ли поля через raw query
+      await prisma.$queryRaw`
+        SELECT "firstName" FROM "User" LIMIT 1
+      `;
+
+      // Поля существуют - добавляем их в updateData
+      if (firstName !== undefined) {
+        (updateData as any).firstName = firstName || null;
+      }
+
+      if (lastName !== undefined) {
+        (updateData as any).lastName = lastName || null;
+      }
+
+      if (avatarUrl !== undefined) {
+        (updateData as any).avatarUrl = avatarUrl || null;
+      }
+    } catch (fieldError) {
+      // Поля не существуют - пропускаем их обновление
+      console.warn("New profile fields not available in database, skipping update:", fieldError);
     }
 
     if (password) {
@@ -164,10 +265,39 @@ export async function PATCH(request: NextRequest) {
       select: {
         id: true,
         email: true,
+        phone: true,
         role: true,
         updatedAt: true,
       },
     });
+
+    // Пытаемся получить новые поля отдельно через raw query
+    let updatedFirstName: string | null = null;
+    let updatedLastName: string | null = null;
+    let updatedAvatarUrl: string | null = null;
+
+    try {
+      const userWithNewFields = await prisma.$queryRaw<Array<{
+        firstName: string | null;
+        lastName: string | null;
+        avatarUrl: string | null;
+      }>>`
+        SELECT "firstName", "lastName", "avatarUrl"
+        FROM "User"
+        WHERE id = ${session.user.id}
+        LIMIT 1
+      `;
+      if (userWithNewFields && userWithNewFields.length > 0) {
+        updatedFirstName = userWithNewFields[0].firstName;
+        updatedLastName = userWithNewFields[0].lastName;
+        updatedAvatarUrl = userWithNewFields[0].avatarUrl;
+      }
+    } catch (fieldError) {
+      // Поля не существуют - используем значения из запроса
+      updatedFirstName = firstName !== undefined ? (firstName || null) : null;
+      updatedLastName = lastName !== undefined ? (lastName || null) : null;
+      updatedAvatarUrl = avatarUrl !== undefined ? (avatarUrl || null) : null;
+    }
 
     // Если указано название компании, обновляем первое заведение
     if (companyName) {
@@ -188,18 +318,35 @@ export async function PATCH(request: NextRequest) {
       message: "Profile updated successfully",
       data: {
         email: updatedUser.email,
+        phone: updatedUser.phone,
+        firstName: updatedFirstName,
+        lastName: updatedLastName,
+        avatarUrl: updatedAvatarUrl,
         companyName: companyName || "",
         updatedAt: updatedUser.updatedAt,
       },
     });
-  } catch (error) {
-    console.error("Error updating venue profile:", error);
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Internal server error",
-      },
-      { status: 500 }
-    );
-  }
+    } catch (error) {
+      console.error("Error updating venue profile:", error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      // Проверяем, не связана ли ошибка с отсутствием полей в БД
+      if (errorMessage.includes("Unknown column") || (errorMessage.includes("column") && errorMessage.includes("does not exist"))) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Database migration required. Please run: npx prisma db push",
+            error: "Migration not applied"
+          },
+          { status: 500 }
+        );
+      }
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Internal server error",
+          error: errorMessage
+        },
+        { status: 500 }
+      );
+    }
 }

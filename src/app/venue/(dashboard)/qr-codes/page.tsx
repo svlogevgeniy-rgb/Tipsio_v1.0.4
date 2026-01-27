@@ -2,8 +2,18 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { useState, useEffect, useMemo } from 'react';
-import { Download, ExternalLink, QrCode, Plus, Users, User, Edit } from 'lucide-react';
+import { Download, ExternalLink, QrCode, Plus, Users, User, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import {
   Card,
   CardContent,
@@ -44,6 +54,7 @@ export default function QrCodesPage() {
   const [error, setError] = useState<string | null>(null);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [editingQr, setEditingQr] = useState<QrCodeType | null>(null);
+  const [deletingQrId, setDeletingQrId] = useState<string | null>(null);
   const t = useTranslations('venue.qr');
 
   // Get venue data from shared context
@@ -125,6 +136,25 @@ export default function QrCodesPage() {
     fetchQrCodes();
   };
 
+  const handleDelete = async (qrId: string) => {
+    try {
+      const response = await fetch(`/api/venue/qr-codes/${qrId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete QR code');
+      }
+
+      // Remove from local state
+      setQrCodes(prev => prev.filter(qr => qr.id !== qrId));
+      setDeletingQrId(null);
+    } catch (err) {
+      console.error('Delete failed:', err);
+      setError('Не удалось удалить QR-код');
+    }
+  };
+
   const isTeamQr = (type: string) => {
     return type === 'TEAM' || type === 'TABLE' || type === 'VENUE';
   };
@@ -186,35 +216,11 @@ export default function QrCodesPage() {
 
       {/* QR Codes List */}
       {filteredQrCodes.length > 0 ? (
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="space-y-4">
           {filteredQrCodes.map((qr) => (
             <Card key={qr.id} className="glass">
-              <CardHeader className="pb-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/10 text-primary text-xs font-medium">
-                        {getQrTypeIcon(qr.type)}
-                        {getQrTypeLabel(qr.type)}
-                      </div>
-                    </div>
-                    <CardTitle className="font-heading text-lg">{qr.label || venueName}</CardTitle>
-                    {qr.type === 'INDIVIDUAL' || qr.type === 'PERSONAL' ? (
-                      qr.staff && (
-                        <CardDescription className="text-sm">
-                          {qr.staff.displayName}
-                        </CardDescription>
-                      )
-                    ) : (
-                      <CardDescription className="text-sm">
-                        {qr.recipients?.length || 0} сотрудников
-                      </CardDescription>
-                    )}
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col sm:flex-row items-center gap-4">
+              <CardContent className="p-4">
+                <div className="flex flex-col sm:flex-row items-start gap-4">
                   {/* QR Preview */}
                   <div className="w-24 h-24 bg-white rounded-lg p-2 shadow-sm flex-shrink-0">
                     <img
@@ -225,49 +231,80 @@ export default function QrCodesPage() {
                     />
                   </div>
 
-                  {/* Info & Actions */}
-                  <div className="flex-1 text-center sm:text-left space-y-2">
+                  {/* Info */}
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/10 text-primary text-xs font-medium">
+                        {getQrTypeIcon(qr.type)}
+                        {getQrTypeLabel(qr.type)}
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-heading text-lg font-semibold">{qr.label || venueName}</h3>
+                      {qr.type === 'INDIVIDUAL' || qr.type === 'PERSONAL' ? (
+                        qr.staff && (
+                          <p className="text-sm text-muted-foreground">
+                            {qr.staff.displayName}
+                          </p>
+                        )
+                      ) : (
+                        <p className="text-sm text-muted-foreground">
+                          {qr.recipients?.length || 0} сотрудников
+                        </p>
+                      )}
+                    </div>
                     <div className="text-xs text-muted-foreground font-mono break-all">
                       {baseUrl}/tip/{qr.shortCode}
                     </div>
-                    <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-                      {isTeamQr(qr.type) && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setEditingQr(qr)}
-                        >
-                          <Edit className="h-3 w-3 mr-1" />
-                          Редактировать
-                        </Button>
-                      )}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex flex-wrap gap-2 sm:flex-col sm:items-end">
+                    {isTeamQr(qr.type) && (
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() =>
-                          window.open(`${baseUrl}/tip/${qr.shortCode}`, "_blank")
-                        }
+                        onClick={() => setEditingQr(qr)}
                       >
-                        <ExternalLink className="h-3 w-3 mr-1" />
-                        Открыть
+                        <Edit className="h-3 w-3 mr-1" />
+                        Редактировать
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDownload(qr.id, "png")}
-                      >
-                        <Download className="h-3 w-3 mr-1" />
-                        PNG
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDownload(qr.id, "svg")}
-                      >
-                        <Download className="h-3 w-3 mr-1" />
-                        SVG
-                      </Button>
-                    </div>
+                    )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        window.open(`${baseUrl}/tip/${qr.shortCode}`, "_blank")
+                      }
+                    >
+                      <ExternalLink className="h-3 w-3 mr-1" />
+                      Открыть
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDownload(qr.id, "png")}
+                    >
+                      <Download className="h-3 w-3 mr-1" />
+                      PNG
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDownload(qr.id, "svg")}
+                    >
+                      <Download className="h-3 w-3 mr-1" />
+                      SVG
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setDeletingQrId(qr.id)}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="h-3 w-3 mr-1" />
+                      Удалить
+                    </Button>
                   </div>
                 </div>
               </CardContent>
@@ -318,6 +355,27 @@ export default function QrCodesPage() {
           onSuccess={handleQrUpdated}
         />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deletingQrId} onOpenChange={(open) => !open && setDeletingQrId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Удалить QR-код?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Это действие нельзя отменить. QR-код будет удалён навсегда.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Отмена</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => deletingQrId && handleDelete(deletingQrId)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Удалить
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

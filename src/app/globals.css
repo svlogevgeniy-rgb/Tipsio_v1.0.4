@@ -41,6 +41,12 @@
     --chart-5: 27 87% 67%;
 
     --radius: 0.75rem;
+
+    /* Brand colors for tip payment UI */
+    --brand: 162 52% 25%;
+    --brand-hover: 163 53% 18%;
+    --brand-active: 163 55% 13%;
+    --brand-foreground: 0 0% 100%;
   }
 
   /* Dark theme */
@@ -79,6 +85,12 @@
     --chart-3: 142 71% 45%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+
+    /* Brand colors for tip payment UI */
+    --brand: 162 52% 25%;
+    --brand-hover: 163 53% 18%;
+    --brand-active: 163 55% 13%;
+    --brand-foreground: 0 0% 100%;
   }
 
   * {
