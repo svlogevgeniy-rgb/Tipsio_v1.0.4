@@ -1,0 +1,224 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Light theme */
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 161 52% 25%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 220 14% 96%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 142 71% 45%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 161 52% 25%;
+
+    --chart-1: 161 52% 25%;
+    --chart-2: 0 91% 71%;
+    --chart-3: 142 71% 45%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+
+    --radius: 0.75rem;
+
+    /* Brand colors for tip payment UI */
+    --brand: 162 52% 25%;
+    --brand-hover: 163 53% 18%;
+    --brand-active: 163 55% 13%;
+    --brand-foreground: 0 0% 100%;
+  }
+
+  /* Dark theme */
+  .dark {
+    --background: 222 47% 5%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 7%;
+    --card-foreground: 210 40% 98%;
+ 
+    --popover: 222 47% 5%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 161 52% 25%;
+    --primary-foreground: 222 47% 7%;
+
+    --secondary: 0 91% 71%;
+    --secondary-foreground: 222 47% 5%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --success: 142 71% 45%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 161 52% 25%;
+
+    --chart-1: 161 52% 25%;
+    --chart-2: 0 91% 71%;
+    --chart-3: 142 71% 45%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+
+    /* Brand colors for tip payment UI */
+    --brand: 162 52% 25%;
+    --brand-hover: 163 53% 18%;
+    --brand-active: 163 55% 13%;
+    --brand-foreground: 0 0% 100%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Утилита для Стекла (Glassmorphism) */
+  .glass {
+    @apply bg-white/80 dark:bg-white/5 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-lg dark:shadow-xl;
+  }
+  
+  /* Утилита для сильного стекла (для модалок) */
+  .glass-heavy {
+    @apply bg-white/95 dark:bg-[#020617]/80 backdrop-blur-xl border border-gray-200 dark:border-white/5;
+  }
+
+  /* Живой градиент текста */
+  .text-gradient {
+    color: #1E5F4B;
+    background-image: linear-gradient(90deg, #1E5F4B, #1E5F4B);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  /* Анимация пульсации для фоновых элементов */
+  .animate-pulse-slow {
+    animation: pulse-slow 8s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* Animated gradient shift for landing page */
+@keyframes gradient-shift {
+  0%, 100% {
+    transform: translate(0%, 0%) scale(1);
+  }
+  25% {
+    transform: translate(2%, -2%) scale(1.02);
+  }
+  50% {
+    transform: translate(-1%, 2%) scale(1);
+  }
+  75% {
+    transform: translate(-2%, -1%) scale(1.01);
+  }
+}
+
+.animate-gradient-shift {
+  animation: gradient-shift 20s ease-in-out infinite;
+}
+
+/* Gradient text animation */
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 3s ease infinite;
+}
+
+@keyframes gradient-x {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Animation delays */
+.delay-1000 {
+  animation-delay: 1s;
+}
+
+.delay-2000 {
+  animation-delay: 2s;
+}
+
+
+/* Оптимизированные CSS анимации для лендинга */
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-down {
+  animation: fade-in-down 0.5s ease-out forwards;
+}
+
+/* Плавающие элементы - CSS вместо JS */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 4s ease-in-out infinite;
+  animation-delay: 0.6s;
+}

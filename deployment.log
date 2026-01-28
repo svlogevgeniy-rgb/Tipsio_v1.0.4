@@ -1,0 +1,1475 @@
+[0;32m🚀 Starting deployment to production server[0m
+Server: 31.130.155.71
+Project directory: /var/www/tipsio
+
+[1;33m📋 Step 1: Checking server requirements[0m
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Hit:1 http://mirror.timeweb.ru/ubuntu noble InRelease
+Hit:2 http://zabbix.repo.timeweb.ru/ubuntu focal InRelease
+Get:3 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Hit:4 http://archive.ubuntu.com/ubuntu noble InRelease
+Get:5 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1410 kB]
+Get:6 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Get:7 http://security.ubuntu.com/ubuntu noble-security/main Translation-en [229 kB]
+Get:8 http://security.ubuntu.com/ubuntu noble-security/main amd64 Components [21.5 kB]
+Get:9 http://security.ubuntu.com/ubuntu noble-security/main amd64 c-n-f Metadata [9820 B]
+Get:10 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [924 kB]
+Get:11 http://security.ubuntu.com/ubuntu noble-security/universe Translation-en [209 kB]
+Get:12 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Components [74.2 kB]
+Get:13 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Components [208 B]
+Get:14 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Components [208 B]
+Get:15 http://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Get:16 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1700 kB]
+Get:17 http://archive.ubuntu.com/ubuntu noble-updates/main Translation-en [314 kB]
+Get:18 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [175 kB]
+Get:19 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 c-n-f Metadata [16.0 kB]
+Get:20 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1519 kB]
+Get:21 http://archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [310 kB]
+Get:22 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [386 kB]
+Get:23 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2506 kB]
+Get:24 http://archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [573 kB]
+Get:25 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Components [212 B]
+Get:26 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 c-n-f Metadata [556 B]
+Get:27 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [31.8 kB]
+Get:28 http://archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [6348 B]
+Get:29 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+Get:30 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 c-n-f Metadata [496 B]
+Get:31 http://archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [7300 B]
+Get:32 http://archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [10.5 kB]
+Get:33 http://archive.ubuntu.com/ubuntu noble-backports/restricted amd64 Components [212 B]
+Get:34 http://archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Components [212 B]
+Fetched 10.8 MB in 2s (5518 kB/s)
+Reading package lists...
+Building dependency tree...
+Reading state information...
+3 packages can be upgraded. Run 'apt list --upgradable' to see them.
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (8.5.0-2ubuntu10.6).
+curl set to manually installed.
+git is already the newest version (1:2.43.0-1ubuntu7.3).
+git set to manually installed.
+0 upgraded, 0 newly installed, 0 to remove and 3 not upgraded.
+[1;33m📋 Step 2: Installing Node.js 20[0m
+[38;5;79m2026-01-27 10:09:49 - Installing pre-requisites[0m
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Hit:1 http://zabbix.repo.timeweb.ru/ubuntu focal InRelease
+Hit:2 http://mirror.timeweb.ru/ubuntu noble InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu noble InRelease
+Hit:4 http://security.ubuntu.com/ubuntu noble-security InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu noble-backports InRelease
+Reading package lists...
+Building dependency tree...
+Reading state information...
+3 packages can be upgraded. Run 'apt list --upgradable' to see them.
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+apt-transport-https is already the newest version (2.8.3).
+ca-certificates is already the newest version (20240203).
+ca-certificates set to manually installed.
+curl is already the newest version (8.5.0-2ubuntu10.6).
+gnupg is already the newest version (2.4.4-2ubuntu17.4).
+0 upgraded, 0 newly installed, 0 to remove and 3 not upgraded.
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Hit:1 http://mirror.timeweb.ru/ubuntu noble InRelease
+Hit:2 http://zabbix.repo.timeweb.ru/ubuntu focal InRelease
+Hit:3 http://security.ubuntu.com/ubuntu noble-security InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu noble InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu noble-backports InRelease
+Get:7 https://deb.nodesource.com/node_20.x nodistro InRelease [12.1 kB]
+Get:8 https://deb.nodesource.com/node_20.x nodistro/main amd64 Packages [13.6 kB]
+Fetched 25.8 kB in 1s (38.4 kB/s)
+Reading package lists...
+Building dependency tree...
+Reading state information...
+3 packages can be upgraded. Run 'apt list --upgradable' to see them.
+[1;34m2026-01-27 10:09:55 - Repository configured successfully.[0m
+[38;5;79m2026-01-27 10:09:55 - To install Node.js, run: apt install nodejs -y[0m
+[38;5;79m2026-01-27 10:09:55 - You can use N|solid Runtime as a node.js alternative[0m
+[1;32m2026-01-27 10:09:55 - To install N|solid Runtime, run: apt install nsolid -y 
+[0m
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following NEW packages will be installed:
+  nodejs
+0 upgraded, 1 newly installed, 0 to remove and 3 not upgraded.
+Need to get 32.0 MB of archives.
+After this operation, 197 MB of additional disk space will be used.
+Get:1 https://deb.nodesource.com/node_20.x nodistro/main amd64 nodejs amd64 20.20.0-1nodesource1 [32.0 MB]
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+dpkg-preconfigure: unable to re-open stdin: 
+Fetched 32.0 MB in 1s (37.5 MB/s)
+Selecting previously unselected package nodejs.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 73712 files and directories currently installed.)
+Preparing to unpack .../nodejs_20.20.0-1nodesource1_amd64.deb ...
+Unpacking nodejs (20.20.0-1nodesource1) ...
+Setting up nodejs (20.20.0-1nodesource1) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+v20.20.0
+10.8.2
+[1;33m📋 Step 3: Installing PostgreSQL[0m
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  libcommon-sense-perl libjson-perl libjson-xs-perl libllvm17t64 libpq5
+  libtypes-serialiser-perl postgresql-16 postgresql-client-16
+  postgresql-client-common postgresql-common ssl-cert
+Suggested packages:
+  postgresql-doc postgresql-doc-16
+The following NEW packages will be installed:
+  libcommon-sense-perl libjson-perl libjson-xs-perl libllvm17t64 libpq5
+  libtypes-serialiser-perl postgresql postgresql-16 postgresql-client-16
+  postgresql-client-common postgresql-common postgresql-contrib ssl-cert
+0 upgraded, 13 newly installed, 0 to remove and 3 not upgraded.
+Need to get 43.6 MB of archives.
+After this operation, 175 MB of additional disk space will be used.
+Get:1 http://mirror.timeweb.ru/ubuntu noble/main amd64 libjson-perl all 4.10000-1 [81.9 kB]
+Get:2 http://mirror.timeweb.ru/ubuntu noble/main amd64 ssl-cert all 1.1.2ubuntu1 [17.8 kB]
+Get:3 http://mirror.timeweb.ru/ubuntu noble/main amd64 libcommon-sense-perl amd64 3.75-3build3 [20.4 kB]
+Get:4 http://mirror.timeweb.ru/ubuntu noble/main amd64 libtypes-serialiser-perl all 1.01-1 [11.6 kB]
+Get:5 http://mirror.timeweb.ru/ubuntu noble/main amd64 libllvm17t64 amd64 1:17.0.6-9ubuntu1 [26.2 MB]
+Get:6 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 postgresql-client-common all 257build1.1 [36.4 kB]
+Get:7 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 postgresql-common all 257build1.1 [161 kB]
+Get:8 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libjson-xs-perl amd64 4.040-0ubuntu0.24.04.1 [83.7 kB]
+Get:9 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpq5 amd64 16.11-0ubuntu0.24.04.1 [145 kB]
+Get:10 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 postgresql-client-16 amd64 16.11-0ubuntu0.24.04.1 [1297 kB]
+Get:11 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 postgresql-16 amd64 16.11-0ubuntu0.24.04.1 [15.6 MB]
+Get:12 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 postgresql all 16+257build1.1 [11.6 kB]
+Get:13 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 postgresql-contrib all 16+257build1.1 [11.6 kB]
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+dpkg-preconfigure: unable to re-open stdin: 
+Fetched 43.6 MB in 1s (42.3 MB/s)
+Selecting previously unselected package libjson-perl.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 79075 files and directories currently installed.)
+Preparing to unpack .../00-libjson-perl_4.10000-1_all.deb ...
+Unpacking libjson-perl (4.10000-1) ...
+Selecting previously unselected package postgresql-client-common.
+Preparing to unpack .../01-postgresql-client-common_257build1.1_all.deb ...
+Unpacking postgresql-client-common (257build1.1) ...
+Selecting previously unselected package ssl-cert.
+Preparing to unpack .../02-ssl-cert_1.1.2ubuntu1_all.deb ...
+Unpacking ssl-cert (1.1.2ubuntu1) ...
+Selecting previously unselected package postgresql-common.
+Preparing to unpack .../03-postgresql-common_257build1.1_all.deb ...
+Adding 'diversion of /usr/bin/pg_config to /usr/bin/pg_config.libpq-dev by postgresql-common'
+Unpacking postgresql-common (257build1.1) ...
+Selecting previously unselected package libcommon-sense-perl:amd64.
+Preparing to unpack .../04-libcommon-sense-perl_3.75-3build3_amd64.deb ...
+Unpacking libcommon-sense-perl:amd64 (3.75-3build3) ...
+Selecting previously unselected package libtypes-serialiser-perl.
+Preparing to unpack .../05-libtypes-serialiser-perl_1.01-1_all.deb ...
+Unpacking libtypes-serialiser-perl (1.01-1) ...
+Selecting previously unselected package libjson-xs-perl.
+Preparing to unpack .../06-libjson-xs-perl_4.040-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking libjson-xs-perl (4.040-0ubuntu0.24.04.1) ...
+Selecting previously unselected package libllvm17t64:amd64.
+Preparing to unpack .../07-libllvm17t64_1%3a17.0.6-9ubuntu1_amd64.deb ...
+Unpacking libllvm17t64:amd64 (1:17.0.6-9ubuntu1) ...
+Selecting previously unselected package libpq5:amd64.
+Preparing to unpack .../08-libpq5_16.11-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking libpq5:amd64 (16.11-0ubuntu0.24.04.1) ...
+Selecting previously unselected package postgresql-client-16.
+Preparing to unpack .../09-postgresql-client-16_16.11-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking postgresql-client-16 (16.11-0ubuntu0.24.04.1) ...
+Selecting previously unselected package postgresql-16.
+Preparing to unpack .../10-postgresql-16_16.11-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking postgresql-16 (16.11-0ubuntu0.24.04.1) ...
+Selecting previously unselected package postgresql.
+Preparing to unpack .../11-postgresql_16+257build1.1_all.deb ...
+Unpacking postgresql (16+257build1.1) ...
+Selecting previously unselected package postgresql-contrib.
+Preparing to unpack .../12-postgresql-contrib_16+257build1.1_all.deb ...
+Unpacking postgresql-contrib (16+257build1.1) ...
+Setting up postgresql-client-common (257build1.1) ...
+Setting up libpq5:amd64 (16.11-0ubuntu0.24.04.1) ...
+Setting up libcommon-sense-perl:amd64 (3.75-3build3) ...
+Setting up libllvm17t64:amd64 (1:17.0.6-9ubuntu1) ...
+Setting up ssl-cert (1.1.2ubuntu1) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+Created symlink /etc/systemd/system/multi-user.target.wants/ssl-cert.service → /usr/lib/systemd/system/ssl-cert.service.
+Setting up libtypes-serialiser-perl (1.01-1) ...
+Setting up libjson-perl (4.10000-1) ...
+Setting up libjson-xs-perl (4.040-0ubuntu0.24.04.1) ...
+Setting up postgresql-client-16 (16.11-0ubuntu0.24.04.1) ...
+update-alternatives: using /usr/share/postgresql/16/man/man1/psql.1.gz to provide /usr/share/man/man1/psql.1.gz (psql.1.gz) in auto mode
+Setting up postgresql-common (257build1.1) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+
+Creating config file /etc/postgresql-common/createcluster.conf with new version
+Building PostgreSQL dictionaries from installed myspell/hunspell packages...
+Removing obsolete dictionary files:
+Created symlink /etc/systemd/system/multi-user.target.wants/postgresql.service → /usr/lib/systemd/system/postgresql.service.
+Setting up postgresql-16 (16.11-0ubuntu0.24.04.1) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+Creating new PostgreSQL cluster 16/main ...
+/usr/lib/postgresql/16/bin/initdb -D /var/lib/postgresql/16/main --auth-local peer --auth-host scram-sha-256 --no-instructions
+The files belonging to this database system will be owned by user "postgres".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "C.UTF-8".
+The default database encoding has accordingly been set to "UTF8".
+The default text search configuration will be set to "english".
+
+Data page checksums are disabled.
+
+fixing permissions on existing directory /var/lib/postgresql/16/main ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... posix
+selecting default max_connections ... 100
+selecting default shared_buffers ... 128MB
+selecting default time zone ... Etc/UTC
+creating configuration files ... ok
+running bootstrap script ... ok
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+Setting up postgresql-contrib (16+257build1.1) ...
+Setting up postgresql (16+257build1.1) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.6) ...
+Synchronizing state of postgresql.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable postgresql
+[1;33m📋 Step 4: Creating database[0m
+CREATE DATABASE
+CREATE ROLE
+GRANT
+ALTER DATABASE
+[1;33m📋 Step 5: Installing PM2[0m
+
+added 133 packages in 10s
+
+13 packages are looking for funding
+  run `npm fund` for details
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.8.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.8.0
+npm notice To update run: npm install -g npm@11.8.0
+npm notice
+[1;33m📋 Step 6: Installing Nginx[0m
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  nginx-common
+Suggested packages:
+  fcgiwrap nginx-doc
+The following NEW packages will be installed:
+  nginx nginx-common
+0 upgraded, 2 newly installed, 0 to remove and 3 not upgraded.
+Need to get 564 kB of archives.
+After this operation, 1596 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 nginx-common all 1.24.0-2ubuntu7.5 [43.4 kB]
+Get:2 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 nginx amd64 1.24.0-2ubuntu7.5 [520 kB]
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+dpkg-preconfigure: unable to re-open stdin: 
+Fetched 564 kB in 0s (1550 kB/s)
+Selecting previously unselected package nginx-common.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 81045 files and directories currently installed.)
+Preparing to unpack .../nginx-common_1.24.0-2ubuntu7.5_all.deb ...
+Unpacking nginx-common (1.24.0-2ubuntu7.5) ...
+Selecting previously unselected package nginx.
+Preparing to unpack .../nginx_1.24.0-2ubuntu7.5_amd64.deb ...
+Unpacking nginx (1.24.0-2ubuntu7.5) ...
+Setting up nginx-common (1.24.0-2ubuntu7.5) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+Created symlink /etc/systemd/system/multi-user.target.wants/nginx.service → /usr/lib/systemd/system/nginx.service.
+Setting up nginx (1.24.0-2ubuntu7.5) ...
+ * Upgrading binary nginx
+   ...done.
+Processing triggers for man-db (2.12.0-4build2) ...
+Processing triggers for ufw (0.36.2-6) ...
+Synchronizing state of nginx.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable nginx
+[1;33m📋 Step 7: Creating project directory[0m
+[1;33m📋 Step 8: Copying project files[0m
+Transfer starting: 632 files
+./
+.DS_Store
+           8196 100%    4.39MB/s   00:00:00 (xfer#1, to-check=1/632)
+.env.example
+            797 100%    1.09MB/s   00:00:00 (xfer#2, to-check=2/632)
+.env.prod.template
+           2979 100%    4.60MB/s   00:00:00 (xfer#3, to-check=3/632)
+.env.production.example
+            962 100%    1.70MB/s   00:00:00 (xfer#4, to-check=4/632)
+.eslintrc.json
+           1062 100%    2.03MB/s   00:00:00 (xfer#5, to-check=5/632)
+.git-commit-message.txt
+           1999 100%    2.61MB/s   00:00:00 (xfer#6, to-check=6/632)
+.gitignore
+            521 100%  825.86KB/s   00:00:00 (xfer#7, to-check=7/632)
+.nvmrc
+              8 100%   12.56KB/s   00:00:00 (xfer#8, to-check=8/632)
+ADMIN_PANEL_COMPLETE.md
+           6913 100%    7.61MB/s   00:00:00 (xfer#9, to-check=9/632)
+CHANGES_SUMMARY.md
+           5818 100%    8.26MB/s   00:00:00 (xfer#10, to-check=10/632)
+DEPLOYMENT_GUIDE.md
+           4754 100%    6.79MB/s   00:00:00 (xfer#11, to-check=11/632)
+DEPLOYMENT_GUIDE_NO_DOCKER.md
+          12615 100%   13.35MB/s   00:00:00 (xfer#12, to-check=12/632)
+DEPLOYMENT_SECURITY_GUIDE.md
+           7039 100%   10.71MB/s   00:00:00 (xfer#13, to-check=13/632)
+DEPLOY_CHECKLIST.md
+           6414 100%    8.96MB/s   00:00:00 (xfer#14, to-check=14/632)
+DOCKER_REMOVAL_COMPLETE.md
+           6591 100%    6.73MB/s   00:00:00 (xfer#15, to-check=15/632)
+EXPLANATION_LOCKS.md
+           2766 100%    3.53MB/s   00:00:00 (xfer#16, to-check=16/632)
+EXPLANATION_PENDING_STATUS.md
+           3983 100%    5.07MB/s   00:00:00 (xfer#17, to-check=17/632)
+LANDING_PAGE_FIX.md
+           5873 100%    7.29MB/s   00:00:00 (xfer#18, to-check=18/632)
+MANUAL_DEPLOY.md
+           8869 100%   11.07MB/s   00:00:00 (xfer#19, to-check=19/632)
+PRODUCTION_DEPLOYMENT_COMPLETE.md
+           7763 100%   13.48MB/s   00:00:00 (xfer#20, to-check=20/632)
+PRODUCTION_READY.md
+              0 nan%   00:00:00 (xfer#21, to-check=21/632)
+PROJECT_HEALTH_CHECK.md
+           6729 100%    9.55MB/s   00:00:00 (xfer#22, to-check=22/632)
+QUICK_REFACTORING_GUIDE.md
+           7532 100%   11.55MB/s   00:00:00 (xfer#23, to-check=23/632)
+QUICK_START.md
+           3487 100%    6.55MB/s   00:00:00 (xfer#24, to-check=24/632)
+README.md
+           6016 100%    9.93MB/s   00:00:00 (xfer#25, to-check=25/632)
+README_DB.md
+           4585 100%    8.36MB/s   00:00:00 (xfer#26, to-check=26/632)
+REFACTORING_COMPLETE.md
+           3901 100%    7.29MB/s   00:00:00 (xfer#27, to-check=27/632)
+REFACTORING_COMPLETE_SUMMARY.md
+          10381 100%   10.07MB/s   00:00:00 (xfer#28, to-check=28/632)
+REFACTORING_FOLLOW_UPS.md
+           9679 100%    8.83MB/s   00:00:00 (xfer#29, to-check=29/632)
+REFACTORING_GUIDE.md
+          12251 100%   15.94MB/s   00:00:00 (xfer#30, to-check=30/632)
+REFACTORING_PHASE2_SUMMARY.md
+           5047 100%    8.08MB/s   00:00:00 (xfer#31, to-check=31/632)
+REFACTORING_PHASE3_SUMMARY.md
+           4307 100%    6.19MB/s   00:00:00 (xfer#32, to-check=32/632)
+REFACTORING_PHASE4_SUMMARY.md
+           5049 100%    9.46MB/s   00:00:00 (xfer#33, to-check=33/632)
+REFACTORING_PROGRESS.md
+           6956 100%   11.40MB/s   00:00:00 (xfer#34, to-check=34/632)
+REFACTORING_README.md
+           6047 100%    9.76MB/s   00:00:00 (xfer#35, to-check=35/632)
+REFACTORING_SUMMARY.md
+          11319 100%   14.62MB/s   00:00:00 (xfer#36, to-check=36/632)
+SECURITY.md
+           2424 100%    5.69MB/s   00:00:00 (xfer#37, to-check=37/632)
+SECURITY_AUDIT_COMPLETE 2.md
+           7366 100%   13.23MB/s   00:00:00 (xfer#38, to-check=38/632)
+SECURITY_AUDIT_COMPLETE.md
+           7366 100%   13.89MB/s   00:00:00 (xfer#39, to-check=39/632)
+SECURITY_FIXES.md
+           5485 100%   13.80MB/s   00:00:00 (xfer#40, to-check=40/632)
+STRUCTURAL_REFACTORING_COMPLETE.md
+           9336 100%   14.48MB/s   00:00:00 (xfer#41, to-check=41/632)
+TESTING_REPORT.md
+           6961 100%   11.90MB/s   00:00:00 (xfer#42, to-check=42/632)
+backup-db.sh
+           1093 100%    2.95MB/s   00:00:00 (xfer#43, to-check=43/632)
+components.json
+            530 100%    1.41MB/s   00:00:00 (xfer#44, to-check=44/632)
+cookies.txt
+              0 nan%   00:00:00 (xfer#45, to-check=45/632)
+deploy-no-docker.sh
+            950 100%    2.68MB/s   00:00:00 (xfer#46, to-check=46/632)
+deploy-to-production.sh
+           6039 100%   19.14MB/s   00:00:00 (xfer#47, to-check=47/632)
+deployment.log
+          24754 121%   33.58MB/s   00:00:00 (xfer#48, to-check=48/632)
+ecosystem.config.js
+            601 100%    1.55MB/s   00:00:00 (xfer#49, to-check=49/632)
+generate-secrets.sh
+           4102 100%   13.87MB/s   00:00:00 (xfer#50, to-check=50/632)
+next-env.d.ts
+            228 100%  725.63KB/s   00:00:00 (xfer#51, to-check=51/632)
+next.config.mjs
+            454 100%    1.48MB/s   00:00:00 (xfer#52, to-check=52/632)
+nginx.conf.example
+           2764 100%    7.75MB/s   00:00:00 (xfer#53, to-check=53/632)
+package-lock.json
+         492021 100%   25.67MB/s   00:00:00 (xfer#54, to-check=54/632)
+package.json
+           2712 100%    2.31MB/s   00:00:00 (xfer#55, to-check=55/632)
+postcss.config.mjs
+            135 100%  697.30KB/s   00:00:00 (xfer#56, to-check=56/632)
+prisma.config.ts
+            455 100%    2.80MB/s   00:00:00 (xfer#57, to-check=57/632)
+tailwind.config.ts
+           2664 100%    8.36MB/s   00:00:00 (xfer#58, to-check=58/632)
+tsconfig.json
+            578 100%    2.25MB/s   00:00:00 (xfer#59, to-check=59/632)
+tsconfig.tsbuildinfo
+         242870 100%   33.63MB/s   00:00:00 (xfer#60, to-check=60/632)
+update-deploy.sh
+           1237 100%    4.70MB/s   00:00:00 (xfer#61, to-check=61/632)
+vitest.config.ts
+            401 100%    2.20MB/s   00:00:00 (xfer#62, to-check=62/632)
+.cursor/
+.github/
+.github/workflows/
+.github/workflows/ci.yml
+            695 100%    4.24MB/s   00:00:00 (xfer#63, to-check=66/632)
+.kiro/
+.kiro/refactoring-structure.md
+          15147 100%   35.66MB/s   00:00:00 (xfer#64, to-check=68/632)
+.kiro/specs/
+.kiro/specs/codebase-refactoring/
+.kiro/specs/codebase-refactoring/design.md
+          16942 100%   30.09MB/s   00:00:00 (xfer#65, to-check=71/632)
+.kiro/specs/codebase-refactoring/requirements.md
+           6821 100%   27.67MB/s   00:00:00 (xfer#66, to-check=72/632)
+.kiro/specs/codebase-refactoring/tasks.md
+          11136 100%   23.82MB/s   00:00:00 (xfer#67, to-check=73/632)
+.kiro/specs/full-stack-stabilization/
+.kiro/specs/full-stack-stabilization/design.md
+           9775 100%   29.42MB/s   00:00:00 (xfer#68, to-check=75/632)
+.kiro/specs/full-stack-stabilization/requirements.md
+           6687 100%   28.46MB/s   00:00:00 (xfer#69, to-check=76/632)
+.kiro/specs/full-stack-stabilization/tasks.md
+           3010 100%   14.35MB/s   00:00:00 (xfer#70, to-check=77/632)
+.kiro/specs/indonesian-i18n/
+.kiro/specs/indonesian-i18n/design.md
+          12805 100%   38.17MB/s   00:00:00 (xfer#71, to-check=79/632)
+.kiro/specs/indonesian-i18n/requirements.md
+           6618 100%   27.55MB/s   00:00:00 (xfer#72, to-check=80/632)
+.kiro/specs/indonesian-i18n/tasks.md
+           4644 100%   21.93MB/s   00:00:00 (xfer#73, to-check=81/632)
+.kiro/specs/landing-and-qr-improvements/
+.kiro/specs/landing-and-qr-improvements/IMPLEMENTATION_COMPLETE.md
+           9880 100%   26.17MB/s   00:00:00 (xfer#74, to-check=83/632)
+.kiro/specs/landing-and-qr-improvements/design.md
+          11903 100%   34.18MB/s   00:00:00 (xfer#75, to-check=84/632)
+.kiro/specs/landing-and-qr-improvements/requirements.md
+           7341 100%   29.78MB/s   00:00:00 (xfer#76, to-check=85/632)
+.kiro/specs/landing-and-qr-improvements/tasks.md
+           7850 100%   26.81MB/s   00:00:00 (xfer#77, to-check=86/632)
+.kiro/specs/landing-page-improvements/
+.kiro/specs/landing-page-improvements/design.md
+          11615 100%   30.77MB/s   00:00:00 (xfer#78, to-check=88/632)
+.kiro/specs/landing-page-improvements/requirements.md
+           6838 100%   22.81MB/s   00:00:00 (xfer#79, to-check=89/632)
+.kiro/specs/landing-page-improvements/tasks.md
+           5170 100%   12.00MB/s   00:00:00 (xfer#80, to-check=90/632)
+.kiro/specs/landing-page-v2-improvements/
+.kiro/specs/landing-page-v2-improvements/design.md
+          13543 100%   22.31MB/s   00:00:00 (xfer#81, to-check=92/632)
+.kiro/specs/landing-page-v2-improvements/requirements.md
+           6761 100%   23.52MB/s   00:00:00 (xfer#82, to-check=93/632)
+.kiro/specs/landing-page-v2-improvements/tasks.md
+           6262 100%   22.28MB/s   00:00:00 (xfer#83, to-check=94/632)
+.kiro/specs/marketing-improvements/
+.kiro/specs/marketing-improvements/design.md
+          15855 100%   28.31MB/s   00:00:00 (xfer#84, to-check=96/632)
+.kiro/specs/marketing-improvements/requirements.md
+           4557 100%   18.34MB/s   00:00:00 (xfer#85, to-check=97/632)
+.kiro/specs/marketing-improvements/tasks.md
+           5386 100%   13.55MB/s   00:00:00 (xfer#86, to-check=98/632)
+.kiro/specs/qr-code-types-refactoring/
+.kiro/specs/qr-code-types-refactoring/COMPLETION_REPORT.md
+           9457 100%   18.72MB/s   00:00:00 (xfer#87, to-check=100/632)
+.kiro/specs/qr-code-types-refactoring/MIGRATION_REPORT.md
+           6897 100%   24.54MB/s   00:00:00 (xfer#88, to-check=101/632)
+.kiro/specs/qr-code-types-refactoring/QR_CODES_PAGE_GUIDE.md
+           4984 100%   15.43MB/s   00:00:00 (xfer#89, to-check=102/632)
+.kiro/specs/qr-code-types-refactoring/TASK_14_COMPLETION.md
+           8610 100%   10.68MB/s   00:00:00 (xfer#90, to-check=103/632)
+.kiro/specs/qr-code-types-refactoring/design.md
+          15777 100%   23.92MB/s   00:00:00 (xfer#91, to-check=104/632)
+.kiro/specs/qr-code-types-refactoring/requirements.md
+          11870 100%   32.17MB/s   00:00:00 (xfer#92, to-check=105/632)
+.kiro/specs/qr-code-types-refactoring/tasks.md
+          12288 100%   35.64MB/s   00:00:00 (xfer#93, to-check=106/632)
+.kiro/specs/qr-codes-filtering/
+.kiro/specs/qr-codes-filtering/design.md
+          11049 100%   25.76MB/s   00:00:00 (xfer#94, to-check=108/632)
+.kiro/specs/qr-codes-filtering/requirements.md
+           6255 100%   26.76MB/s   00:00:00 (xfer#95, to-check=109/632)
+.kiro/specs/qr-codes-filtering/tasks.md
+           6827 100%   21.42MB/s   00:00:00 (xfer#96, to-check=110/632)
+.kiro/specs/staff-management-fix/
+.kiro/specs/staff-management-fix/design.md
+           5267 100%   20.76MB/s   00:00:00 (xfer#97, to-check=112/632)
+.kiro/specs/staff-management-fix/requirements.md
+           4767 100%   19.42MB/s   00:00:00 (xfer#98, to-check=113/632)
+.kiro/specs/staff-management-fix/tasks.md
+           1434 100%    5.72MB/s   00:00:00 (xfer#99, to-check=114/632)
+.kiro/specs/structural-refactoring/
+.kiro/specs/structural-refactoring/design.md
+           8745 100%   30.10MB/s   00:00:00 (xfer#100, to-check=116/632)
+.kiro/specs/structural-refactoring/requirements.md
+           7860 100%   31.10MB/s   00:00:00 (xfer#101, to-check=117/632)
+.kiro/specs/structural-refactoring/tasks.md
+           6544 100%   31.84MB/s   00:00:00 (xfer#102, to-check=118/632)
+.kiro/specs/tip-payment-ui-redesign/
+.kiro/specs/tip-payment-ui-redesign/design.md
+          20862 100%   27.37MB/s   00:00:00 (xfer#103, to-check=120/632)
+.kiro/specs/tip-payment-ui-redesign/requirements.md
+           7472 100%   28.49MB/s   00:00:00 (xfer#104, to-check=121/632)
+.kiro/specs/tip-payment-ui-redesign/tasks.md
+           7350 100%   19.86MB/s   00:00:00 (xfer#105, to-check=122/632)
+.kiro/specs/tip-payment-ui-v2/
+.kiro/specs/tip-payment-ui-v2/IMPLEMENTATION_COMPLETE.md
+           6483 100%   25.96MB/s   00:00:00 (xfer#106, to-check=124/632)
+.kiro/specs/tip-payment-ui-v2/QA_REPORT.md
+           7276 100%   29.13MB/s   00:00:00 (xfer#107, to-check=125/632)
+.kiro/specs/tip-payment-ui-v2/design.md
+          18073 100%   29.41MB/s   00:00:00 (xfer#108, to-check=126/632)
+.kiro/specs/tip-payment-ui-v2/requirements.md
+           8077 100%   34.89MB/s   00:00:00 (xfer#109, to-check=127/632)
+.kiro/specs/tip-payment-ui-v2/tasks.md
+          10321 100%   31.47MB/s   00:00:00 (xfer#110, to-check=128/632)
+.kiro/specs/tip-payment-ui-v3/
+.kiro/specs/tip-payment-ui-v3/IMPLEMENTATION_COMPLETE.md
+           3095 100%   15.13MB/s   00:00:00 (xfer#111, to-check=130/632)
+.kiro/specs/tip-payment-ui-v3/requirements.md
+           6585 100%   27.55MB/s   00:00:00 (xfer#112, to-check=131/632)
+.kiro/specs/tip-payment-ui-v3/tasks.md
+           2710 100%   16.88MB/s   00:00:00 (xfer#113, to-check=132/632)
+.kiro/specs/v1.0.2-security-audit/
+.kiro/specs/v1.0.2-security-audit/RELEASE_COMPLETE.md
+           4253 100%   19.90MB/s   00:00:00 (xfer#114, to-check=134/632)
+.kiro/specs/v1.0.2-security-audit/SECURITY_AUDIT_REPORT.md
+          11560 100%   26.24MB/s   00:00:00 (xfer#115, to-check=135/632)
+.kiro/specs/v1.0.2-security-audit/design.md
+          25058 100%   32.13MB/s   00:00:00 (xfer#116, to-check=136/632)
+.kiro/specs/v1.0.2-security-audit/github-security-check.md
+           3718 100%   18.27MB/s   00:00:00 (xfer#117, to-check=137/632)
+.kiro/specs/v1.0.2-security-audit/npm-audit-results.md
+           5145 100%   22.11MB/s   00:00:00 (xfer#118, to-check=138/632)
+.kiro/specs/v1.0.2-security-audit/requirements.md
+           8565 100%   30.81MB/s   00:00:00 (xfer#119, to-check=139/632)
+.kiro/specs/v1.0.2-security-audit/secret-scan-results.md
+           3611 100%   20.87MB/s   00:00:00 (xfer#120, to-check=140/632)
+.kiro/specs/v1.0.2-security-audit/sensitive-files-check.md
+           2664 100%   13.66MB/s   00:00:00 (xfer#121, to-check=141/632)
+.kiro/specs/v1.0.2-security-audit/tasks.md
+           9843 100%   24.90MB/s   00:00:00 (xfer#122, to-check=142/632)
+.kiro/specs/venue-dashboard-deduplication/
+.kiro/specs/venue-dashboard-deduplication/design.md
+          12409 100%   36.18MB/s   00:00:00 (xfer#123, to-check=144/632)
+.kiro/specs/venue-dashboard-deduplication/requirements.md
+           5845 100%   27.87MB/s   00:00:00 (xfer#124, to-check=145/632)
+.kiro/specs/venue-dashboard-deduplication/tasks.md
+           6646 100%   25.15MB/s   00:00:00 (xfer#125, to-check=146/632)
+.kiro/specs/venue-login-ui-unification/
+.kiro/specs/venue-login-ui-unification/design.md
+          12495 100%   28.38MB/s   00:00:00 (xfer#126, to-check=148/632)
+.kiro/specs/venue-login-ui-unification/requirements.md
+           7111 100%   24.29MB/s   00:00:00 (xfer#127, to-check=149/632)
+.kiro/specs/venue-login-ui-unification/tasks.md
+           3630 100%   18.04MB/s   00:00:00 (xfer#128, to-check=150/632)
+.kiro/specs/venue-menu/
+.kiro/specs/venue-menu/design.md
+          14274 100%   39.71MB/s   00:00:00 (xfer#129, to-check=152/632)
+.kiro/specs/venue-menu/requirements.md
+           6576 100%   32.51MB/s   00:00:00 (xfer#130, to-check=153/632)
+.kiro/specs/venue-menu/tasks.md
+           6667 100%   30.58MB/s   00:00:00 (xfer#131, to-check=154/632)
+.kiro/specs/venue-ui-improvements/
+.kiro/specs/venue-ui-improvements/design.md
+           9951 100%   29.46MB/s   00:00:00 (xfer#132, to-check=156/632)
+.kiro/specs/venue-ui-improvements/requirements.md
+           7149 100%   28.06MB/s   00:00:00 (xfer#133, to-check=157/632)
+.kiro/specs/venue-ui-improvements/tasks.md
+           4896 100%   13.94MB/s   00:00:00 (xfer#134, to-check=158/632)
+.vscode/
+.vscode/settings.json
+              3 100%   23.63KB/s   00:00:00 (xfer#135, to-check=160/632)
+docs/
+docs/ops/
+docs/ops/TIPS-31-issues.md
+           3818 100%   21.94MB/s   00:00:00 (xfer#136, to-check=163/632)
+docs/ops/venue-dashboard-deduplication.md
+           4669 100%   21.92MB/s   00:00:00 (xfer#137, to-check=164/632)
+docs/refactoring/
+docs/refactoring/STRUCTURAL_REFACTORING.md
+           8848 100%   29.92MB/s   00:00:00 (xfer#138, to-check=166/632)
+docs/refactoring/TIPS-27.md
+           8668 100%   28.99MB/s   00:00:00 (xfer#139, to-check=167/632)
+i18n/
+i18n/request.ts
+           1475 100%    8.64MB/s   00:00:00 (xfer#140, to-check=169/632)
+images/
+images/.DS_Store
+           6148 100%   30.36MB/s   00:00:00 (xfer#141, to-check=171/632)
+images/China UnionPay.svg
+          12662 100%   18.98MB/s   00:00:00 (xfer#142, to-check=172/632)
+images/Gpay.png
+           1299 100%    5.12MB/s   00:00:00 (xfer#143, to-check=173/632)
+images/Japan Credit Bureau.svg
+           3893 100%    8.84MB/s   00:00:00 (xfer#144, to-check=174/632)
+images/Logo.png
+           2568 100%    6.60MB/s   00:00:00 (xfer#145, to-check=175/632)
+images/Logo_1.svg
+           1311 100%    5.66MB/s   00:00:00 (xfer#146, to-check=176/632)
+images/Mastercard.svg
+            883 100%    7.02MB/s   00:00:00 (xfer#147, to-check=177/632)
+images/Product_1.png
+        2242800 100%   15.97MB/s   00:00:00 (xfer#148, to-check=178/632)
+images/Product_2.png
+         889938 100%    9.41MB/s   00:00:00 (xfer#149, to-check=179/632)
+images/Product_3.png
+        1914848 100%    6.81MB/s   00:00:00 (xfer#150, to-check=180/632)
+images/Type=Plain, Style=Dark, Shape=Rounded.png
+           1774 100%    3.93MB/s   00:00:00 (xfer#151, to-check=181/632)
+images/Type=Plain, Style=Dark, Shape=Rounded.svg
+           2853 100%    9.13MB/s   00:00:00 (xfer#152, to-check=182/632)
+images/Visa.svg
+           1306 100%    5.02MB/s   00:00:00 (xfer#153, to-check=183/632)
+images/dark.png
+          96537 100%   25.62MB/s   00:00:00 (xfer#154, to-check=184/632)
+images/default.svg
+            469 100%    1.94MB/s   00:00:00 (xfer#155, to-check=185/632)
+images/image.png
+        1289435 100%   40.71MB/s   00:00:00 (xfer#156, to-check=186/632)
+images/midtrans-dark-3a5ac77cd3110b28b32cb590fc968f296d2123e686591d636bd51b276f6ed034.svg
+           5523 100%   14.72MB/s   00:00:00 (xfer#157, to-check=187/632)
+messages/
+messages/en.json
+          36783 100%    3.04MB/s   00:00:00 (xfer#158, to-check=189/632)
+messages/id.json
+          37981 100%   34.20MB/s   00:00:00 (xfer#159, to-check=190/632)
+messages/ru.json
+          54837 100%   28.88MB/s   00:00:00 (xfer#160, to-check=191/632)
+prisma/
+prisma/schema.prisma
+           8182 100%   24.70MB/s   00:00:00 (xfer#161, to-check=193/632)
+prisma/seed.ts
+           4039 100%   18.36MB/s   00:00:00 (xfer#162, to-check=194/632)
+prisma/migrations/
+prisma/migrations/migration_lock.toml
+            128 100%  862.32KB/s   00:00:00 (xfer#163, to-check=196/632)
+prisma/migrations/0_init/
+prisma/migrations/0_init/migration.sql
+          11309 100%   42.32MB/s   00:00:00 (xfer#164, to-check=198/632)
+prisma/migrations/20260113103549_add_qr_types_and_recipients/
+prisma/migrations/20260113103549_add_qr_types_and_recipients/migration.sql
+           1285 100%    8.40MB/s   00:00:00 (xfer#165, to-check=200/632)
+prisma/migrations/20260116122403_add_user_profile_fields/
+prisma/migrations/20260116122403_add_user_profile_fields/migration.sql
+            120 100%  887.22KB/s   00:00:00 (xfer#166, to-check=202/632)
+public/
+public/.gitkeep
+              0 nan%   00:00:00 (xfer#167, to-check=204/632)
+public/favicon-16x16.png
+             92 100%  586.97KB/s   00:00:00 (xfer#168, to-check=205/632)
+public/favicon.svg
+            289 100%    1.59MB/s   00:00:00 (xfer#169, to-check=206/632)
+public/images/
+public/images/Gpay.png
+           1299 100%    7.08MB/s   00:00:00 (xfer#170, to-check=208/632)
+public/images/Logo_1.svg
+           1311 100%    7.27MB/s   00:00:00 (xfer#171, to-check=209/632)
+public/images/Logo_tipsio.svg
+           2568 100%   12.82MB/s   00:00:00 (xfer#172, to-check=210/632)
+public/images/doku-logo.png
+           3990 100%   18.03MB/s   00:00:00 (xfer#173, to-check=211/632)
+public/images/image_landing.png
+        1560697 100%    8.91MB/s   00:00:00 (xfer#174, to-check=212/632)
+public/images/midtrans-dark-3a5ac77cd3110b28b32cb590fc968f296d2123e686591d636bd51b276f6ed034.svg
+           5523 100%   12.40MB/s   00:00:00 (xfer#175, to-check=213/632)
+public/images/tipsio-logo.svg
+            320 100%    1.34MB/s   00:00:00 (xfer#176, to-check=214/632)
+public/images/xendit-logo.svg
+           4441 100%   14.80MB/s   00:00:00 (xfer#177, to-check=215/632)
+public/images/hero/
+public/images/hero/.gitkeep
+             94 100%  596.94KB/s   00:00:00 (xfer#178, to-check=217/632)
+public/images/hero/README.md
+           2337 100%    7.28MB/s   00:00:00 (xfer#179, to-check=218/632)
+public/images/payment/
+public/images/payment/google-pay-color.svg
+           1810 100%    7.70MB/s   00:00:00 (xfer#180, to-check=220/632)
+public/images/payment/google-pay-official.svg
+           1810 100%   10.99MB/s   00:00:00 (xfer#181, to-check=221/632)
+public/images/payment/googlepay.svg
+            402 100%    2.08MB/s   00:00:00 (xfer#182, to-check=222/632)
+public/images/payment/gopay-color.svg
+           8864 100%   18.51MB/s   00:00:00 (xfer#183, to-check=223/632)
+public/images/payment/mastercard-color.svg
+            883 100%    3.74MB/s   00:00:00 (xfer#184, to-check=224/632)
+public/images/payment/mastercard.svg
+            322 100%    1.27MB/s   00:00:00 (xfer#185, to-check=225/632)
+public/images/payment/ovo-color.svg
+            712 100%    3.71MB/s   00:00:00 (xfer#186, to-check=226/632)
+public/images/payment/visa-color.svg
+           1306 100%    8.96MB/s   00:00:00 (xfer#187, to-check=227/632)
+public/images/payment/visa.svg
+            292 100%    1.93MB/s   00:00:00 (xfer#188, to-check=228/632)
+public/images/products/
+public/images/products/image1.png
+        1062954 100%   11.37MB/s   00:00:00 (xfer#189, to-check=230/632)
+public/images/products/menu-illustration.svg
+           2492 100%    7.87MB/s   00:00:00 (xfer#190, to-check=231/632)
+public/images/products/menu.webp
+          71856 100%   32.48MB/s   00:00:00 (xfer#191, to-check=232/632)
+public/images/products/preorders-illustration.svg
+           2654 100%   12.91MB/s   00:00:00 (xfer#192, to-check=233/632)
+public/images/products/preorders.webp
+          27658 100%   35.65MB/s   00:00:00 (xfer#193, to-check=234/632)
+public/images/products/product_1.png
+        2242800 100%   10.67MB/s   00:00:00 (xfer#194, to-check=235/632)
+public/images/products/product_2.png
+         889938 100%    7.51MB/s   00:00:00 (xfer#195, to-check=236/632)
+public/images/products/product_3.png
+        1914848 100%    7.32MB/s   00:00:00 (xfer#196, to-check=237/632)
+public/images/products/tips-reviews.png
+         150291 100%   28.97MB/s   00:00:00 (xfer#197, to-check=238/632)
+public/uploads/
+public/uploads/avatars/
+public/uploads/avatars/1768581467186-npfag1t.png
+           2568 100%    7.73MB/s   00:00:00 (xfer#198, to-check=241/632)
+public/uploads/avatars/1768581507724-op3kdc2.png
+           2568 100%    8.78MB/s   00:00:00 (xfer#199, to-check=242/632)
+public/uploads/avatars/1768581513114-ro1fa2q.png
+           2568 100%   10.94MB/s   00:00:00 (xfer#200, to-check=243/632)
+public/uploads/avatars/1768581514850-6xhwrnm.png
+           2568 100%    5.94MB/s   00:00:00 (xfer#201, to-check=244/632)
+public/uploads/avatars/1768581515682-jj0r4hz.png
+           2568 100%   15.02MB/s   00:00:00 (xfer#202, to-check=245/632)
+public/uploads/avatars/1768581515895-r8n3iz4.png
+           2568 100%   13.99MB/s   00:00:00 (xfer#203, to-check=246/632)
+public/uploads/avatars/1768581516133-vycgfao.png
+           2568 100%   10.99MB/s   00:00:00 (xfer#204, to-check=247/632)
+public/uploads/avatars/1768581516377-qisdd48.png
+           2568 100%    3.40MB/s   00:00:00 (xfer#205, to-check=248/632)
+public/uploads/avatars/1768581549220-d63aztl.png
+           2568 100%    9.72MB/s   00:00:00 (xfer#206, to-check=249/632)
+public/uploads/avatars/1768581550414-eoecvs7.png
+           2568 100%   15.71MB/s   00:00:00 (xfer#207, to-check=250/632)
+queries/
+queries/check-data-collection.sql
+           2949 100%   11.73MB/s   00:00:00 (xfer#208, to-check=252/632)
+queries/check-tip-status-by-order-id.sql
+           2194 100%    9.78MB/s   00:00:00 (xfer#209, to-check=253/632)
+queries/check-top-staff.sql
+           3222 100%   15.07MB/s   00:00:00 (xfer#210, to-check=254/632)
+queries/correct-venue-query.sql
+           1003 100%    5.01MB/s   00:00:00 (xfer#211, to-check=255/632)
+queries/diagnose-data-issues.sql
+           3771 100%   20.66MB/s   00:00:00 (xfer#212, to-check=256/632)
+queries/fix-locks.sql
+           1872 100%    8.26MB/s   00:00:00 (xfer#213, to-check=257/632)
+queries/fix-pending-tip.sql
+           3024 100%   12.83MB/s   00:00:00 (xfer#214, to-check=258/632)
+queries/get-venue-id.sql
+           2918 100%   15.04MB/s   00:00:00 (xfer#215, to-check=259/632)
+queries/quick-get-venue-id.sql
+           1251 100%    6.09MB/s   00:00:00 (xfer#216, to-check=260/632)
+queries/total-tips.sql
+           3714 100%   19.57MB/s   00:00:00 (xfer#217, to-check=261/632)
+queries/venue-tips.sql
+           4888 100%   17.08MB/s   00:00:00 (xfer#218, to-check=262/632)
+scripts/
+scripts/create-test-user.ts
+           1884 100%    8.16MB/s   00:00:00 (xfer#219, to-check=264/632)
+scripts/migrate-qr-types.test.ts
+              0 nan%   00:00:00 (xfer#220, to-check=265/632)
+scripts/migrate-qr-types.ts
+           6519 100%   21.15MB/s   00:00:00 (xfer#221, to-check=266/632)
+scripts/test-secret-detection.sh
+           3857 100%   12.91MB/s   00:00:00 (xfer#222, to-check=267/632)
+scripts/validate-translations.ts
+           4259 100%    9.62MB/s   00:00:00 (xfer#223, to-check=268/632)
+scripts/wait-for-db.ts
+           1106 100%    4.10MB/s   00:00:00 (xfer#224, to-check=269/632)
+src/
+src/.DS_Store
+           6148 100%   23.44MB/s   00:00:00 (xfer#225, to-check=271/632)
+src/build.test.ts
+           1440 100%    7.59MB/s   00:00:00 (xfer#226, to-check=272/632)
+src/middleware.ts
+           3381 100%   12.31MB/s   00:00:00 (xfer#227, to-check=273/632)
+src/app/
+src/app/favicon.ico
+          25931 100%   30.57MB/s   00:00:00 (xfer#228, to-check=275/632)
+src/app/globals.css
+           4633 100%   16.68MB/s   00:00:00 (xfer#229, to-check=276/632)
+src/app/layout.test.ts
+           1772 100%    9.50MB/s   00:00:00 (xfer#230, to-check=277/632)
+src/app/layout.tsx
+           1503 100%    8.01MB/s   00:00:00 (xfer#231, to-check=278/632)
+src/app/page-dark.tsx
+          30132 100%   46.64MB/s   00:00:00 (xfer#232, to-check=279/632)
+src/app/page-old.tsx
+          36220 100%   39.25MB/s   00:00:00 (xfer#233, to-check=280/632)
+src/app/page.test.tsx
+          19324 100%   38.78MB/s   00:00:00 (xfer#234, to-check=281/632)
+src/app/page.tsx
+            743 100%    4.05MB/s   00:00:00 (xfer#235, to-check=282/632)
+src/app/admin/
+src/app/admin/admin.test.tsx
+            488 100%    2.74MB/s   00:00:00 (xfer#236, to-check=284/632)
+src/app/admin/page.tsx
+           7366 100%   34.26MB/s   00:00:00 (xfer#237, to-check=285/632)
+src/app/admin/commissions/
+src/app/admin/commissions/page.tsx
+          10174 100%   31.40MB/s   00:00:00 (xfer#238, to-check=287/632)
+src/app/admin/settings/
+src/app/admin/settings/page.tsx
+             62 100%  383.61KB/s   00:00:00 (xfer#239, to-check=289/632)
+src/app/admin/transactions/
+src/app/admin/transactions/page.tsx
+          16115 100%   45.62MB/s   00:00:00 (xfer#240, to-check=291/632)
+src/app/admin/venues/
+src/app/admin/venues/page.tsx
+          12663 100%   33.90MB/s   00:00:00 (xfer#241, to-check=293/632)
+src/app/api/
+src/app/api/admin/
+src/app/api/admin/commissions/
+src/app/api/admin/commissions/route.ts
+           2729 100%   14.38MB/s   00:00:00 (xfer#242, to-check=297/632)
+src/app/api/admin/profile/
+src/app/api/admin/profile/route.ts
+           5463 100%   20.35MB/s   00:00:00 (xfer#243, to-check=299/632)
+src/app/api/admin/transactions/
+src/app/api/admin/transactions/route.test.ts
+           2630 100%   12.60MB/s   00:00:00 (xfer#244, to-check=301/632)
+src/app/api/admin/transactions/route.ts
+           2563 100%   14.54MB/s   00:00:00 (xfer#245, to-check=302/632)
+src/app/api/admin/venues/
+src/app/api/admin/venues/route.test.ts
+           2403 100%   17.77MB/s   00:00:00 (xfer#246, to-check=304/632)
+src/app/api/admin/venues/route.ts
+           3463 100%   16.35MB/s   00:00:00 (xfer#247, to-check=305/632)
+src/app/api/auth/
+src/app/api/auth/[...nextauth]/
+src/app/api/auth/[...nextauth]/route.ts
+            182 100%    1.11MB/s   00:00:00 (xfer#248, to-check=308/632)
+src/app/api/auth/register/
+src/app/api/auth/register/register.property.test.ts
+          12629 100%   43.32MB/s   00:00:00 (xfer#249, to-check=310/632)
+src/app/api/auth/register/route.ts
+           3972 100%   18.39MB/s   00:00:00 (xfer#250, to-check=311/632)
+src/app/api/dev/
+src/app/api/dev/seed/
+src/app/api/dev/seed/route.ts
+           4383 100%   16.20MB/s   00:00:00 (xfer#251, to-check=314/632)
+src/app/api/health/
+src/app/api/health/route.ts
+           1273 100%    6.13MB/s   00:00:00 (xfer#252, to-check=316/632)
+src/app/api/otp/
+src/app/api/otp/send/
+src/app/api/otp/send/route.ts
+           2390 100%   14.53MB/s   00:00:00 (xfer#253, to-check=319/632)
+src/app/api/otp/verify/
+src/app/api/otp/verify/route.ts
+           3258 100%   12.52MB/s   00:00:00 (xfer#254, to-check=321/632)
+src/app/api/payouts/
+src/app/api/payouts/route.ts
+           2639 100%    6.86MB/s   00:00:00 (xfer#255, to-check=323/632)
+src/app/api/payouts/mark-paid/
+src/app/api/payouts/mark-paid/route.ts
+           2972 100%   14.10MB/s   00:00:00 (xfer#256, to-check=325/632)
+src/app/api/qr/
+src/app/api/qr/qr-api.property.test.ts
+          14960 100%   25.35MB/s   00:00:00 (xfer#257, to-check=327/632)
+src/app/api/qr/qr-update.property.test.ts
+          12008 100%   48.13MB/s   00:00:00 (xfer#258, to-check=328/632)
+src/app/api/qr/route.ts
+           7522 100%   27.16MB/s   00:00:00 (xfer#259, to-check=329/632)
+src/app/api/qr/[id]/
+src/app/api/qr/[id]/route.ts
+           7477 100%   32.26MB/s   00:00:00 (xfer#260, to-check=331/632)
+src/app/api/qr/[id]/download/
+src/app/api/qr/[id]/download/route.ts
+           2497 100%   21.25MB/s   00:00:00 (xfer#261, to-check=333/632)
+src/app/api/qr/[id]/material/
+src/app/api/qr/[id]/material/route.ts
+           7240 100%   24.05MB/s   00:00:00 (xfer#262, to-check=335/632)
+src/app/api/staff/
+src/app/api/staff/route.ts
+           5666 100%   21.98MB/s   00:00:00 (xfer#263, to-check=337/632)
+src/app/api/staff/[id]/
+src/app/api/staff/[id]/route.ts
+           6383 100%   26.60MB/s   00:00:00 (xfer#264, to-check=339/632)
+src/app/api/staff/[id]/payout/
+src/app/api/staff/[id]/payout/route.ts
+           2011 100%   18.62MB/s   00:00:00 (xfer#265, to-check=341/632)
+src/app/api/staff/dashboard/
+src/app/api/staff/dashboard/route.ts
+           3843 100%   28.89MB/s   00:00:00 (xfer#266, to-check=343/632)
+src/app/api/staff/history/
+src/app/api/staff/history/route.ts
+           4526 100%   18.05MB/s   00:00:00 (xfer#267, to-check=345/632)
+src/app/api/staff/payout-all/
+src/app/api/staff/payout-all/route.ts
+           2015 100%   19.38MB/s   00:00:00 (xfer#268, to-check=347/632)
+src/app/api/tip/
+src/app/api/tip/tip-api.property.test.ts
+          25030 100%   49.84MB/s   00:00:00 (xfer#269, to-check=349/632)
+src/app/api/tip/[shortCode]/
+src/app/api/tip/[shortCode]/route.ts
+           6250 100%   24.44MB/s   00:00:00 (xfer#270, to-check=351/632)
+src/app/api/tips/
+src/app/api/tips/route.ts
+           4319 100%   18.98MB/s   00:00:00 (xfer#271, to-check=353/632)
+src/app/api/tips/[orderId]/
+src/app/api/tips/[orderId]/route.ts
+           4964 100%   22.34MB/s   00:00:00 (xfer#272, to-check=355/632)
+src/app/api/upload/
+src/app/api/upload/route.ts
+           2358 100%   22.73MB/s   00:00:00 (xfer#273, to-check=357/632)
+src/app/api/uploads/
+src/app/api/uploads/[...path]/
+src/app/api/uploads/[...path]/route.ts
+           1557 100%   15.61MB/s   00:00:00 (xfer#274, to-check=360/632)
+src/app/api/venue/
+src/app/api/venue/qr-codes/
+src/app/api/venue/qr-codes/[id]/
+src/app/api/venue/qr-codes/[id]/route.ts
+           1463 100%    7.58MB/s   00:00:00 (xfer#275, to-check=364/632)
+src/app/api/venues/
+src/app/api/venues/settings.property.test.ts
+           6861 100%   28.21MB/s   00:00:00 (xfer#276, to-check=366/632)
+src/app/api/venues/[id]/
+src/app/api/venues/[id]/route.ts
+           2857 100%   14.41MB/s   00:00:00 (xfer#277, to-check=368/632)
+src/app/api/venues/[id]/distribution/
+src/app/api/venues/[id]/distribution/route.ts
+           3607 100%   18.29MB/s   00:00:00 (xfer#278, to-check=370/632)
+src/app/api/venues/[id]/midtrans/
+src/app/api/venues/[id]/midtrans/route.ts
+           2745 100%   23.77MB/s   00:00:00 (xfer#279, to-check=372/632)
+src/app/api/venues/[id]/settings/
+src/app/api/venues/[id]/settings/route.ts
+           2933 100%   14.48MB/s   00:00:00 (xfer#280, to-check=374/632)
+src/app/api/venues/dashboard/
+src/app/api/venues/dashboard/route.ts
+           4720 100%   17.86MB/s   00:00:00 (xfer#281, to-check=376/632)
+src/app/api/venues/midtrans/
+src/app/api/venues/midtrans/validate/
+src/app/api/venues/midtrans/validate/route.ts
+           1455 100%   10.68MB/s   00:00:00 (xfer#282, to-check=379/632)
+src/app/api/venues/profile/
+src/app/api/venues/profile/route.ts
+          11197 100%   34.14MB/s   00:00:00 (xfer#283, to-check=381/632)
+src/app/api/webhook/
+src/app/api/webhook/midtrans/
+src/app/api/webhook/midtrans/route.ts
+           5893 100%   22.49MB/s   00:00:00 (xfer#284, to-check=384/632)
+src/app/fonts/
+src/app/fonts/GeistMonoVF.woff
+          67864 100%   30.58MB/s   00:00:00 (xfer#285, to-check=386/632)
+src/app/fonts/GeistVF.woff
+          66268 100%   40.54MB/s   00:00:00 (xfer#286, to-check=387/632)
+src/app/landing-v3/
+src/app/landing-v3/page.tsx
+            701 100%    3.37MB/s   00:00:00 (xfer#287, to-check=389/632)
+src/app/staff/
+src/app/staff/dashboard/
+src/app/staff/dashboard/page.tsx
+           6495 100%   25.27MB/s   00:00:00 (xfer#288, to-check=392/632)
+src/app/staff/history/
+src/app/staff/history/page.tsx
+           6630 100%   28.49MB/s   00:00:00 (xfer#289, to-check=394/632)
+src/app/staff/login/
+src/app/staff/login/page.tsx
+           7972 100%   30.78MB/s   00:00:00 (xfer#290, to-check=396/632)
+src/app/tip/
+src/app/tip/tip-pages.property.test.tsx
+          14716 100%   47.24MB/s   00:00:00 (xfer#291, to-check=398/632)
+src/app/tip/[shortCode]/
+src/app/tip/[shortCode]/accessibility.test.tsx
+           6850 100%   29.30MB/s   00:00:00 (xfer#292, to-check=400/632)
+src/app/tip/[shortCode]/business-logic.property.test.tsx
+           6532 100%   27.19MB/s   00:00:00 (xfer#293, to-check=401/632)
+src/app/tip/[shortCode]/button-styling.property.test.tsx
+           4766 100%   21.25MB/s   00:00:00 (xfer#294, to-check=402/632)
+src/app/tip/[shortCode]/button-styling.test.tsx
+           6209 100%   23.86MB/s   00:00:00 (xfer#295, to-check=403/632)
+src/app/tip/[shortCode]/logo.property.test.tsx
+           5559 100%   14.40MB/s   00:00:00 (xfer#296, to-check=404/632)
+src/app/tip/[shortCode]/logo.test.tsx
+           8436 100%   34.40MB/s   00:00:00 (xfer#297, to-check=405/632)
+src/app/tip/[shortCode]/numeric-input.property.test.tsx
+           4677 100%   23.98MB/s   00:00:00 (xfer#298, to-check=406/632)
+src/app/tip/[shortCode]/numeric-input.test.tsx
+           6498 100%   32.09MB/s   00:00:00 (xfer#299, to-check=407/632)
+src/app/tip/[shortCode]/page.test.tsx
+          11767 100%   49.44MB/s   00:00:00 (xfer#300, to-check=408/632)
+src/app/tip/[shortCode]/page.tsx
+          20750 100%   34.60MB/s   00:00:00 (xfer#301, to-check=409/632)
+src/app/tip/[shortCode]/responsive-behavior.test.tsx
+           6372 100%   27.03MB/s   00:00:00 (xfer#302, to-check=410/632)
+src/app/tip/[shortCode]/responsive.property.test.tsx
+           5805 100%   27.81MB/s   00:00:00 (xfer#303, to-check=411/632)
+src/app/tip/[shortCode]/responsive.test.tsx
+           8578 100%   38.04MB/s   00:00:00 (xfer#304, to-check=412/632)
+src/app/tip/[shortCode]/shadcn-components.property.test.tsx
+           4527 100%   22.38MB/s   00:00:00 (xfer#305, to-check=413/632)
+src/app/tip/[shortCode]/shadcn-components.test.tsx
+           6869 100%   26.12MB/s   00:00:00 (xfer#306, to-check=414/632)
+src/app/tip/[shortCode]/star-rating-integration.test.tsx
+           7158 100%   30.08MB/s   00:00:00 (xfer#307, to-check=415/632)
+src/app/tip/[shortCode]/touch-targets.property.test.tsx
+           6839 100%   28.71MB/s   00:00:00 (xfer#308, to-check=416/632)
+src/app/tip/[shortCode]/ui-removal.test.tsx
+           5561 100%   24.55MB/s   00:00:00 (xfer#309, to-check=417/632)
+src/app/tip/error/
+src/app/tip/error/page.tsx
+           2307 100%   12.03MB/s   00:00:00 (xfer#310, to-check=419/632)
+src/app/tip/pending/
+src/app/tip/pending/page.tsx
+           4105 100%   19.00MB/s   00:00:00 (xfer#311, to-check=421/632)
+src/app/tip/success/
+src/app/tip/success/page.test.tsx
+          13350 100%   48.06MB/s   00:00:00 (xfer#312, to-check=423/632)
+src/app/tip/success/page.tsx
+           8462 100%   36.51MB/s   00:00:00 (xfer#313, to-check=424/632)
+src/app/venue/
+src/app/venue/(dashboard)/
+src/app/venue/(dashboard)/VenueLayoutClient.tsx
+           7118 100%   30.42MB/s   00:00:00 (xfer#314, to-check=427/632)
+src/app/venue/(dashboard)/layout.test.tsx
+           1736 100%   11.42MB/s   00:00:00 (xfer#315, to-check=428/632)
+src/app/venue/(dashboard)/layout.tsx
+           1236 100%    6.04MB/s   00:00:00 (xfer#316, to-check=429/632)
+src/app/venue/(dashboard)/dashboard/
+src/app/venue/(dashboard)/dashboard/page.tsx
+           5620 100%   10.33MB/s   00:00:00 (xfer#317, to-check=431/632)
+src/app/venue/(dashboard)/dashboard/use-dashboard-data.ts
+           1713 100%   12.67MB/s   00:00:00 (xfer#318, to-check=432/632)
+src/app/venue/(dashboard)/dashboard/components/
+src/app/venue/(dashboard)/dashboard/components/dashboard-panels.tsx
+           5142 100%   16.18MB/s   00:00:00 (xfer#319, to-check=434/632)
+src/app/venue/(dashboard)/menu/
+src/app/venue/(dashboard)/menu/route.test.ts
+           1092 100%    3.60MB/s   00:00:00 (xfer#320, to-check=436/632)
+src/app/venue/(dashboard)/payouts/
+src/app/venue/(dashboard)/payouts/page.tsx
+           8441 100%   33.83MB/s   00:00:00 (xfer#321, to-check=438/632)
+src/app/venue/(dashboard)/profile/
+src/app/venue/(dashboard)/profile/page.tsx
+          21315 100%   46.41MB/s   00:00:00 (xfer#322, to-check=440/632)
+src/app/venue/(dashboard)/qr-codes/
+src/app/venue/(dashboard)/qr-codes/page.tsx
+          13302 100%   36.57MB/s   00:00:00 (xfer#323, to-check=442/632)
+src/app/venue/(dashboard)/qr-codes/__tests__/
+src/app/venue/(dashboard)/qr-codes/__tests__/qr-delete-flow.test.tsx
+           5235 100%   26.68MB/s   00:00:00 (xfer#324, to-check=444/632)
+src/app/venue/(dashboard)/qr-codes/__tests__/qr-list-layout.test.tsx
+           4167 100%   19.96MB/s   00:00:00 (xfer#325, to-check=445/632)
+src/app/venue/(dashboard)/settings/
+src/app/venue/(dashboard)/settings/page.tsx
+           4379 100%   35.75MB/s   00:00:00 (xfer#326, to-check=447/632)
+src/app/venue/(dashboard)/staff/
+src/app/venue/(dashboard)/staff/page.tsx
+           3832 100%   31.73MB/s   00:00:00 (xfer#327, to-check=449/632)
+src/app/venue/login/
+src/app/venue/login/page.test.tsx
+          19995 100%   52.38MB/s   00:00:00 (xfer#328, to-check=451/632)
+src/app/venue/login/page.tsx
+           5178 100%   40.14MB/s   00:00:00 (xfer#329, to-check=452/632)
+src/app/venue/onboarding/
+src/app/venue/onboarding/page.tsx
+           6512 100%   47.45MB/s   00:00:00 (xfer#330, to-check=454/632)
+src/app/venue/register/
+src/app/venue/register/page.tsx
+           7229 100%   47.17MB/s   00:00:00 (xfer#331, to-check=456/632)
+src/components/
+src/components/animate-ui/
+src/components/animate-ui/components/
+src/components/animate-ui/components/headless/
+src/components/animate-ui/components/headless/accordion.tsx
+           2914 100%   15.97MB/s   00:00:00 (xfer#332, to-check=461/632)
+src/components/animate-ui/primitives/
+src/components/animate-ui/primitives/animate/
+src/components/animate-ui/primitives/animate/slot.tsx
+           2358 100%   12.23MB/s   00:00:00 (xfer#333, to-check=464/632)
+src/components/animate-ui/primitives/effects/
+src/components/animate-ui/primitives/effects/effect.tsx
+           4372 100%   35.33MB/s   00:00:00 (xfer#334, to-check=466/632)
+src/components/animate-ui/primitives/headless/
+src/components/animate-ui/primitives/headless/disclosure.tsx
+           4738 100%   43.07MB/s   00:00:00 (xfer#335, to-check=468/632)
+src/components/animate-ui/primitives/texts/
+src/components/animate-ui/primitives/texts/counting-number.tsx
+           3419 100%   16.64MB/s   00:00:00 (xfer#336, to-check=470/632)
+src/components/animate-ui/primitives/texts/sliding-number.tsx
+           9078 100%   33.68MB/s   00:00:00 (xfer#337, to-check=471/632)
+src/components/animate-ui/primitives/texts/typing.tsx
+           4381 100%   35.69MB/s   00:00:00 (xfer#338, to-check=472/632)
+src/components/landing/
+src/components/landing/legacy/
+src/components/landing/legacy/content.tsx
+           4444 100%   28.86MB/s   00:00:00 (xfer#339, to-check=475/632)
+src/components/landing/legacy/sections.tsx
+          27653 100%   55.39MB/s   00:00:00 (xfer#340, to-check=476/632)
+src/components/landing/main/
+src/components/landing/main/content.ts
+           1898 100%   10.71MB/s   00:00:00 (xfer#341, to-check=478/632)
+src/components/landing/main/sections.tsx
+            555 100%    3.39MB/s   00:00:00 (xfer#342, to-check=479/632)
+src/components/landing/main/sections/
+src/components/landing/main/sections/LandingBenefitsSection.tsx
+           1984 100%   15.62MB/s   00:00:00 (xfer#343, to-check=481/632)
+src/components/landing/main/sections/LandingFAQSection.tsx
+           2475 100%   20.00MB/s   00:00:00 (xfer#344, to-check=482/632)
+src/components/landing/main/sections/LandingFinalCTASection.tsx
+           1838 100%    8.43MB/s   00:00:00 (xfer#345, to-check=483/632)
+src/components/landing/main/sections/LandingFooter.tsx
+           1699 100%    4.24MB/s   00:00:00 (xfer#346, to-check=484/632)
+src/components/landing/main/sections/LandingHeroSection.test.tsx
+           4418 100%   16.93MB/s   00:00:00 (xfer#347, to-check=485/632)
+src/components/landing/main/sections/LandingHeroSection.tsx
+           4415 100%   18.40MB/s   00:00:00 (xfer#348, to-check=486/632)
+src/components/landing/main/sections/LandingLogoBar.tsx
+           1648 100%    4.59MB/s   00:00:00 (xfer#349, to-check=487/632)
+src/components/landing/main/sections/LandingNavigation.tsx
+           3294 100%   18.58MB/s   00:00:00 (xfer#350, to-check=488/632)
+src/components/landing/main/sections/LandingProblemSection.tsx
+           8236 100%   36.85MB/s   00:00:00 (xfer#351, to-check=489/632)
+src/components/landing/main/sections/LandingProductDemoSection.tsx
+           3832 100%   19.04MB/s   00:00:00 (xfer#352, to-check=490/632)
+src/components/landing/main/sections/LandingProductsSection.tsx
+           2722 100%   14.18MB/s   00:00:00 (xfer#353, to-check=491/632)
+src/components/landing/main/sections/animation.ts
+            159 100%    1.23MB/s   00:00:00 (xfer#354, to-check=492/632)
+src/components/landing/main/sections/index.ts
+            789 100%    4.89MB/s   00:00:00 (xfer#355, to-check=493/632)
+src/components/landing/main/sections/__tests__/
+src/components/landing/main/sections/__tests__/LandingNavigation.test.tsx
+           2305 100%   14.18MB/s   00:00:00 (xfer#356, to-check=495/632)
+src/components/landing/main/sections/__tests__/translations.test.tsx
+           3645 100%   17.91MB/s   00:00:00 (xfer#357, to-check=496/632)
+src/components/layout/
+src/components/layout/aurora-background.tsx
+            729 100%    3.22MB/s   00:00:00 (xfer#358, to-check=498/632)
+src/components/providers/
+src/components/providers/session-provider.tsx
+            247 100%    1.77MB/s   00:00:00 (xfer#359, to-check=500/632)
+src/components/providers/theme-provider.tsx
+            321 100%    2.20MB/s   00:00:00 (xfer#360, to-check=501/632)
+src/components/tip/
+src/components/tip/StaffAvatar.test.tsx
+          20435 100%   52.97MB/s   00:00:00 (xfer#361, to-check=503/632)
+src/components/tip/StaffAvatar.tsx
+           2953 100%   15.22MB/s   00:00:00 (xfer#362, to-check=504/632)
+src/components/tip/StarRating.property.test.tsx
+           6646 100%   28.40MB/s   00:00:00 (xfer#363, to-check=505/632)
+src/components/tip/StarRating.test.tsx
+          11119 100%   46.72MB/s   00:00:00 (xfer#364, to-check=506/632)
+src/components/tip/StarRating.tsx
+           3431 100%   20.21MB/s   00:00:00 (xfer#365, to-check=507/632)
+src/components/ui/
+src/components/ui/alert-dialog.tsx
+           4433 100%   12.62MB/s   00:00:00 (xfer#366, to-check=509/632)
+src/components/ui/badge.tsx
+           1336 100%    8.22MB/s   00:00:00 (xfer#367, to-check=510/632)
+src/components/ui/button.test.tsx
+           2946 100%   18.24MB/s   00:00:00 (xfer#368, to-check=511/632)
+src/components/ui/button.tsx
+           2286 100%    4.95MB/s   00:00:00 (xfer#369, to-check=512/632)
+src/components/ui/card.tsx
+           1827 100%    6.75MB/s   00:00:00 (xfer#370, to-check=513/632)
+src/components/ui/checkbox.tsx
+           1069 100%   12.92MB/s   00:00:00 (xfer#371, to-check=514/632)
+src/components/ui/dialog.tsx
+           3848 100%   19.84MB/s   00:00:00 (xfer#372, to-check=515/632)
+src/components/ui/dropdown-menu.tsx
+           7605 100%   36.09MB/s   00:00:00 (xfer#373, to-check=516/632)
+src/components/ui/form.tsx
+           4188 100%   23.11MB/s   00:00:00 (xfer#374, to-check=517/632)
+src/components/ui/input.tsx
+            767 100%    2.34MB/s   00:00:00 (xfer#375, to-check=518/632)
+src/components/ui/label.tsx
+            723 100%    8.31MB/s   00:00:00 (xfer#376, to-check=519/632)
+src/components/ui/language-switcher.test.tsx
+           2583 100%   14.15MB/s   00:00:00 (xfer#377, to-check=520/632)
+src/components/ui/language-switcher.tsx
+           2612 100%   15.27MB/s   00:00:00 (xfer#378, to-check=521/632)
+src/components/ui/select.tsx
+           5744 100%   52.70MB/s   00:00:00 (xfer#379, to-check=522/632)
+src/components/ui/switch.tsx
+           1161 100%   10.85MB/s   00:00:00 (xfer#380, to-check=523/632)
+src/components/ui/tabs.tsx
+           1890 100%   14.08MB/s   00:00:00 (xfer#381, to-check=524/632)
+src/components/ui/textarea.tsx
+            771 100%    1.81MB/s   00:00:00 (xfer#382, to-check=525/632)
+src/components/ui/theme-toggle.tsx
+            884 100%    5.11MB/s   00:00:00 (xfer#383, to-check=526/632)
+src/components/ui/toast.tsx
+           4831 100%   45.15MB/s   00:00:00 (xfer#384, to-check=527/632)
+src/components/ui/toaster.tsx
+            786 100%    4.90MB/s   00:00:00 (xfer#385, to-check=528/632)
+src/components/venue/
+src/components/venue/integrations/
+src/components/venue/integrations/ConfirmationDialog.tsx
+           1644 100%   19.12MB/s   00:00:00 (xfer#386, to-check=531/632)
+src/components/venue/integrations/IntegrationCard.tsx
+           2317 100%   16.35MB/s   00:00:00 (xfer#387, to-check=532/632)
+src/components/venue/integrations/MidtransSettings.tsx
+           7514 100%   20.47MB/s   00:00:00 (xfer#388, to-check=533/632)
+src/components/venue/qr-codes/
+src/components/venue/qr-codes/CreateQrDialog.tsx
+          11726 100%   46.39MB/s   00:00:00 (xfer#389, to-check=535/632)
+src/components/venue/qr-codes/EditTeamQrDialog.tsx
+           6832 100%   46.24MB/s   00:00:00 (xfer#390, to-check=536/632)
+src/components/venue/qr-codes/MaterialPreview.tsx
+           3777 100%   18.96MB/s   00:00:00 (xfer#391, to-check=537/632)
+src/components/venue/qr-codes/PdfTemplates.tsx
+           6944 100%   31.10MB/s   00:00:00 (xfer#392, to-check=538/632)
+src/components/venue/qr-codes/QrGenerator.tsx
+           8977 100%   41.18MB/s   00:00:00 (xfer#393, to-check=539/632)
+src/components/venue/register/
+src/components/venue/register/forms.tsx
+           5582 100%   50.63MB/s   00:00:00 (xfer#394, to-check=541/632)
+src/components/venue/register/schemas.ts
+            973 100%    5.95MB/s   00:00:00 (xfer#395, to-check=542/632)
+src/components/venue/register/use-persisted-register.ts
+           1112 100%    7.91MB/s   00:00:00 (xfer#396, to-check=543/632)
+src/components/venue/staff/
+src/components/venue/staff/schema.ts
+            680 100%    4.24MB/s   00:00:00 (xfer#397, to-check=545/632)
+src/components/venue/staff/staff-avatar.tsx
+            876 100%    6.48MB/s   00:00:00 (xfer#398, to-check=546/632)
+src/components/venue/staff/staff-dialog.tsx
+           6392 100%   49.55MB/s   00:00:00 (xfer#399, to-check=547/632)
+src/components/venue/staff/staff-list.tsx
+           3535 100%   35.53MB/s   00:00:00 (xfer#400, to-check=548/632)
+src/components/venue/staff/use-avatar-upload.ts
+           1069 100%    8.57MB/s   00:00:00 (xfer#401, to-check=549/632)
+src/components/venue/staff/use-staff-management.test.tsx
+          12981 100%   51.41MB/s   00:00:00 (xfer#402, to-check=550/632)
+src/components/venue/staff/use-staff-management.ts
+           3635 100%   35.72MB/s   00:00:00 (xfer#403, to-check=551/632)
+src/features/
+src/features/venue-dashboard/
+src/features/venue-dashboard/README.md
+           4011 100%   19.71MB/s   00:00:00 (xfer#404, to-check=554/632)
+src/features/venue-dashboard/constants.ts
+            243 100%    1.56MB/s   00:00:00 (xfer#405, to-check=555/632)
+src/features/venue-dashboard/api/
+src/features/venue-dashboard/api/getVenueDashboard.ts
+           2079 100%   22.78MB/s   00:00:00 (xfer#406, to-check=557/632)
+src/features/venue-dashboard/context/
+src/features/venue-dashboard/context/VenueDashboardProvider.tsx
+           2970 100%   29.85MB/s   00:00:00 (xfer#407, to-check=559/632)
+src/features/venue-dashboard/hooks/
+src/features/venue-dashboard/hooks/useVenueDashboard.ts
+            511 100%    2.63MB/s   00:00:00 (xfer#408, to-check=561/632)
+src/hooks/
+src/hooks/use-api.ts
+           2194 100%   13.24MB/s   00:00:00 (xfer#409, to-check=563/632)
+src/hooks/use-is-in-view.tsx
+            751 100%    4.97MB/s   00:00:00 (xfer#410, to-check=564/632)
+src/hooks/use-optimistic-update.ts
+           1496 100%   10.50MB/s   00:00:00 (xfer#411, to-check=565/632)
+src/hooks/use-session-storage.ts
+           3140 100%   20.39MB/s   00:00:00 (xfer#412, to-check=566/632)
+src/hooks/use-toast.ts
+           3703 100%   34.29MB/s   00:00:00 (xfer#413, to-check=567/632)
+src/i18n/
+src/i18n/client.ts
+            698 100%    4.47MB/s   00:00:00 (xfer#414, to-check=569/632)
+src/i18n/request.ts
+           1170 100%   17.21MB/s   00:00:00 (xfer#415, to-check=570/632)
+src/lib/
+src/lib/access.ts
+           4180 100%   44.23MB/s   00:00:00 (xfer#416, to-check=572/632)
+src/lib/auth.test.ts
+           4376 100%   41.78MB/s   00:00:00 (xfer#417, to-check=573/632)
+src/lib/auth.ts
+           2098 100%   12.04MB/s   00:00:00 (xfer#418, to-check=574/632)
+src/lib/constants.test.ts
+           3558 100%   23.60MB/s   00:00:00 (xfer#419, to-check=575/632)
+src/lib/constants.ts
+           1462 100%    8.93MB/s   00:00:00 (xfer#420, to-check=576/632)
+src/lib/dashboard.test.ts
+           4091 100%   22.82MB/s   00:00:00 (xfer#421, to-check=577/632)
+src/lib/dashboard.ts
+           2320 100%   30.73MB/s   00:00:00 (xfer#422, to-check=578/632)
+src/lib/encryption.ts
+           1870 100%   13.12MB/s   00:00:00 (xfer#423, to-check=579/632)
+src/lib/get-strict-context.tsx
+            749 100%    7.68MB/s   00:00:00 (xfer#424, to-check=580/632)
+src/lib/i18n-completeness.test.ts
+           3588 100%   19.34MB/s   00:00:00 (xfer#425, to-check=581/632)
+src/lib/i18n.test.ts
+           6581 100%   51.82MB/s   00:00:00 (xfer#426, to-check=582/632)
+src/lib/midtrans.ts
+           3912 100%   27.65MB/s   00:00:00 (xfer#427, to-check=583/632)
+src/lib/notifications.test.ts
+           3289 100%   18.90MB/s   00:00:00 (xfer#428, to-check=584/632)
+src/lib/notifications.ts
+            912 100%    5.91MB/s   00:00:00 (xfer#429, to-check=585/632)
+src/lib/otp.ts
+           3663 100%   22.13MB/s   00:00:00 (xfer#430, to-check=586/632)
+src/lib/payouts.test.ts
+           6148 100%   59.26MB/s   00:00:00 (xfer#431, to-check=587/632)
+src/lib/payouts.ts
+           1613 100%    9.56MB/s   00:00:00 (xfer#432, to-check=588/632)
+src/lib/prisma.ts
+            771 100%    5.04MB/s   00:00:00 (xfer#433, to-check=589/632)
+src/lib/qr-display.test.ts
+           4636 100%   51.37MB/s   00:00:00 (xfer#434, to-check=590/632)
+src/lib/qr-display.ts
+           1694 100%   16.33MB/s   00:00:00 (xfer#435, to-check=591/632)
+src/lib/qr-materials.ts
+           6293 100%   28.19MB/s   00:00:00 (xfer#436, to-check=592/632)
+src/lib/qr.ts
+           1184 100%    9.04MB/s   00:00:00 (xfer#437, to-check=593/632)
+src/lib/rate-limit.test.ts
+           4593 100%   22.35MB/s   00:00:00 (xfer#438, to-check=594/632)
+src/lib/rate-limit.ts
+           2884 100%   14.71MB/s   00:00:00 (xfer#439, to-check=595/632)
+src/lib/rbac.ts
+           2423 100%    7.89MB/s   00:00:00 (xfer#440, to-check=596/632)
+src/lib/refactoring.test.ts
+           4571 100%   14.15MB/s   00:00:00 (xfer#441, to-check=597/632)
+src/lib/staff.test.ts
+           3451 100%   13.89MB/s   00:00:00 (xfer#442, to-check=598/632)
+src/lib/staff.ts
+           1290 100%    6.99MB/s   00:00:00 (xfer#443, to-check=599/632)
+src/lib/tip-page.test.ts
+           3953 100%   13.41MB/s   00:00:00 (xfer#444, to-check=600/632)
+src/lib/tip-page.ts
+           1444 100%    8.56MB/s   00:00:00 (xfer#445, to-check=601/632)
+src/lib/utils.ts
+            174 100%    1.42MB/s   00:00:00 (xfer#446, to-check=602/632)
+src/lib/validation.test.ts
+           3901 100%   39.11MB/s   00:00:00 (xfer#447, to-check=603/632)
+src/lib/validation.ts
+           1776 100%   10.65MB/s   00:00:00 (xfer#448, to-check=604/632)
+src/lib/venue.test.ts
+           3325 100%   18.12MB/s   00:00:00 (xfer#449, to-check=605/632)
+src/lib/venue.ts
+           1156 100%    7.30MB/s   00:00:00 (xfer#450, to-check=606/632)
+src/lib/api/
+src/lib/api/client.ts
+           2555 100%   14.33MB/s   00:00:00 (xfer#451, to-check=608/632)
+src/lib/api/error-handler.ts
+           2045 100%   12.05MB/s   00:00:00 (xfer#452, to-check=609/632)
+src/lib/api/index.ts
+            134 100%  947.95KB/s   00:00:00 (xfer#453, to-check=610/632)
+src/lib/api/middleware.ts
+           2775 100%   15.48MB/s   00:00:00 (xfer#454, to-check=611/632)
+src/lib/i18n/
+src/lib/i18n/formatters.test.ts
+           5506 100%   27.06MB/s   00:00:00 (xfer#455, to-check=613/632)
+src/lib/i18n/formatters.ts
+           5476 100%   29.01MB/s   00:00:00 (xfer#456, to-check=614/632)
+src/lib/i18n/locale-utils.test.ts
+           5258 100%   25.59MB/s   00:00:00 (xfer#457, to-check=615/632)
+src/lib/i18n/locale-utils.ts
+           2328 100%   13.21MB/s   00:00:00 (xfer#458, to-check=616/632)
+src/lib/i18n/translations.test.ts
+           6515 100%   28.92MB/s   00:00:00 (xfer#459, to-check=617/632)
+src/lib/migration/
+src/lib/migration/migrate-qr-types.test.ts
+          13254 100%   44.18MB/s   00:00:00 (xfer#460, to-check=619/632)
+src/lib/refactoring-tests/
+src/lib/refactoring-tests/build-config-equivalence.test.ts
+           4174 100%   24.30MB/s   00:00:00 (xfer#461, to-check=621/632)
+src/lib/refactoring-tests/circular-dependencies.test.ts
+           4956 100%   21.09MB/s   00:00:00 (xfer#462, to-check=622/632)
+src/lib/refactoring-tests/import-organization.test.ts
+           4174 100%   21.77MB/s   00:00:00 (xfer#463, to-check=623/632)
+src/lib/refactoring-tests/public-api-preservation.test.ts
+           3080 100%    9.07MB/s   00:00:00 (xfer#464, to-check=624/632)
+src/lib/refactoring-tests/translation-immutability.test.ts
+           3667 100%   22.43MB/s   00:00:00 (xfer#465, to-check=625/632)
+src/test/
+src/test/setup.ts
+             35 100%  247.60KB/s   00:00:00 (xfer#466, to-check=627/632)
+src/types/
+src/types/api.ts
+           1428 100%    8.56MB/s   00:00:00 (xfer#467, to-check=629/632)
+src/types/distribution.ts
+            960 100%    6.10MB/s   00:00:00 (xfer#468, to-check=630/632)
+src/types/next-auth.d.ts
+            419 100%    2.79MB/s   00:00:00 (xfer#469, to-check=631/632)
+
+sent 15252831 bytes  received 11316 bytes  8188480 bytes/sec
+total size is 17660902  speedup is 1.16
+[1;33m📋 Step 9: Generating secrets[0m
+[1;33m📋 Step 10: Creating .env.production[0m
+[1;33m📋 Step 11: Installing dependencies[0m
+npm warn config production Use `--omit=dev` instead.
+npm error code EUSAGE
+npm error
+npm error `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+npm error
+npm error Missing: @swc/helpers@0.5.18 from lock file
+npm error
+npm error Clean install a project
+npm error
+npm error Usage:
+npm error npm ci
+npm error
+npm error Options:
+npm error [--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]
+npm error [--global-style] [--omit <dev|optional|peer> [--omit <dev|optional|peer> ...]]
+npm error [--include <prod|dev|optional|peer> [--include <prod|dev|optional|peer> ...]]
+npm error [--strict-peer-deps] [--foreground-scripts] [--ignore-scripts] [--no-audit]
+npm error [--no-bin-links] [--no-fund] [--dry-run]
+npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
+npm error [-ws|--workspaces] [--include-workspace-root] [--install-links]
+npm error
+npm error aliases: clean-install, ic, install-clean, isntall-clean
+npm error
+npm error Run "npm help ci" for more info
+npm error A complete log of this run can be found in: /root/.npm/_logs/2026-01-27T10_11_05_608Z-debug-0.log
