@@ -220,11 +220,11 @@ export default function VenueProfilePage() {
         password?: string
         confirmPassword?: string
       } = {
-        firstName: data.firstName || null,
-        lastName: data.lastName || null,
+        firstName: data.firstName || undefined,
+        lastName: data.lastName || undefined,
         email: data.email,
-        phone: data.phone || null,
-        avatarUrl: avatarUrl || null,
+        phone: data.phone || undefined,
+        avatarUrl: avatarUrl || undefined,
       }
 
       // Добавляем пароль только если он был введен
