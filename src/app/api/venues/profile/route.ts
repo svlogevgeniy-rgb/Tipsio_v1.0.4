@@ -251,7 +251,7 @@ export async function PATCH(request: NextRequest) {
       }
     } catch {
       // Поля не существуют - пропускаем их обновление
-      console.warn("New profile fields not available in database, skipping update:", fieldError);
+      console.warn("New profile fields not available in database, skipping update");
     }
 
     if (password) {
