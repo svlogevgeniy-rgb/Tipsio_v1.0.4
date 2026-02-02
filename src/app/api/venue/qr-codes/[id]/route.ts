@@ -17,7 +17,7 @@ export async function DELETE(
     }
 
     // Get the QR code with staff and venue information
-    const qrCode = await prisma.qRCode.findUnique({
+    const qrCode = await prisma.qrCode.findUnique({
       where: { id: params.id },
       include: {
         staff: {
@@ -45,7 +45,7 @@ export async function DELETE(
     }
 
     // Delete the QR code
-    await prisma.qRCode.delete({
+    await prisma.qrCode.delete({
       where: { id: params.id },
     })
 
