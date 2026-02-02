@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Property-Based Tests for Logo Centering
  * Feature: tip-payment-ui-v2
@@ -5,9 +6,9 @@
  * Tests logo centering across different viewport sizes
  */
 
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
 import * as fc from "fast-check";
+import { render } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import TipPage from "./page";
 
 // Mock dependencies

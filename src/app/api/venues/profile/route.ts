@@ -239,17 +239,17 @@ export async function PATCH(request: NextRequest) {
 
       // Поля существуют - добавляем их в updateData
       if (firstName !== undefined) {
-        (updateData as any).firstName = firstName || null;
+        (updateData as Record<string, unknown>).firstName = firstName || null;
       }
 
       if (lastName !== undefined) {
-        (updateData as any).lastName = lastName || null;
+        (updateData as Record<string, unknown>).lastName = lastName || null;
       }
 
       if (avatarUrl !== undefined) {
-        (updateData as any).avatarUrl = avatarUrl || null;
+        (updateData as Record<string, unknown>).avatarUrl = avatarUrl || null;
       }
-    } catch (fieldError) {
+    } catch {
       // Поля не существуют - пропускаем их обновление
       console.warn("New profile fields not available in database, skipping update:", fieldError);
     }
@@ -292,8 +292,7 @@ export async function PATCH(request: NextRequest) {
         updatedLastName = userWithNewFields[0].lastName;
         updatedAvatarUrl = userWithNewFields[0].avatarUrl;
       }
-    } catch (fieldError) {
-      // Поля не существуют - используем значения из запроса
+    } catch {
       updatedFirstName = firstName !== undefined ? (firstName || null) : null;
       updatedLastName = lastName !== undefined ? (lastName || null) : null;
       updatedAvatarUrl = avatarUrl !== undefined ? (avatarUrl || null) : null;

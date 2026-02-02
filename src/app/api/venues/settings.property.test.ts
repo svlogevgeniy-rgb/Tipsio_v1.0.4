@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Property-based tests for Venue Settings API
  * Feature: qr-code-types-refactoring
@@ -6,8 +7,8 @@
  * Validates: Requirements 10.5
  */
 
-import { NextRequest } from 'next/server';
 import * as fc from 'fast-check';
+import { NextRequest } from 'next/server';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock prisma - must be before imports that use it
