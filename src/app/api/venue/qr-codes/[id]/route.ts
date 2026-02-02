@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { auth } from '@/lib/auth'
+import prisma from '@/lib/prisma'
 
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
 
     if (!session?.user?.id) {
       return NextResponse.json(
@@ -37,7 +36,8 @@ export async function DELETE(
     }
 
     // Verify that the QR code belongs to the user's venue
-    if (qrCode.staff.venueId !== session.user.venueId) {
+    const userVenueId = (session.user as { venueId?: string }).venueId
+    if (qrCode.staff.venueId !== userVenueId) {
       return NextResponse.json(
         { error: 'You do not have permission to delete this QR code' },
         { status: 403 }
