@@ -49,9 +49,10 @@ export function LandingFAQSection() {
                   />
                 </button>
                 {openIndex === idx && (
-                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 text-slate-600 leading-relaxed border-t border-slate-200 pt-4">
-                    {t(faq.answerKey)}
-                  </div>
+                  <div 
+                    className="px-4 sm:px-5 pb-4 sm:pb-5 text-slate-600 leading-relaxed border-t border-slate-200 pt-4 [&_a]:text-blue-600 [&_a]:underline [&_a]:hover:text-blue-800 [&_a]:transition-colors"
+                    dangerouslySetInnerHTML={{ __html: t.raw(faq.answerKey) as string }}
+                  />
                 )}
               </Card>
             </motion.div>

@@ -34,7 +34,11 @@ ENCRYPTION_KEY="<paste-generated-key>"
 
 ### 4. Setup Database
 ```bash
-# Start PostgreSQL (if using Docker)
+# Option 1: Use local PostgreSQL
+# Make sure PostgreSQL is installed and running
+createdb tipsio
+
+# Option 2: Use Docker (optional)
 docker run -d \
   --name tipsio-postgres \
   -e POSTGRES_PASSWORD=postgres \
@@ -55,73 +59,75 @@ Visit http://localhost:3000 🎉
 
 ---
 
-## Production (10 minutes)
+## Production (15 minutes)
 
 ### Prerequisites
-- Server with Docker installed
+- Server with Node.js 20+ and PostgreSQL 15+
 - Domain name configured
 - Midtrans production keys
+
+### Quick Production Setup
+
+For detailed production deployment, see [DEPLOYMENT_GUIDE_NO_DOCKER.md](DEPLOYMENT_GUIDE_NO_DOCKER.md)
 
 ### 1. Prepare Server
 ```bash
 # SSH to your server
 ssh root@your-server-ip
 
-# Create deployment user
-adduser deploy
-usermod -aG sudo,docker deploy
+# Install Node.js 20
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
 
-# Set up SSH key
-mkdir -p /home/deploy/.ssh
-cp ~/.ssh/authorized_keys /home/deploy/.ssh/
-chown -R deploy:deploy /home/deploy/.ssh
+# Install PostgreSQL
+sudo apt-get install -y postgresql postgresql-contrib
+
+# Install PM2
+sudo npm install -g pm2
+
+# Install Nginx
+sudo apt-get install -y nginx
 ```
 
-### 2. Generate Production Secrets
+### 2. Deploy Application
 ```bash
-# On your local machine
-openssl rand -base64 32  # NEXTAUTH_SECRET
-openssl rand -hex 32     # ENCRYPTION_KEY
-openssl rand -base64 24  # DB_PASSWORD
+# Clone repository
+cd /var/www
+git clone https://github.com/your-org/tipsio.git
+cd tipsio
+
+# Install dependencies
+npm ci --production=false
+
+# Setup environment
+cp .env.production.example .env.production
+nano .env.production  # Add your secrets
+
+# Build application
+npm run build
+
+# Start with PM2
+pm2 start ecosystem.config.js --env production
+pm2 save
+pm2 startup
 ```
 
-### 3. Configure Deployment
+### 3. Configure Nginx
 ```bash
-# Set environment variables
-export DEPLOY_SERVER="your-server-ip"
-export DEPLOY_USER="deploy"
-export DEPLOY_DOMAIN="your-domain.com"
+# Copy nginx configuration
+sudo cp nginx.conf.example /etc/nginx/sites-available/tipsio
+sudo ln -s /etc/nginx/sites-available/tipsio /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
 ```
 
-### 4. Deploy
+### 4. Setup SSL
 ```bash
-./deploy.sh
-```
+# Install certbot
+sudo apt-get install -y certbot python3-certbot-nginx
 
-### 5. Configure Production .env
-```bash
-# SSH to server
-ssh deploy@your-server-ip
-cd /opt/tipsio
-
-# Edit .env file
-nano .env
-```
-
-Add:
-```env
-DB_PASSWORD="<generated-db-password>"
-NEXTAUTH_SECRET="<generated-secret>"
-ENCRYPTION_KEY="<generated-key>"
-MIDTRANS_SERVER_KEY="<production-key>"
-MIDTRANS_CLIENT_KEY="<production-client-key>"
-MIDTRANS_IS_PRODUCTION="true"
-```
-
-### 6. Restart Services
-```bash
-docker-compose down
-docker-compose up -d
+# Get SSL certificate
+sudo certbot --nginx -d your-domain.com
 ```
 
 Visit https://your-domain.com 🎉
@@ -148,6 +154,9 @@ npm run test:watch
 ### Database Connection Failed
 ```bash
 # Check PostgreSQL is running
+sudo systemctl status postgresql
+
+# Or if using Docker
 docker ps | grep postgres
 
 # Check connection string in .env
@@ -159,8 +168,13 @@ cat .env | grep DATABASE_URL
 # Find process using port 3000
 lsof -i :3000
 
+# Or using PM2
+pm2 list
+
 # Kill the process
 kill -9 <PID>
+# Or restart PM2
+pm2 restart tipsio
 ```
 
 ### Rate Limiting Too Strict
@@ -179,17 +193,8 @@ const rateLimitResult = checkRateLimit(identifier, {
 1. ✅ Application running
 2. 📖 Read [SECURITY.md](SECURITY.md) for security best practices
 3. 🔒 Review [SECURITY_AUDIT_COMPLETE.md](SECURITY_AUDIT_COMPLETE.md)
-4. 🚀 See [DEPLOYMENT_SECURITY_GUIDE.md](DEPLOYMENT_SECURITY_GUIDE.md) for advanced deployment
+4. 🚀 See [DEPLOYMENT_GUIDE_NO_DOCKER.md](DEPLOYMENT_GUIDE_NO_DOCKER.md) for production deployment
 
 ---
 
-## Need Help?
-
-- **Security Issues**: security@tipsio.app
-- **Documentation**: See README.md
-- **Deployment**: See DEPLOYMENT_SECURITY_GUIDE.md
-- **General Support**: GitHub Issues
-
----
-
-**Last Updated**: December 4, 2025
+**Last Updated**: January 31, 2026

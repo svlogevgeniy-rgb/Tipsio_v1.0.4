@@ -2,7 +2,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { handleApiError, successResponse } from "@/lib/api/error-handler";
 import { auth } from "@/lib/auth";
 
@@ -34,13 +34,25 @@ function generateMockDashboard(period: string, distributionMode: string = "PERSO
 export async function GET(request: NextRequest) {
   try {
     const session = await auth();
+    
+    // Require authentication
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { message: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+    
+    // Require MANAGER or ADMIN role
+    if (session.user.role !== "MANAGER" && session.user.role !== "ADMIN") {
+      return NextResponse.json(
+        { message: "Forbidden" },
+        { status: 403 }
+      );
+    }
+    
     const { searchParams } = new URL(request.url);
     const period = searchParams.get("period") || "week";
-
-    // For development, return mock data
-    if (!session) {
-      return successResponse(generateMockDashboard(period));
-    }
 
     // In production, fetch real data
     try {

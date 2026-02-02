@@ -130,16 +130,16 @@
     "faq": {
       "title": "Pertanyaan pemilik",
       "q1": {
-        "q": "Apakah saya perlu membuka rekening baru?",
-        "a": "Tidak, jika Anda sudah punya Midtrans, kami terintegrasi dengannya. Jika tidak — kami akan membantu Anda terhubung."
+        "q": "Bagaimana tip non-tunai akan ditransfer dari pelanggan ke rekening bank perusahaan saya?",
+        "a": "Saat ini, layanan acquiring disediakan oleh mitra kami — <a href=\"https://midtrans.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Midtrans</a>. Jika Anda memiliki akun, masukkan detail saat pendaftaran. Jika Anda tidak memiliki akun — Anda perlu membuatnya di situs web Midtrans."
       },
       "q2": {
         "q": "Apakah uang melewati rekening TIPSIO?",
-        "a": "Tidak pernah. Secara teknis uang mengalir: Kartu tamu → Midtrans Anda → Rekening bank Anda. Kami hanya menyediakan infrastruktur IT."
+        "a": "Tidak pernah. Secara teknis uang mengalir: Kartu tamu → Akun <a href=\"https://midtrans.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Midtrans</a> Anda → Rekening bank Anda. Kami hanya menyediakan infrastruktur IT."
       },
       "q3": {
         "q": "Berapa biaya untuk venue?",
-        "a": "Saat ini layanan sepenuhnya gratis. Di masa depan, biayanya akan 5%, tetapi Anda dapat mengaturnya untuk dibayar oleh tamu (di atas jumlah tip)."
+        "a": "Saat ini layanan sepenuhnya gratis!"
       },
       "q4": {
         "q": "Bagaimana membayar pajak?",

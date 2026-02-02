@@ -130,16 +130,16 @@
     "faq": {
       "title": "Owner questions",
       "q1": {
-        "q": "Do I need to open a new account?",
-        "a": "No, if you already have Midtrans, we integrate with it. If not — we'll help you connect."
+        "q": "How will cashless tips be transferred from the customer to my company's bank account?",
+        "a": "Currently, acquiring services are provided by our partner — <a href=\"https://midtrans.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Midtrans</a>. If you have an account, enter the details during registration. If you don't have an account — you need to create one on the Midtrans website."
       },
       "q2": {
         "q": "Does money go through TIPSIO accounts?",
-        "a": "Never. Technically money flows: Guest card → Your Midtrans → Your bank account. We only provide IT infrastructure."
+        "a": "Never. Technically money flows: Guest card → Your <a href=\"https://midtrans.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Midtrans</a> account → Your bank account. We only provide IT infrastructure."
       },
       "q3": {
         "q": "How much does it cost for venues?",
-        "a": "Currently the service is completely free. In the future, the fee will be 5%, but you can set it to be paid by the guest (on top of the tip amount)."
+        "a": "Currently the service is completely free!"
       },
       "q4": {
         "q": "How to pay taxes?",
