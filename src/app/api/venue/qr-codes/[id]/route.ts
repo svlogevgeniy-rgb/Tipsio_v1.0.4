@@ -37,7 +37,7 @@ export async function DELETE(
 
     // Verify that the QR code belongs to the user's venue
     const userVenueId = (session.user as { venueId?: string }).venueId
-    if (qrCode.staff.venueId !== userVenueId) {
+    if (!qrCode.staff || qrCode.staff.venueId !== userVenueId) {
       return NextResponse.json(
         { error: 'You do not have permission to delete this QR code' },
         { status: 403 }
