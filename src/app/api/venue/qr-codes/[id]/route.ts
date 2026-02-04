@@ -16,15 +16,13 @@ export async function DELETE(
       )
     }
 
-    // Get the QR code with staff and venue information
+    // Get the QR code with venue information
     const qrCode = await prisma.qrCode.findUnique({
       where: { id: params.id },
-      include: {
-        staff: {
-          select: {
-            venueId: true,
-          },
-        },
+      select: {
+        id: true,
+        venueId: true,
+        type: true,
       },
     })
 
@@ -37,11 +35,18 @@ export async function DELETE(
 
     // Verify that the QR code belongs to the user's venue
     const userVenueId = (session.user as { venueId?: string }).venueId
-    if (!qrCode.staff || qrCode.staff.venueId !== userVenueId) {
+    if (qrCode.venueId !== userVenueId) {
       return NextResponse.json(
         { error: 'You do not have permission to delete this QR code' },
         { status: 403 }
       )
+    }
+
+    // For TEAM QR codes, first delete the recipients
+    if (qrCode.type === 'TEAM') {
+      await prisma.qrCodeRecipient.deleteMany({
+        where: { qrCodeId: qrCode.id },
+      })
     }
 
     // Delete the QR code
