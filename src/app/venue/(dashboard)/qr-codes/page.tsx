@@ -55,6 +55,7 @@ export default function QrCodesPage() {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [editingQr, setEditingQr] = useState<QrCodeType | null>(null);
   const [deletingQrId, setDeletingQrId] = useState<string | null>(null);
+  const [selectedQrForMaterial, setSelectedQrForMaterial] = useState<string>('');
   const t = useTranslations('venue.qr');
 
   // Get venue data from shared context
@@ -94,7 +95,12 @@ export default function QrCodesPage() {
       const qrRes = await fetch(`/api/qr?venueId=${venueId}`);
       if (qrRes.ok) {
         const qrData = await qrRes.json();
-        setQrCodes(qrData.qrCodes || []);
+        const codes = qrData.qrCodes || [];
+        setQrCodes(codes);
+        // Set first QR as default for materials if not already selected
+        if (codes.length > 0 && !selectedQrForMaterial) {
+          setSelectedQrForMaterial(codes[0].shortCode);
+        }
       }
     } catch (err) {
       console.error('Failed to load QR codes:', err);
@@ -324,15 +330,39 @@ export default function QrCodesPage() {
         </Card>
       )}
 
-      {/* Materials Constructor - show for first QR */}
-      {qrCodes.length > 0 && qrCodes[0] && (
+      {/* Materials Constructor */}
+      {qrCodes.length > 0 && (
         <Card className="glass">
           <CardHeader className="pb-4">
             <CardTitle className="font-heading">{t("printMaterials")}</CardTitle>
             <CardDescription>{t("printMaterialsDesc")}</CardDescription>
           </CardHeader>
-          <CardContent className="p-0 md:p-6">
-            <QrGenerator shortCode={qrCodes[0].shortCode} venueName={venueName} />
+          <CardContent className="space-y-4">
+            {/* QR Code Selector */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">{t("selectQrForPrint")}</label>
+              <select
+                value={selectedQrForMaterial}
+                onChange={(e) => setSelectedQrForMaterial(e.target.value)}
+                className="w-full h-12 px-4 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                {qrCodes.map((qr) => (
+                  <option key={qr.id} value={qr.shortCode}>
+                    {qr.label || venueName} - {getQrTypeLabel(qr.type)}
+                    {qr.type === 'INDIVIDUAL' || qr.type === 'PERSONAL' 
+                      ? ` (${qr.staff?.displayName || 'Без имени'})` 
+                      : ` (${qr.recipients?.length || 0} сотрудников)`}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            {/* Generator */}
+            {selectedQrForMaterial && (
+              <div className="pt-2">
+                <QrGenerator shortCode={selectedQrForMaterial} venueName={venueName} />
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

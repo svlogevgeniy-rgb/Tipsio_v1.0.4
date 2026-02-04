@@ -810,6 +810,7 @@
       "qrWillBeCreated": "QR code will be created automatically after venue setup is complete",
       "printMaterials": "Print Materials",
       "printMaterialsDesc": "Ready designs for tables, counter or entrance",
+      "selectQrForPrint": "Select QR code for printing",
       "horizontal": "Horizontal",
       "vertical": "Vertical",
       "failedToLoad": "Failed to load QR code",
@@ -839,7 +840,9 @@
       "cancel": "Cancel",
       "save": "Save",
       "saving": "Saving...",
-      "failedToUpdate": "Failed to update QR code"
+      "failedToUpdate": "Failed to update QR code",
+      "selectQrForPrint": "Select QR code for printing",
+      "selectQrPlaceholder": "Select QR code"
     },
     "settings": {
       "title": "Integrations",

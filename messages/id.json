@@ -810,6 +810,7 @@
       "qrWillBeCreated": "Kode QR akan dibuat secara otomatis setelah setup venue selesai",
       "printMaterials": "Materi Cetak",
       "printMaterialsDesc": "Desain siap pakai untuk meja, counter atau pintu masuk",
+      "selectQrForPrint": "Pilih kode QR untuk dicetak",
       "horizontal": "Horizontal",
       "vertical": "Vertikal",
       "failedToLoad": "Gagal memuat kode QR",
@@ -839,7 +840,9 @@
       "cancel": "Batal",
       "save": "Simpan",
       "saving": "Menyimpan...",
-      "failedToUpdate": "Gagal memperbarui kode QR"
+      "failedToUpdate": "Gagal memperbarui kode QR",
+      "selectQrForPrint": "Pilih kode QR untuk dicetak",
+      "selectQrPlaceholder": "Pilih kode QR"
     },
     "settings": {
       "title": "Integrasi",

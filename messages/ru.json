@@ -810,6 +810,7 @@
       "qrWillBeCreated": "QR-код будет создан автоматически после завершения настройки заведения",
       "printMaterials": "Материалы для печати",
       "printMaterialsDesc": "Готовые дизайны для размещения на столах, стойке или у входа",
+      "selectQrForPrint": "Выберите QR-код для печати",
       "horizontal": "Горизонтальные",
       "vertical": "Вертикальные",
       "failedToLoad": "Не удалось загрузить QR-код",
@@ -839,7 +840,9 @@
       "cancel": "Отмена",
       "save": "Сохранить",
       "saving": "Сохранение...",
-      "failedToUpdate": "Не удалось обновить QR-код"
+      "failedToUpdate": "Не удалось обновить QR-код",
+      "selectQrForPrint": "Выберите QR-код для печати",
+      "selectQrPlaceholder": "Выберите QR-код"
     },
     "settings": {
       "title": "Интеграции",
