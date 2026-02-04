@@ -120,11 +120,53 @@ export function useStaffManagement() {
     }
   }, []);
 
+  const updateStaff = useCallback(
+    async (staffId: string, data: StaffForm, avatarFile: File | null) => {
+      let avatarUrl = data.avatarUrl;
+      if (avatarFile) {
+        const formData = new FormData();
+        formData.append('file', avatarFile);
+
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!uploadRes.ok) {
+          const uploadError = await uploadRes.json();
+          throw new Error(uploadError.message || 'Failed to upload photo');
+        }
+
+        const uploadData = await uploadRes.json();
+        avatarUrl = uploadData.url;
+      }
+
+      const response = await fetch(`/api/staff/${staffId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...data, avatarUrl }),
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to update staff');
+      }
+
+      if (isMountedRef.current) {
+        setStaff((prev) =>
+          prev.map((s) => (s.id === staffId ? { ...s, ...result.staff } : s)),
+        );
+      }
+    },
+    [],
+  );
+
   return {
     staff,
     venueId,
     isPageLoading,
     addStaff,
+    updateStaff,
     toggleStatus,
     deleteStaff,
     refresh: fetchStaff,

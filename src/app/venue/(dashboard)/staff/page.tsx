@@ -13,10 +13,11 @@ import { useTranslations } from "@/i18n/client";
 
 export default function StaffManagementPage() {
   const t = useTranslations("venue.staff");
-  const { staff, isPageLoading, addStaff, toggleStatus, deleteStaff } = useStaffManagement();
-  const { avatarFile, avatarPreview, selectFile, clearAvatar } = useAvatarUpload();
+  const { staff, isPageLoading, addStaff, updateStaff, toggleStatus, deleteStaff } = useStaffManagement();
+  const { avatarFile, avatarPreview, selectFile, clearAvatar, setPreviewFromUrl } = useAvatarUpload();
 
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingStaff, setEditingStaff] = useState<Staff | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -41,17 +42,46 @@ export default function StaffManagementPage() {
     OTHER: t("roles.other"),
   };
 
-  const handleAddStaff = async (data: StaffForm) => {
+  const handleOpenAddDialog = () => {
+    setEditingStaff(null);
+    form.reset({ displayName: "", fullName: "", role: "WAITER", avatarUrl: "" });
+    clearAvatar();
+    setFormError(null);
+    setDialogOpen(true);
+  };
+
+  const handleOpenEditDialog = (staffMember: Staff) => {
+    setEditingStaff(staffMember);
+    form.reset({
+      displayName: staffMember.displayName,
+      fullName: staffMember.fullName || "",
+      role: staffMember.role as StaffForm["role"],
+      avatarUrl: staffMember.avatarUrl || "",
+    });
+    clearAvatar();
+    if (staffMember.avatarUrl) {
+      setPreviewFromUrl(staffMember.avatarUrl);
+    }
+    setFormError(null);
+    setDialogOpen(true);
+  };
+
+  const handleSubmit = async (data: StaffForm) => {
     setFormError(null);
     setIsSaving(true);
     setIsUploading(Boolean(avatarFile));
     try {
-      await addStaff(data, avatarFile);
+      if (editingStaff) {
+        await updateStaff(editingStaff.id, data, avatarFile);
+      } else {
+        await addStaff(data, avatarFile);
+      }
       setDialogOpen(false);
-      form.reset({ displayName: "", fullName: "", role: "WAITER" });
+      setEditingStaff(null);
+      form.reset({ displayName: "", fullName: "", role: "WAITER", avatarUrl: "" });
       clearAvatar();
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : "Failed to add staff");
+      setFormError(err instanceof Error ? err.message : "Failed to save staff");
     } finally {
       setIsSaving(false);
       setIsUploading(false);
@@ -85,9 +115,17 @@ export default function StaffManagementPage() {
         <StaffDialog
           form={form}
           open={dialogOpen}
-          onOpenChange={setDialogOpen}
+          onOpenChange={(open) => {
+            setDialogOpen(open);
+            if (!open) {
+              setEditingStaff(null);
+              form.reset({ displayName: "", fullName: "", role: "WAITER", avatarUrl: "" });
+              clearAvatar();
+              setFormError(null);
+            }
+          }}
           triggerLabel={t("addStaff")}
-          onSubmit={handleAddStaff}
+          onSubmit={handleSubmit}
           error={formError}
           isLoading={isSaving}
           isUploading={isUploading}
@@ -103,22 +141,24 @@ export default function StaffManagementPage() {
             clearAvatar();
             setFormError(null);
           }}
+          editingStaff={editingStaff}
         />
       </div>
 
       <StaffList
-      staff={staff}
-      roleLabels={roleLabels}
-      onToggleStatus={async (member) => {
-        try {
-          await toggleStatus(member);
-        } catch (err) {
-          console.error(err);
-        }
-      }}
-      onDelete={handleDeleteStaff}
-      onEmptyAction={() => setDialogOpen(true)}
-    />
+        staff={staff}
+        roleLabels={roleLabels}
+        onToggleStatus={async (member) => {
+          try {
+            await toggleStatus(member);
+          } catch (err) {
+            console.error(err);
+          }
+        }}
+        onDelete={handleDeleteStaff}
+        onEdit={handleOpenEditDialog}
+        onEmptyAction={handleOpenAddDialog}
+      />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 /* eslint-disable @next/next/no-img-element */
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { Camera, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useTranslations } from '@/i18n/client';
-import type { StaffForm } from './schema';
+import type { StaffForm, Staff } from './schema';
 import type { UseFormReturn } from 'react-hook-form';
 
 interface StaffDialogProps {
@@ -30,13 +30,15 @@ interface StaffDialogProps {
   open: boolean;
   onOpenChange: (value: boolean) => void;
   onSubmit: (data: StaffForm) => Promise<void>;
-  triggerLabel: string;
+  triggerLabel?: string;
   error?: string | null;
   isLoading: boolean;
   isUploading: boolean;
   avatarPreview: string | null;
   onFileSelect: (file?: File) => string | null;
   onClearAvatar: () => void;
+  editingStaff?: Staff | null;
+  hideTrigger?: boolean;
 }
 
 export function StaffDialog({
@@ -51,9 +53,23 @@ export function StaffDialog({
   avatarPreview,
   onFileSelect,
   onClearAvatar,
+  editingStaff,
+  hideTrigger,
 }: StaffDialogProps) {
   const t = useTranslations('venue.staff');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isEditMode = Boolean(editingStaff);
+
+  useEffect(() => {
+    if (editingStaff && open) {
+      form.reset({
+        displayName: editingStaff.displayName,
+        fullName: editingStaff.fullName || '',
+        role: editingStaff.role as StaffForm['role'],
+        avatarUrl: editingStaff.avatarUrl || '',
+      });
+    }
+  }, [editingStaff, open, form]);
 
   const handleSubmit = async (data: StaffForm) => {
     await onSubmit(data);
@@ -61,13 +77,19 @@ export function StaffDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-cyan-500 to-blue-600">{triggerLabel}</Button>
-      </DialogTrigger>
+      {!hideTrigger && triggerLabel && (
+        <DialogTrigger asChild>
+          <Button className="bg-gradient-to-r from-cyan-500 to-blue-600">{triggerLabel}</Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="glass-heavy">
         <DialogHeader>
-          <DialogTitle className="font-heading">{t('addStaffMember')}</DialogTitle>
-          <DialogDescription>{t('addStaffDesc')}</DialogDescription>
+          <DialogTitle className="font-heading">
+            {isEditMode ? t('editStaffMember') : t('addStaffMember')}
+          </DialogTitle>
+          <DialogDescription>
+            {isEditMode ? t('editStaffDesc') : t('addStaffDesc')}
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
@@ -101,7 +123,7 @@ export function StaffDialog({
             <Label htmlFor="role">{t('role')} *</Label>
             <Select
               onValueChange={(value) => form.setValue('role', value as StaffForm['role'])}
-              defaultValue={form.watch('role')}
+              value={form.watch('role')}
             >
               <SelectTrigger className="h-12">
                 <SelectValue placeholder={t('selectRole')} />
@@ -137,10 +159,10 @@ export function StaffDialog({
               }}
             />
 
-            {avatarPreview ? (
+            {avatarPreview || (isEditMode && editingStaff?.avatarUrl && !avatarPreview) ? (
               <div className="relative w-24 h-24 mx-auto">
                 <img
-                  src={avatarPreview}
+                  src={avatarPreview || editingStaff?.avatarUrl || ''}
                   alt="Preview"
                   width={96}
                   height={96}
@@ -150,6 +172,7 @@ export function StaffDialog({
                   type="button"
                   onClick={() => {
                     onClearAvatar();
+                    form.setValue('avatarUrl', '');
                     if (fileInputRef.current) {
                       fileInputRef.current.value = '';
                     }
@@ -176,7 +199,15 @@ export function StaffDialog({
             disabled={isLoading || isUploading}
             className="w-full h-14 text-lg font-heading font-bold bg-gradient-to-r from-cyan-500 to-blue-600"
           >
-            {isUploading ? t('uploading') : isLoading ? t('adding') : t('addStaffButton')}
+            {isUploading
+              ? t('uploading')
+              : isLoading
+                ? isEditMode
+                  ? t('saving')
+                  : t('adding')
+                : isEditMode
+                  ? t('saveChanges')
+                  : t('addStaffButton')}
           </Button>
         </form>
       </DialogContent>

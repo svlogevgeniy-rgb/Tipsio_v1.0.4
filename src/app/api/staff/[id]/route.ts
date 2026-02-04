@@ -14,7 +14,7 @@ const updateStaffSchema = z.object({
   role: z.enum(STAFF_ROLES).optional(),
   status: z.enum(STAFF_STATUSES).optional(),
   participatesInPool: z.boolean().optional(),
-  avatarUrl: z.string().url().optional(),
+  avatarUrl: z.string().optional().nullable(),
 });
 
 // GET /api/staff/[id] - Get staff details

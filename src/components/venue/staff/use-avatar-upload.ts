@@ -32,10 +32,16 @@ export function useAvatarUpload() {
     setAvatarPreview(null);
   }, []);
 
+  const setPreviewFromUrl = useCallback((url: string) => {
+    setAvatarPreview(url);
+    setAvatarFile(null);
+  }, []);
+
   return {
     avatarFile,
     avatarPreview,
     selectFile,
     clearAvatar,
+    setPreviewFromUrl,
   };
 }

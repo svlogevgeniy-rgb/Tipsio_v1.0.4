@@ -1,6 +1,6 @@
 'use client';
 
-import { Trash2 } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useTranslations } from '@/i18n/client';
@@ -13,10 +13,11 @@ interface StaffListProps {
   roleLabels: Record<string, string>;
   onToggleStatus: (staffMember: Staff) => void;
   onDelete: (staffMember: Staff) => void;
+  onEdit: (staffMember: Staff) => void;
   onEmptyAction?: () => void;
 }
 
-export function StaffList({ staff, roleLabels, onToggleStatus, onDelete, onEmptyAction }: StaffListProps) {
+export function StaffList({ staff, roleLabels, onToggleStatus, onDelete, onEdit, onEmptyAction }: StaffListProps) {
   const t = useTranslations('venue.staff');
 
   if (staff.length === 0) {
@@ -59,6 +60,14 @@ export function StaffList({ staff, roleLabels, onToggleStatus, onDelete, onEmpty
                 </span>
                 <Button variant="outline" size="sm" onClick={() => onToggleStatus(member)}>
                   {member.status === 'ACTIVE' ? t('deactivate') : t('activate')}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onEdit(member)}
+                  className="text-primary hover:text-primary"
+                >
+                  <Pencil className="h-4 w-4" />
                 </Button>
                 <Button
                   variant="outline"
