@@ -547,7 +547,25 @@
         "messagePlaceholder": "Say something nice...",
         "characterCount": "{current}/{max}",
         "continueButton": "Send {amount}",
-        "minAmount": "Minimum tip is Rp 10"
+        "minAmount": "Minimum tip is Rp 10",
+      "staffUnavailable": "Staff Unavailable",
+      "selectAnother": "Select Another",
+      "selectAnotherStaff": "Select another staff member!",
+      "qrInvalid": "This QR code is not valid or has been deactivated.",
+      "somethingWrong": "Something went wrong. Please try again.",
+      "failedToLoad": "Failed to load. Please check your connection.",
+      "venueNotAccepting": "This venue is not accepting tips at the moment.",
+      "oops": "Oops!",
+      "qrNotFound": "QR code not found",
+      "whoToThank": "Who would you like to thank?",
+      "tipAmountTitle": "Tip Amount",
+      "enterAmountPlaceholder": "Enter amount (IDR)",
+      "at": "at",
+      "sendButton": "Send Rp {amount}",
+      "failedPayment": "Failed to process payment. Please try again.",
+      "failedGooglePay": "Failed to process Google Pay. Please try again.",
+      "staffNotAvailable": "This staff member is not available. Please try another QR code.",
+      "backToStaffSelection": "Back to staff selection"
       }
     },
     "pending": {

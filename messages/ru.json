@@ -547,7 +547,25 @@
         "messagePlaceholder": "Напишите что-нибудь приятное...",
         "characterCount": "{current}/{max}",
         "continueButton": "Отправить {amount}",
-        "minAmount": "Минимальная сумма Rp 10"
+        "minAmount": "Минимальная сумма Rp 10",
+      "staffUnavailable": "Сотрудник недоступен",
+      "selectAnother": "Выбрать другого",
+      "selectAnotherStaff": "Выберите другого сотрудника!",
+      "qrInvalid": "Этот QR-код недействителен или был деактивирован.",
+      "somethingWrong": "Что-то пошло не так. Пожалуйста, попробуйте снова.",
+      "failedToLoad": "Не удалось загрузить. Проверьте подключение к интернету.",
+      "venueNotAccepting": "Это заведение сейчас не принимает чаевые.",
+      "oops": "Упс!",
+      "qrNotFound": "QR-код не найден",
+      "whoToThank": "Кому вы хотите сказать спасибо?",
+      "tipAmountTitle": "Сумма чаевых",
+      "enterAmountPlaceholder": "Введите сумму (IDR)",
+      "at": "в",
+      "sendButton": "Отправить Rp {amount}",
+      "failedPayment": "Не удалось обработать платёж. Попробуйте снова.",
+      "failedGooglePay": "Не удалось обработать Google Pay. Попробуйте снова.",
+      "staffNotAvailable": "Этот сотрудник недоступен. Попробуйте другой QR-код.",
+      "backToStaffSelection": "Назад к выбору сотрудника"
       }
     },
     "pending": {

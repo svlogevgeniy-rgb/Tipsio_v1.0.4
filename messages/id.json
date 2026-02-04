@@ -547,7 +547,25 @@
         "messagePlaceholder": "Katakan sesuatu yang baik...",
         "characterCount": "{current}/{max}",
         "continueButton": "Kirim {amount}",
-        "minAmount": "Tip minimum adalah Rp 10"
+        "minAmount": "Tip minimum adalah Rp 10",
+      "staffUnavailable": "Staf Tidak Tersedia",
+      "selectAnother": "Pilih Lainnya",
+      "selectAnotherStaff": "Pilih anggota staf lainnya!",
+      "qrInvalid": "Kode QR ini tidak valid atau telah dinonaktifkan.",
+      "somethingWrong": "Terjadi kesalahan. Silakan coba lagi.",
+      "failedToLoad": "Gagal memuat. Silakan periksa koneksi Anda.",
+      "venueNotAccepting": "Venue ini tidak menerima tip saat ini.",
+      "oops": "Ups!",
+      "qrNotFound": "Kode QR tidak ditemukan",
+      "whoToThank": "Siapa yang ingin Anda ucapkan terima kasih?",
+      "tipAmountTitle": "Jumlah Tip",
+      "enterAmountPlaceholder": "Masukkan jumlah (IDR)",
+      "at": "di",
+      "sendButton": "Kirim Rp {amount}",
+      "failedPayment": "Gagal memproses pembayaran. Silakan coba lagi.",
+      "failedGooglePay": "Gagal memproses Google Pay. Silakan coba lagi.",
+      "staffNotAvailable": "Anggota staf ini tidak tersedia. Silakan coba kode QR lain.",
+      "backToStaffSelection": "Kembali ke pemilihan staf"
       }
     },
     "pending": {

@@ -51,16 +51,16 @@ function InactiveStaffPopup({
           <AlertCircle className="w-6 h-6 text-yellow-600" />
         </div>
         <h3 className="text-lg font-semibold text-gray-900 mb-2">
-          {t('staffUnavailable') || 'Staff Unavailable'}
+          {t('staffUnavailable')}
         </h3>
         <p className="text-gray-500 mb-4">
-          Выберите другого сотрудника!
+          {t('selectAnotherStaff')}
         </p>
         <Button
           onClick={onClose}
           className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white"
         >
-          {t('selectAnother') || 'Select Another'}
+          {t('selectAnother')}
         </Button>
       </div>
     </div>
@@ -72,6 +72,7 @@ export default function TipPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const shortCode = params.shortCode as string;
+  const t = useTranslations("guest.tip");
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -118,9 +119,9 @@ export default function TipPage() {
       const res = await fetch(`/api/tip/${shortCode}`);
       if (!res.ok) {
         if (res.status === 404) {
-          setError("This QR code is not valid or has been deactivated.");
+          setError(t('qrInvalid'));
         } else {
-          setError("Something went wrong. Please try again.");
+          setError(t('somethingWrong'));
         }
         return;
       }
@@ -139,11 +140,11 @@ export default function TipPage() {
           (s: Staff) => s.status !== 'INACTIVE'
         );
         if (activeRecipients.length === 0) {
-          setError("This venue is not accepting tips at the moment.");
+          setError(t('venueNotAccepting'));
         }
       }
     } catch {
-      setError("Failed to load. Please check your connection.");
+      setError(t('failedToLoad'));
     } finally {
       setLoading(false);
     }
@@ -221,7 +222,7 @@ export default function TipPage() {
         window.snap.pay(snapToken);
       }
     } catch {
-      setError("Failed to process payment. Please try again.");
+      setError(t('failedPayment'));
     } finally {
       setSubmitting(false);
     }
@@ -258,7 +259,7 @@ export default function TipPage() {
         window.location.href = redirectUrl;
       }
     } catch {
-      setError("Failed to process Google Pay. Please try again.");
+      setError(t('failedGooglePay'));
     } finally {
       setSubmittingGPay(false);
     }
@@ -276,7 +277,7 @@ export default function TipPage() {
   function handleInactivePopupClose() {
     setShowInactivePopup(false);
     if (qrData && isIndividualQr(qrData.type)) {
-      setError("This staff member is not available. Please try another QR code.");
+      setError(t('staffNotAvailable'));
     } else {
       setSelectedStaff(null);
     }
@@ -318,8 +319,8 @@ export default function TipPage() {
         />
         <div className="w-full md:min-w-[672px] md:w-[672px] md:mx-auto relative">
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center max-w-sm mx-auto">
-            <h1 className="text-xl font-semibold mb-2 text-gray-900">Oops!</h1>
-            <p className="text-gray-500">{error || "QR code not found"}</p>
+            <h1 className="text-xl font-semibold mb-2 text-gray-900">{t('oops')}</h1>
+            <p className="text-gray-500">{error || t('qrNotFound')}</p>
           </div>
         </div>
       </div>
@@ -386,7 +387,7 @@ export default function TipPage() {
         {/* Main Content */}
         <main className="flex-1 px-4 md:px-6 py-6">
           <h2 className="text-lg font-medium text-gray-900 mb-4 text-center">
-            Who would you like to thank?
+            {t('whoToThank')}
           </h2>
 
           <div className="flex flex-col gap-3">
@@ -454,7 +455,7 @@ export default function TipPage() {
             <button
               onClick={handleBack}
               className="p-2 -ml-2 hover:bg-gray-100 rounded-lg transition-colors"
-              aria-label="Back to staff selection"
+              aria-label={t('backToStaffSelection')}
             >
               <ArrowLeft className="w-5 h-5 text-gray-700" />
             </button>
@@ -482,7 +483,7 @@ export default function TipPage() {
             <div>
               <h1 className="text-xl font-semibold text-gray-900">{selectedStaff.displayName}</h1>
               <p className="text-gray-500 text-sm">
-                {selectedStaff.role.charAt(0) + selectedStaff.role.slice(1).toLowerCase()} at {qrData.venue.name}
+                {selectedStaff.role.charAt(0) + selectedStaff.role.slice(1).toLowerCase()} {t('at')} {qrData.venue.name}
               </p>
             </div>
             <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
@@ -508,12 +509,12 @@ export default function TipPage() {
       <main className="flex-1 px-4 md:px-6 py-6 pb-32">
         {/* Tip Amount */}
         <div className="mb-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-3">Tip Amount</h2>
+          <h2 className="text-lg font-medium text-gray-900 mb-3">{t('tipAmountTitle')}</h2>
           <Input
             type="text"
             inputMode="numeric"
             pattern="[0-9]*"
-            placeholder="Enter amount (IDR)"
+            placeholder={t('enterAmountPlaceholder')}
             value={amountInput}
             onChange={(e) => handleAmountChange(e.target.value)}
             className="bg-white border-gray-200 h-12 text-gray-900 placeholder:text-gray-400 mb-3"
@@ -547,7 +548,7 @@ export default function TipPage() {
             {submitting ? (
               <Loader2 className="h-5 w-5 animate-spin" />
             ) : (
-              <>Send Rp {finalAmount > 0 ? finalAmount.toLocaleString('id-ID') : "0"}</>
+              <>{t('sendButton', { amount: finalAmount > 0 ? finalAmount.toLocaleString('id-ID') : "0" })}</>
             )}
           </Button>
           
