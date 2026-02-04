@@ -7,7 +7,6 @@ import { Loader2, User, AlertCircle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
-import { StarRating } from "@/components/tip/StarRating";
 import { useTranslations } from "@/i18n/client";
 
 interface Staff {
@@ -83,7 +82,6 @@ export default function TipPage() {
   const [selectedPreset, setSelectedPreset] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submittingGPay, setSubmittingGPay] = useState(false);
-  const [rating, setRating] = useState<number>(0);
   const [showInactivePopup, setShowInactivePopup] = useState(false);
 
   // Get step and staffId from URL params (persists across refresh)
@@ -201,7 +199,7 @@ export default function TipPage() {
           amount: finalAmount,
           staffId: selectedStaffId,
           type: "PERSONAL", // Always PERSONAL for new tips
-          experienceRating: rating > 0 ? rating : null,
+          experienceRating: null,
           message: null,
         }),
       });
@@ -289,7 +287,6 @@ export default function TipPage() {
     setAmount(0);
     setAmountInput('');
     setSelectedPreset(null);
-    setRating(0);
   }
 
   if (loading) {
@@ -535,14 +532,6 @@ export default function TipPage() {
                 Rp {(presetAmount / 1000).toFixed(0)}k
               </button>
             ))}
-          </div>
-        </div>
-
-        {/* Experience Rating */}
-        <div className="mb-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-3 text-center">Your Experience</h2>
-          <div className="flex justify-center">
-            <StarRating value={rating} onChange={setRating} />
           </div>
         </div>
       </main>
