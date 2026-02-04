@@ -78,8 +78,9 @@ export default function TipPage() {
   const [error, setError] = useState<string | null>(null);
   const [qrData, setQrData] = useState<QrData | null>(null);
 
-  const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
-  const [customAmount, setCustomAmount] = useState("");
+  const [amount, setAmount] = useState<number>(0);
+  const [amountInput, setAmountInput] = useState("");
+  const [selectedPreset, setSelectedPreset] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submittingGPay, setSubmittingGPay] = useState(false);
   const [rating, setRating] = useState<number>(0);
@@ -150,7 +151,28 @@ export default function TipPage() {
     }
   }
 
-  const finalAmount = selectedAmount || (customAmount ? parseInt(customAmount) : 0);
+  // Handle amount input change
+  const handleAmountChange = (value: string) => {
+    // Remove non-numeric characters except empty string
+    const numericValue = value.replace(/[^0-9]/g, '');
+    
+    setAmountInput(numericValue);
+    setSelectedPreset(null);
+    
+    // Update amount
+    const parsedAmount = numericValue === '' ? 0 : parseInt(numericValue, 10);
+    setAmount(parsedAmount);
+  };
+
+  // Handle preset selection
+  const handlePresetSelect = (presetAmount: number) => {
+    setSelectedPreset(presetAmount);
+    setAmount(presetAmount);
+    setAmountInput('');
+  };
+
+  // Get final amount for display and validation
+  const finalAmount = amount;
 
   const selectedStaff = selectedStaffId
     ? qrData?.staff?.id === selectedStaffId
@@ -264,8 +286,9 @@ export default function TipPage() {
 
   function handleBack() {
     setSelectedStaff(null);
-    setSelectedAmount(null);
-    setCustomAmount("");
+    setAmount(0);
+    setAmountInput('');
+    setSelectedPreset(null);
     setRating(0);
   }
 
@@ -485,41 +508,31 @@ export default function TipPage() {
       )}
 
       {/* Main Content */}
-      <main className="flex-1 px-4 md:px-6 py-6 pb-32">{/* Increased pb for two buttons */}
+      <main className="flex-1 px-4 md:px-6 py-6 pb-32">
         {/* Tip Amount */}
         <div className="mb-6">
           <h2 className="text-lg font-medium text-gray-900 mb-3">Tip Amount</h2>
           <Input
-            type="number"
+            type="text"
             inputMode="numeric"
-            min="0"
-            placeholder="Amount"
-            value={customAmount}
-            onChange={(e) => {
-              const value = e.target.value;
-              // Prevent negative values
-              if (value === "" || parseInt(value) >= 0) {
-                setCustomAmount(value);
-                setSelectedAmount(null);
-              }
-            }}
-            className="bg-white border-gray-200 h-12 text-gray-900 placeholder:text-gray-400 mb-3 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            pattern="[0-9]*"
+            placeholder="Enter amount (IDR)"
+            value={amountInput}
+            onChange={(e) => handleAmountChange(e.target.value)}
+            className="bg-white border-gray-200 h-12 text-gray-900 placeholder:text-gray-400 mb-3"
           />
           <div className="grid grid-cols-3 gap-2">
-            {AMOUNT_PRESETS.map((amount) => (
+            {AMOUNT_PRESETS.map((presetAmount) => (
               <button
-                key={amount}
-                onClick={() => {
-                  setSelectedAmount(amount);
-                  setCustomAmount("");
-                }}
+                key={presetAmount}
+                onClick={() => handlePresetSelect(presetAmount)}
                 className={`h-12 rounded-xl border-2 font-medium transition-all ${
-                  selectedAmount === amount
+                  selectedPreset === presetAmount
                     ? "border-blue-600 bg-blue-600 text-white"
                     : "border-gray-200 bg-white text-gray-900 hover:border-blue-600 hover:bg-blue-50"
                 }`}
               >
-                Rp {(amount / 1000).toFixed(0)}
+                Rp {(presetAmount / 1000).toFixed(0)}k
               </button>
             ))}
           </div>
@@ -539,13 +552,13 @@ export default function TipPage() {
         <div className="w-full md:min-w-[672px] md:w-[672px] bg-white border-t border-gray-100 p-4 space-y-3">
           <Button
             onClick={handleSubmit}
-            disabled={!finalAmount || finalAmount < 10000 || submitting}
+            disabled={!finalAmount || finalAmount < 10000 || submitting || submittingGPay}
             className="w-full h-14 text-lg font-semibold bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:opacity-50 rounded-xl text-white"
           >
             {submitting ? (
               <Loader2 className="h-5 w-5 animate-spin" />
             ) : (
-              <>Send Rp {finalAmount > 0 ? (finalAmount / 1000).toFixed(0) : "0"}</>
+              <>Send Rp {finalAmount > 0 ? finalAmount.toLocaleString('id-ID') : "0"}</>
             )}
           </Button>
           
