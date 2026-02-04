@@ -81,6 +81,7 @@ export default function TipPage() {
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
   const [customAmount, setCustomAmount] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [submittingGPay, setSubmittingGPay] = useState(false);
   const [rating, setRating] = useState<number>(0);
   const [showInactivePopup, setShowInactivePopup] = useState(false);
 
@@ -203,6 +204,44 @@ export default function TipPage() {
       setError("Failed to process payment. Please try again.");
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function handleGooglePay() {
+    if (!finalAmount || finalAmount < 10000) return;
+
+    setSubmittingGPay(true);
+    try {
+      const res = await fetch("/api/tips/gpay", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          qrCodeId: qrData?.id,
+          amount: finalAmount,
+          staffId: selectedStaffId,
+          experienceRating: rating > 0 ? rating : null,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        if (errorData.code === 'STAFF_INACTIVE') {
+          setShowInactivePopup(true);
+          return;
+        }
+        throw new Error(errorData.error || "Failed to create Google Pay payment");
+      }
+
+      const { redirectUrl } = await res.json();
+
+      // Redirect directly to Snap with Google Pay only
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      }
+    } catch {
+      setError("Failed to process Google Pay. Please try again.");
+    } finally {
+      setSubmittingGPay(false);
     }
   }
 
@@ -514,11 +553,8 @@ export default function TipPage() {
           {/* Google Pay Button */}
           <button
             id="google-pay-button"
-            onClick={() => {
-              // TODO: Implement Google Pay integration
-              console.log("Google Pay clicked");
-            }}
-            disabled={!finalAmount || finalAmount < 10000 || submitting}
+            onClick={handleGooglePay}
+            disabled={!finalAmount || finalAmount < 10000 || submitting || submittingGPay}
             className="w-full h-14 bg-black hover:bg-gray-900 active:bg-gray-800 disabled:opacity-50 rounded-xl border-0 flex items-center justify-center overflow-hidden"
             style={{
               background: 'black',
@@ -534,13 +570,17 @@ export default function TipPage() {
               padding: '12px 24px',
             }}
           >
-            <div style={{
-              background: 'no-repeat center/contain',
-              backgroundImage: 'url(https://www.gstatic.com/instantbuy/svg/dark_gpay.svg)',
-              height: '100%',
-              width: '100%',
-              minWidth: '90px',
-            }} />
+            {submittingGPay ? (
+              <Loader2 className="h-5 w-5 animate-spin text-white" />
+            ) : (
+              <div style={{
+                background: 'no-repeat center/contain',
+                backgroundImage: 'url(https://www.gstatic.com/instantbuy/svg/dark_gpay.svg)',
+                height: '100%',
+                width: '100%',
+                minWidth: '90px',
+              }} />
+            )}
           </button>
         </div>
       </div>
