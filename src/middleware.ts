@@ -79,6 +79,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
   
+  // Skip auth check for prefetch requests (Next.js router prefetching)
+  const purpose = request.headers.get('purpose')
+  const nextRouterPrefetch = request.headers.get('next-router-prefetch')
+  if (purpose === 'prefetch' || nextRouterPrefetch) {
+    return NextResponse.next()
+  }
+  
   // Get JWT token with proper configuration for NextAuth v5
   const token = await getToken({ 
     req: request,
@@ -89,19 +96,8 @@ export async function middleware(request: NextRequest) {
       : 'authjs.session-token'
   })
   
-  console.log('[Middleware]', {
-    pathname,
-    hasToken: !!token,
-    userRole: token?.role,
-    requiredRoles,
-    cookieName: process.env.NEXTAUTH_URL?.startsWith('https://') 
-      ? '__Secure-authjs.session-token'
-      : 'authjs.session-token'
-  })
-  
   // No token - redirect to login
   if (!token) {
-    console.log('[Middleware] No token, redirecting to login')
     const loginUrl = pathname.startsWith('/admin') || pathname.startsWith('/venue')
       ? '/venue/login'
       : '/staff/login'
