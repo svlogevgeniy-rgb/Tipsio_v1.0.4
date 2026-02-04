@@ -1,6 +1,11 @@
-import { decrypt, encrypt } from "./encryption";
+import { decrypt, encrypt, isEncrypted } from "./encryption";
 
 const MIDTRANS_SANDBOX_URL = "https://app.sandbox.midtrans.com/snap/v1/transactions";
+const MIDTRANS_PRODUCTION_URL = "https://app.midtrans.com/snap/v1/transactions";
+const MIDTRANS_API_BASE = {
+  sandbox: "https://api.sandbox.midtrans.com",
+  production: "https://api.midtrans.com",
+} as const;
 
 /**
  * Encrypt a Midtrans key for secure storage
@@ -8,13 +13,14 @@ const MIDTRANS_SANDBOX_URL = "https://app.sandbox.midtrans.com/snap/v1/transacti
 export function encryptKey(key: string): string {
   return encrypt(key);
 }
-const MIDTRANS_PRODUCTION_URL = "https://app.midtrans.com/snap/v1/transactions";
+
+export type MidtransEnvironment = "sandbox" | "production";
 
 interface MidtransCredentials {
   serverKey: string;
   clientKey: string;
   merchantId: string;
-  environment: "sandbox" | "production";
+  environment: MidtransEnvironment;
 }
 
 interface CreateTransactionParams {
@@ -59,9 +65,11 @@ export function getDecryptedCredentials(venue: {
 
   return {
     serverKey: decrypt(venue.midtransServerKey),
-    clientKey: venue.midtransClientKey, // Client key is not encrypted
+    clientKey: isEncrypted(venue.midtransClientKey)
+      ? decrypt(venue.midtransClientKey)
+      : venue.midtransClientKey,
     merchantId: venue.midtransMerchantId,
-    environment: venue.midtransEnvironment as "sandbox" | "production",
+    environment: venue.midtransEnvironment as MidtransEnvironment,
   };
 }
 
@@ -132,6 +140,87 @@ export async function createSnapTransaction(
   }
 
   return response.json();
+}
+
+function inferEnvironmentFromKey(key: string | undefined): MidtransEnvironment | null {
+  if (!key) return null;
+  if (key.startsWith("SB-")) return "sandbox";
+  if (key.startsWith("Mid-")) return "production";
+  return null;
+}
+
+async function testServerKey(
+  serverKey: string,
+  environment: MidtransEnvironment
+): Promise<{ ok: boolean; status: number }>
+{
+  const auth = Buffer.from(`${serverKey}:`).toString("base64");
+  const orderId = `TIPSIO-VALIDATION-${Date.now()}`;
+  const response = await fetch(`${MIDTRANS_API_BASE[environment]}/v2/${orderId}/status`, {
+    method: "GET",
+    headers: {
+      Authorization: `Basic ${auth}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  // 401 indicates invalid server key
+  if (response.status === 401) {
+    return { ok: false, status: response.status };
+  }
+
+  // 404 = valid key but order not found; 200 = order exists
+  if (response.status === 404 || response.status === 200) {
+    return { ok: true, status: response.status };
+  }
+
+  return { ok: false, status: response.status };
+}
+
+export async function validateMidtransCredentials(options: {
+  serverKey: string;
+  clientKey: string;
+  merchantId?: string;
+  requireMerchantId?: boolean;
+}): Promise<{ valid: boolean; environment?: MidtransEnvironment; message?: string }> {
+  const { serverKey, clientKey, merchantId, requireMerchantId } = options;
+
+  if (!serverKey || !clientKey || (requireMerchantId && !merchantId)) {
+    return { valid: false, message: "All Midtrans credentials are required" };
+  }
+
+  const serverEnv = inferEnvironmentFromKey(serverKey);
+  const clientEnv = inferEnvironmentFromKey(clientKey);
+
+  if (serverEnv && clientEnv && serverEnv !== clientEnv) {
+    return {
+      valid: false,
+      message: "Server Key and Client Key are from different environments",
+    };
+  }
+
+  const candidateEnvs: MidtransEnvironment[] = serverEnv
+    ? [serverEnv]
+    : clientEnv
+      ? [clientEnv]
+      : ["sandbox", "production"];
+
+  for (const env of candidateEnvs) {
+    const result = await testServerKey(serverKey, env);
+    if (result.ok) {
+      return { valid: true, environment: env };
+    }
+
+    // If auth failed, try the other environment (when applicable)
+    if (result.status !== 401) {
+      return {
+        valid: false,
+        message: "Failed to validate Midtrans credentials",
+      };
+    }
+  }
+
+  return { valid: false, message: "Invalid Midtrans credentials" };
 }
 
 /**

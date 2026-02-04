@@ -5,7 +5,7 @@ export const revalidate = 0;
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-import { encryptKey } from "@/lib/midtrans";
+import { encryptKey, validateMidtransCredentials, type MidtransEnvironment } from "@/lib/midtrans";
 import prisma from "@/lib/prisma";
 import { generateShortCode } from "@/lib/qr";
 
@@ -53,10 +53,29 @@ export async function POST(request: NextRequest) {
     // Hash password
     const passwordHash = await bcrypt.hash(password, 12);
 
-    // Encrypt server key if provided
-    const encryptedServerKey = midtrans?.serverKey 
-      ? encryptKey(midtrans.serverKey) 
-      : null;
+    let encryptedServerKey: string | null = null;
+    let encryptedClientKey: string | null = null;
+    let midtransEnvironment: MidtransEnvironment | null = null;
+
+    if (midtrans) {
+      const validation = await validateMidtransCredentials({
+        serverKey: midtrans.serverKey,
+        clientKey: midtrans.clientKey,
+        merchantId: midtrans.merchantId,
+        requireMerchantId: true,
+      });
+
+      if (!validation.valid) {
+        return NextResponse.json(
+          { code: "MIDTRANS_INVALID", message: validation.message || "Invalid Midtrans credentials" },
+          { status: 400 }
+        );
+      }
+
+      encryptedServerKey = encryptKey(midtrans.serverKey);
+      encryptedClientKey = encryptKey(midtrans.clientKey);
+      midtransEnvironment = validation.environment || "sandbox";
+    }
 
     // Create user, venue, staff profile, and individual QR in transaction
     const result = await prisma.$transaction(async (tx) => {
@@ -81,8 +100,9 @@ export async function POST(request: NextRequest) {
           // Midtrans credentials
           midtransMerchantId: midtrans?.merchantId || null,
           midtransServerKey: encryptedServerKey,
-          midtransClientKey: midtrans?.clientKey || null,
+          midtransClientKey: encryptedClientKey,
           midtransConnected: !!midtrans,
+          ...(midtransEnvironment ? { midtransEnvironment } : {}),
         },
       });
 

@@ -5,6 +5,7 @@ export const revalidate = 0;
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { encrypt } from "@/lib/encryption";
+import { validateMidtransCredentials } from "@/lib/midtrans";
 import prisma from "@/lib/prisma";
 
 export async function POST(
@@ -50,23 +51,16 @@ export async function POST(
       );
     }
 
-    // Test Midtrans connection
-    const testAuth = Buffer.from(serverKey + ":").toString("base64");
-    const testResponse = await fetch(
-      "https://api.sandbox.midtrans.com/v2/status",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Basic ${testAuth}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const validation = await validateMidtransCredentials({
+      serverKey,
+      clientKey,
+      merchantId,
+      requireMerchantId: false,
+    });
 
-    // Midtrans returns 401 for invalid keys, 404 for valid keys (no transaction)
-    if (testResponse.status === 401) {
+    if (!validation.valid) {
       return NextResponse.json(
-        { success: false, message: "Invalid Midtrans credentials" },
+        { success: false, message: validation.message || "Invalid Midtrans credentials" },
         { status: 400 }
       );
     }
@@ -82,6 +76,7 @@ export async function POST(
         midtransClientKey: encryptedClientKey,
         midtransMerchantId: merchantId || null,
         midtransConnected: true,
+        midtransEnvironment: validation.environment || "sandbox",
       },
     });
 
