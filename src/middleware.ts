@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { auth } from '@/lib/auth'
+import { getToken } from 'next-auth/jwt'
 
 const PUBLIC_FILE = /\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt|xml)$/i
 
@@ -79,19 +79,29 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
   
-  // Get session using auth()
-  const session = await auth()
+  // Get JWT token with proper configuration for NextAuth v5
+  const token = await getToken({ 
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+    secureCookie: process.env.NEXTAUTH_URL?.startsWith('https://'),
+    cookieName: process.env.NEXTAUTH_URL?.startsWith('https://') 
+      ? '__Secure-authjs.session-token'
+      : 'authjs.session-token'
+  })
   
   console.log('[Middleware]', {
     pathname,
-    hasSession: !!session,
-    userRole: session?.user?.role,
-    requiredRoles
+    hasToken: !!token,
+    userRole: token?.role,
+    requiredRoles,
+    cookieName: process.env.NEXTAUTH_URL?.startsWith('https://') 
+      ? '__Secure-authjs.session-token'
+      : 'authjs.session-token'
   })
   
-  // No session - redirect to login
-  if (!session || !session.user) {
-    console.log('[Middleware] No session, redirecting to login')
+  // No token - redirect to login
+  if (!token) {
+    console.log('[Middleware] No token, redirecting to login')
     const loginUrl = pathname.startsWith('/admin') || pathname.startsWith('/venue')
       ? '/venue/login'
       : '/staff/login'
@@ -102,7 +112,7 @@ export async function middleware(request: NextRequest) {
   }
   
   // Check role
-  const userRole = (session.user as { role?: string }).role
+  const userRole = token.role as string | undefined
   
   if (!userRole || !requiredRoles.includes(userRole)) {
     // Unauthorized - redirect to appropriate page
