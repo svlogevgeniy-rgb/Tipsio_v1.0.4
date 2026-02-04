@@ -80,6 +80,9 @@ export async function middleware(request: NextRequest) {
   }
   
   // Get JWT token
+  const cookies = request.cookies.getAll()
+  console.log('[Middleware] Cookies:', cookies.map(c => ({ name: c.name, hasValue: !!c.value })))
+  
   const token = await getToken({ 
     req: request, 
     secret: process.env.NEXTAUTH_SECRET 
