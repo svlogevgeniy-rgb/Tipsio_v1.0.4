@@ -21,6 +21,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CreateQrDialog } from '@/components/venue/qr-codes/CreateQrDialog';
 import { EditTeamQrDialog } from '@/components/venue/qr-codes/EditTeamQrDialog';
@@ -340,21 +348,30 @@ export default function QrCodesPage() {
           <CardContent className="space-y-4">
             {/* QR Code Selector */}
             <div className="space-y-2">
-              <label className="text-sm font-medium">{t("selectQrForPrint")}</label>
-              <select
+              <Label className="text-sm font-medium">{t("selectQrForPrint")}</Label>
+              <Select
                 value={selectedQrForMaterial}
-                onChange={(e) => setSelectedQrForMaterial(e.target.value)}
-                className="w-full h-12 px-4 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                onValueChange={(value) => setSelectedQrForMaterial(value)}
               >
-                {qrCodes.map((qr) => (
-                  <option key={qr.id} value={qr.shortCode}>
-                    {qr.label || venueName} - {getQrTypeLabel(qr.type)}
-                    {qr.type === 'INDIVIDUAL' || qr.type === 'PERSONAL' 
-                      ? ` (${qr.staff?.displayName || 'Без имени'})` 
-                      : ` (${qr.recipients?.length || 0} сотрудников)`}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="h-12">
+                  <SelectValue placeholder={t("selectQrPlaceholder")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {qrCodes.map((qr) => (
+                    <SelectItem key={qr.id} value={qr.shortCode}>
+                      <div className="flex items-center gap-2">
+                        {getQrTypeIcon(qr.type)}
+                        <span className="font-medium">{qr.label || venueName}</span>
+                        <span className="text-muted-foreground text-xs">
+                          {qr.type === 'INDIVIDUAL' || qr.type === 'PERSONAL' 
+                            ? `— ${qr.staff?.displayName || 'Без имени'}` 
+                            : `— ${qr.recipients?.length || 0} сотрудников`}
+                        </span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             
             {/* Generator */}
