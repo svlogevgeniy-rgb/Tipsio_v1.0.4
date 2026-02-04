@@ -144,8 +144,12 @@ export async function createSnapTransaction(
 
 function inferEnvironmentFromKey(key: string | undefined): MidtransEnvironment | null {
   if (!key) return null;
+  // SB- prefix is clearly sandbox
   if (key.startsWith("SB-")) return "sandbox";
-  if (key.startsWith("Mid-")) return "production";
+  // Mid-server- and Mid-client- can be either sandbox or production
+  // We cannot reliably determine environment from these prefixes alone
+  // Return null to try both environments
+  if (key.startsWith("Mid-")) return null;
   return null;
 }
 
@@ -203,7 +207,7 @@ export async function validateMidtransCredentials(options: {
     ? [serverEnv]
     : clientEnv
       ? [clientEnv]
-      : ["sandbox", "production"];
+      : ["sandbox", "production"]; // Try sandbox first as it's more common for testing
 
   for (const env of candidateEnvs) {
     const result = await testServerKey(serverKey, env);
