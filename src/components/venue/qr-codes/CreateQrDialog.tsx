@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Loader2, User, Users } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -37,6 +38,7 @@ export function CreateQrDialog({
   venueId,
   onSuccess,
 }: CreateQrDialogProps) {
+  const t = useTranslations('venue.qr');
   const [step, setStep] = useState<'type' | 'details'>('type');
   const [qrType, setQrType] = useState<QrType>('INDIVIDUAL');
   const [label, setLabel] = useState('');
@@ -99,17 +101,17 @@ export function CreateQrDialog({
 
     // Validation
     if (!label.trim()) {
-      setError('Введите название QR-кода');
+      setError(t('enterQrName'));
       return;
     }
 
     if (qrType === 'INDIVIDUAL' && !selectedStaffId) {
-      setError('Выберите сотрудника');
+      setError(t('selectEmployee'));
       return;
     }
 
     if (qrType === 'TEAM' && selectedStaffIds.length < 2) {
-      setError('Выберите минимум 2 сотрудников');
+      setError(t('selectMin2Employees'));
       return;
     }
 
@@ -145,7 +147,7 @@ export function CreateQrDialog({
       onSuccess();
     } catch (err) {
       console.error('Failed to create QR:', err);
-      setError(err instanceof Error ? err.message : 'Не удалось создать QR-код');
+      setError(err instanceof Error ? err.message : t('failedToCreate'));
     } finally {
       setIsLoading(false);
     }
@@ -157,11 +159,11 @@ export function CreateQrDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Создать QR-код</DialogTitle>
+          <DialogTitle>{t('createQr')}</DialogTitle>
           <DialogDescription>
             {step === 'type'
-              ? 'Выберите тип QR-кода'
-              : 'Заполните детали QR-кода'}
+              ? t('selectType')
+              : t('fillDetails')}
           </DialogDescription>
         </DialogHeader>
 
@@ -176,9 +178,9 @@ export function CreateQrDialog({
                   <User className="h-5 w-5 text-primary" />
                 </div>
                 <div className="flex-1">
-                  <div className="font-semibold mb-1">Individual QR</div>
+                  <div className="font-semibold mb-1">{t('individualQr')}</div>
                   <div className="text-sm text-muted-foreground">
-                    Чаевые идут одному конкретному сотруднику. Гость сразу видит экран оплаты.
+                    {t('individualQrDesc')}
                   </div>
                 </div>
               </div>
@@ -193,9 +195,9 @@ export function CreateQrDialog({
                   <Users className="h-5 w-5 text-primary" />
                 </div>
                 <div className="flex-1">
-                  <div className="font-semibold mb-1">Team QR</div>
+                  <div className="font-semibold mb-1">{t('teamQr')}</div>
                   <div className="text-sm text-muted-foreground">
-                    Гость выбирает сотрудника из списка, затем оставляет чаевые.
+                    {t('teamQrDesc')}
                   </div>
                 </div>
               </div>
@@ -207,10 +209,10 @@ export function CreateQrDialog({
           <div className="space-y-4 py-4">
             {/* Label Input */}
             <div className="space-y-2">
-              <Label htmlFor="label">Название QR-кода</Label>
+              <Label htmlFor="label">{t('qrLabel')}</Label>
               <Input
                 id="label"
-                placeholder="Например: Стол 5, Бар, Основной зал"
+                placeholder={t('qrLabelPlaceholder')}
                 value={label}
                 onChange={(e) => setLabel(e.target.value)}
               />
@@ -223,7 +225,7 @@ export function CreateQrDialog({
               </div>
             ) : qrType === 'INDIVIDUAL' ? (
               <div className="space-y-2">
-                <Label>Выберите сотрудника</Label>
+                <Label>{t('selectStaff')}</Label>
                 <div className="space-y-2 max-h-[300px] overflow-y-auto">
                   {activeStaff.map((member) => (
                     <button
@@ -258,7 +260,7 @@ export function CreateQrDialog({
               </div>
             ) : (
               <div className="space-y-2">
-                <Label>Выберите сотрудников (минимум 2)</Label>
+                <Label>{t('selectStaffMin2')}</Label>
                 <div className="space-y-2 max-h-[300px] overflow-y-auto">
                   {activeStaff.map((member) => (
                     <div
@@ -294,7 +296,7 @@ export function CreateQrDialog({
                   ))}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  Выбрано: {selectedStaffIds.length}
+                  {t('selected')}: {selectedStaffIds.length}
                 </div>
               </div>
             )}
@@ -313,7 +315,7 @@ export function CreateQrDialog({
                 disabled={isLoading}
                 className="flex-1"
               >
-                Назад
+                {t('back')}
               </Button>
               <Button
                 onClick={handleCreate}
@@ -323,10 +325,10 @@ export function CreateQrDialog({
                 {isLoading ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Создание...
+                    {t('creating')}
                   </>
                 ) : (
-                  'Создать'
+                  t('create')
                 )}
               </Button>
             </div>

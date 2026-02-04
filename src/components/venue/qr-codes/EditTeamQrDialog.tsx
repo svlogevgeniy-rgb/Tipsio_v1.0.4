@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Loader2, User } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -45,6 +46,7 @@ export function EditTeamQrDialog({
   venueId,
   onSuccess,
 }: EditTeamQrDialogProps) {
+  const t = useTranslations('venue.qr');
   const [selectedStaffIds, setSelectedStaffIds] = useState<string[]>([]);
   const [staff, setStaff] = useState<StaffMember[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -100,7 +102,7 @@ export function EditTeamQrDialog({
 
     // Validation
     if (selectedStaffIds.length < 2) {
-      setError('Выберите минимум 2 сотрудников');
+      setError(t('selectMin2Employees'));
       return;
     }
 
@@ -123,7 +125,7 @@ export function EditTeamQrDialog({
       onSuccess();
     } catch (err) {
       console.error('Failed to update QR:', err);
-      setError(err instanceof Error ? err.message : 'Не удалось обновить QR-код');
+      setError(err instanceof Error ? err.message : t('failedToUpdate'));
     } finally {
       setIsLoading(false);
     }
@@ -135,9 +137,9 @@ export function EditTeamQrDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Редактировать Team QR</DialogTitle>
+          <DialogTitle>{t('editTeamQr')}</DialogTitle>
           <DialogDescription>
-            {qrCode.label || 'QR-код'} - изменить список сотрудников
+            {qrCode.label || 'QR'} - {t('editStaffList')}
           </DialogDescription>
         </DialogHeader>
 
@@ -149,7 +151,7 @@ export function EditTeamQrDialog({
             </div>
           ) : (
             <div className="space-y-2">
-              <div className="text-sm font-medium">Выберите сотрудников (минимум 2)</div>
+              <div className="text-sm font-medium">{t('selectStaffMin2')}</div>
               <div className="space-y-2 max-h-[400px] overflow-y-auto">
                 {activeStaff.map((member) => (
                   <div
@@ -185,7 +187,7 @@ export function EditTeamQrDialog({
                 ))}
               </div>
               <div className="text-sm text-muted-foreground">
-                Выбрано: {selectedStaffIds.length}
+                {t('selected')}: {selectedStaffIds.length}
               </div>
             </div>
           )}
@@ -204,7 +206,7 @@ export function EditTeamQrDialog({
               disabled={isLoading}
               className="flex-1"
             >
-              Отмена
+              {t('cancel')}
             </Button>
             <Button
               onClick={handleUpdate}
@@ -214,10 +216,10 @@ export function EditTeamQrDialog({
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Сохранение...
+                  {t('saving')}
                 </>
               ) : (
-                'Сохранить'
+                t('save')
               )}
             </Button>
           </div>
