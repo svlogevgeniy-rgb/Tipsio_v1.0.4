@@ -18,13 +18,12 @@ interface CreateGPayTipRequest {
   qrCodeId: string;
   amount: number;
   staffId: string | null;
-  experienceRating?: number | null;
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body: CreateGPayTipRequest = await request.json();
-    const { qrCodeId, amount, staffId, experienceRating } = body;
+    const { qrCodeId, amount, staffId } = body;
 
     // Validate amount
     if (!amount || amount < 10000) {
@@ -112,7 +111,6 @@ export async function POST(request: NextRequest) {
         venueId: qrCode.venue.id,
         qrCodeId: qrCode.id,
         staffId: targetStaffId,
-        experienceRating: experienceRating || null,
       },
     });
 

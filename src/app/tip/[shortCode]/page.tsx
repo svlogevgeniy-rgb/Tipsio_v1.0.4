@@ -219,7 +219,6 @@ export default function TipPage() {
           qrCodeId: qrData?.id,
           amount: finalAmount,
           staffId: selectedStaffId,
-          experienceRating: rating > 0 ? rating : null,
         }),
       });
 
