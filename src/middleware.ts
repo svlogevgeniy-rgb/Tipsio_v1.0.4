@@ -85,8 +85,17 @@ export async function middleware(request: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET 
   })
   
+  console.log('[Middleware]', {
+    pathname,
+    hasToken: !!token,
+    tokenRole: token?.role,
+    requiredRoles,
+    hasSecret: !!process.env.NEXTAUTH_SECRET
+  })
+  
   // No token - redirect to login
   if (!token) {
+    console.log('[Middleware] No token, redirecting to login')
     const loginUrl = pathname.startsWith('/admin') || pathname.startsWith('/venue')
       ? '/venue/login'
       : '/staff/login'
