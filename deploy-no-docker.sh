@@ -28,6 +28,11 @@ npx prisma migrate deploy
 echo "🔨 Building application..."
 npm run build
 
+# Копирование статических файлов для standalone режима
+echo "📁 Copying static files..."
+cp -r public .next/standalone/
+cp -r .next/static .next/standalone/.next/
+
 # Запуск приложения
 echo "▶️  Starting application..."
 pm2 start ecosystem.config.js
