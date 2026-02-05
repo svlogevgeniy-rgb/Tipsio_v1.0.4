@@ -8,6 +8,14 @@
  *   npx tsx scripts/fix-staff-balances.ts
  */
 
+// Load environment variables
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+
+// Load .env.production if it exists, otherwise .env
+const envPath = path.resolve(process.cwd(), '.env.production');
+dotenv.config({ path: envPath });
+
 import { prisma } from '../src/lib/prisma';
 
 async function main() {
