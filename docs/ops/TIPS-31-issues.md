@@ -6,7 +6,21 @@ This document tracks all issues found and fixed during the TIPS-31 stabilization
 
 ## Issues Found & Fixed
 
-### 1. useEffect Dependency Warnings (Severity: Medium)
+### 1. useEffect Dependency Warnings in QR Code Components (Severity: Medium)
+
+**Problem:** React exhaustive-deps warnings in QR code dialog components causing potential bugs with stale closures.
+
+**Files Affected:**
+- `src/components/venue/qr-codes/CreateQrDialog.tsx`
+- `src/components/venue/qr-codes/EditTeamQrDialog.tsx`
+
+**Fix:** Moved `fetchStaff` function inside useEffect to avoid adding it to dependency array.
+
+**Status:** ✅ Fixed (February 5, 2026)
+
+---
+
+### 2. useEffect Dependency Warnings in Admin Panel (Severity: Medium)
 
 **Problem:** React exhaustive-deps warnings in admin panel components causing potential bugs with stale closures.
 
@@ -17,11 +31,11 @@ This document tracks all issues found and fixed during the TIPS-31 stabilization
 
 **Fix:** Moved fetch functions inside useEffect or added them to dependency arrays with proper useCallback wrapping.
 
-**Status:** ✅ Fixed
+**Status:** ✅ Fixed (December 30, 2025)
 
 ---
 
-### 2. Missing Error Handling in Admin Panel (Severity: High)
+### 3. Missing Error Handling in Admin Panel (Severity: High)
 
 **Problem:** Admin pages (Venues, Transactions) had no error states - failed API requests would silently fail, leaving users confused.
 
@@ -35,11 +49,11 @@ This document tracks all issues found and fixed during the TIPS-31 stabilization
 - Retry button for user recovery
 - Proper error message extraction from fetch failures
 
-**Status:** ✅ Fixed
+**Status:** ✅ Fixed (December 30, 2025)
 
 ---
 
-### 3. Hardcoded Russian Text in Navigation (Severity: Medium)
+### 4. Hardcoded Russian Text in Navigation (Severity: Medium)
 
 **Problem:** LandingNavigation component had hardcoded Russian text in dropdown menus ("Вход", "Продукты", etc.), breaking i18n support.
 
@@ -54,11 +68,11 @@ This document tracks all issues found and fixed during the TIPS-31 stabilization
 - Updated component to use `t()` calls instead of hardcoded strings
 - Added translations for all 3 locales (EN, RU, ID)
 
-**Status:** ✅ Fixed
+**Status:** ✅ Fixed (December 30, 2025)
 
 ---
 
-### 4. Missing Translation Keys (Severity: Low)
+### 5. Missing Translation Keys (Severity: Low)
 
 **Problem:** Property-based tests revealed missing translation keys across locales:
 - `venue.register.venueType`, `selectType`, `restaurant`, `cafe`, `bar`, `coffeeShop`, `other` - missing in EN and ID
@@ -71,7 +85,7 @@ This document tracks all issues found and fixed during the TIPS-31 stabilization
 
 **Fix:** Added all missing keys to ensure translation completeness across all locales.
 
-**Status:** ✅ Fixed
+**Status:** ✅ Fixed (December 30, 2025)
 
 ---
 
@@ -114,7 +128,8 @@ npm run test -- --run src/lib/i18n-completeness.test.ts - ✅ 6/6 tests pass
 
 ## Files Modified
 
-1. `src/app/admin/venues/page.tsx` - Error handling
+### December 30, 2025
+1. `src/app/admin/venues/page.tsx` - Error handling + useEffect fix
 2. `src/app/admin/transactions/page.tsx` - Error handling + useEffect fix
 3. `src/components/venue/staff/use-staff-management.ts` - useEffect fix
 4. `src/components/landing/main/sections/LandingNavigation.tsx` - i18n
@@ -123,8 +138,13 @@ npm run test -- --run src/lib/i18n-completeness.test.ts - ✅ 6/6 tests pass
 7. `messages/id.json` - Translation keys
 8. `src/lib/i18n-completeness.test.ts` - New property-based test
 
+### February 5, 2026
+9. `src/components/venue/qr-codes/CreateQrDialog.tsx` - useEffect fix
+10. `src/components/venue/qr-codes/EditTeamQrDialog.tsx` - useEffect fix
+
 ---
 
 ## Date
 
-December 30, 2025
+Started: December 30, 2025
+Completed: February 5, 2026

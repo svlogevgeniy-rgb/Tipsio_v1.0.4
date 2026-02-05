@@ -46,14 +46,26 @@ async function allocateTip(tipId: string) {
 
   if (tip.type === "PERSONAL" && tip.staffId) {
     // Personal tip - allocate to specific staff
-    await prisma.tipAllocation.create({
-      data: {
-        tipId: tip.id,
-        staffId: tip.staffId,
-        amount: tip.netAmount,
-        date: today,
-      },
-    });
+    await prisma.$transaction([
+      // Create allocation record
+      prisma.tipAllocation.create({
+        data: {
+          tipId: tip.id,
+          staffId: tip.staffId,
+          amount: tip.netAmount,
+          date: today,
+        },
+      }),
+      // Update staff balance
+      prisma.staff.update({
+        where: { id: tip.staffId },
+        data: {
+          balance: {
+            increment: tip.netAmount,
+          },
+        },
+      }),
+    ]);
   } else {
     // Pool tip - distribute among active staff
     const activeStaff = await prisma.staff.findMany({
@@ -70,17 +82,29 @@ async function allocateTip(tipId: string) {
     const shareAmount = Math.floor(tip.netAmount / activeStaff.length);
     const remainder = tip.netAmount - shareAmount * activeStaff.length;
 
-    // Create allocations
-    const allocations = activeStaff.map((staff, index) => ({
-      tipId: tip.id,
-      staffId: staff.id,
-      amount: index === 0 ? shareAmount + remainder : shareAmount,
-      date: today,
-    }));
-
-    await prisma.tipAllocation.createMany({
-      data: allocations,
-    });
+    // Create allocations and update balances in a transaction
+    await prisma.$transaction([
+      // Create all allocation records
+      prisma.tipAllocation.createMany({
+        data: activeStaff.map((staff, index) => ({
+          tipId: tip.id,
+          staffId: staff.id,
+          amount: index === 0 ? shareAmount + remainder : shareAmount,
+          date: today,
+        })),
+      }),
+      // Update each staff member's balance
+      ...activeStaff.map((staff, index) =>
+        prisma.staff.update({
+          where: { id: staff.id },
+          data: {
+            balance: {
+              increment: index === 0 ? shareAmount + remainder : shareAmount,
+            },
+          },
+        })
+      ),
+    ]);
   }
 }
 

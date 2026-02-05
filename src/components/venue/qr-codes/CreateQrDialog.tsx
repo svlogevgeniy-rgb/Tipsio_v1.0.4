@@ -52,6 +52,20 @@ export function CreateQrDialog({
   // Fetch staff when dialog opens
   useEffect(() => {
     if (open && venueId) {
+      const fetchStaff = async () => {
+        setIsLoadingStaff(true);
+        try {
+          const response = await fetch(`/api/staff?venueId=${venueId}`);
+          if (response.ok) {
+            const data = await response.json();
+            setStaff(data.staff || []);
+          }
+        } catch (err) {
+          console.error('Failed to fetch staff:', err);
+        } finally {
+          setIsLoadingStaff(false);
+        }
+      };
       fetchStaff();
     }
   }, [open, venueId]);
@@ -67,21 +81,6 @@ export function CreateQrDialog({
       setError(null);
     }
   }, [open]);
-
-  const fetchStaff = async () => {
-    setIsLoadingStaff(true);
-    try {
-      const response = await fetch(`/api/staff?venueId=${venueId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setStaff(data.staff || []);
-      }
-    } catch (err) {
-      console.error('Failed to fetch staff:', err);
-    } finally {
-      setIsLoadingStaff(false);
-    }
-  };
 
   const handleTypeSelect = (type: QrType) => {
     setQrType(type);
