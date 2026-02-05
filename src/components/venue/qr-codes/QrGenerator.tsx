@@ -23,6 +23,8 @@ import {
 } from "@/lib/qr-materials";
 import { MaterialPreview } from "./MaterialPreview";
 import { QrPdfDocument } from "./PdfTemplates";
+import { useTranslations } from '@/i18n/client';
+import { useLocale } from '@/i18n/client';
 
 interface QrGeneratorProps {
   shortCode: string;
@@ -49,6 +51,8 @@ export function QrGenerator({ shortCode, venueName }: QrGeneratorProps) {
     logoUrl: undefined,
   });
   const [isClient, setIsClient] = useState(false);
+  const t = useTranslations('venue.qr');
+  const locale = useLocale() as 'ru' | 'en' | 'id';
 
   useEffect(() => {
     setIsClient(true);
@@ -107,7 +111,7 @@ export function QrGenerator({ shortCode, venueName }: QrGeneratorProps) {
       <div className="lg:w-1/2 space-y-6">
         {/* Format Selection */}
         <div className="space-y-3">
-          <Label className="text-sm font-heading font-semibold">Формат материала</Label>
+          <Label className="text-sm font-heading font-semibold">{t('materialFormat')}</Label>
           <div className="grid grid-cols-2 gap-2">
             {MATERIAL_TYPES.map((type) => (
               <button
@@ -124,9 +128,9 @@ export function QrGenerator({ shortCode, venueName }: QrGeneratorProps) {
                     : "border-white/10 bg-white/5 hover:bg-white/10"
                 }`}
               >
-                <div className="font-medium text-sm">{type.label.ru}</div>
+                <div className="font-medium text-sm">{type.label[locale]}</div>
                 <div className="text-xs text-muted-foreground">
-                  {type.description.ru}
+                  {type.description[locale]}
                 </div>
               </button>
             ))}
@@ -135,13 +139,13 @@ export function QrGenerator({ shortCode, venueName }: QrGeneratorProps) {
 
         {/* Text Settings */}
         <div className="space-y-3">
-          <Label className="text-sm font-heading font-semibold">Текст призыва</Label>
+          <Label className="text-sm font-heading font-semibold">{t('ctaText')}</Label>
           <Select
             value={design.ctaText}
             onValueChange={(v) => setDesign((d) => ({ ...d, ctaText: v }))}
           >
             <SelectTrigger className="h-12">
-              <SelectValue placeholder="Выберите текст" />
+              <SelectValue placeholder={t('ctaPlaceholder')} />
             </SelectTrigger>
             <SelectContent>
               {DEFAULT_CTA_TEXTS.map((text) => (
@@ -152,7 +156,7 @@ export function QrGenerator({ shortCode, venueName }: QrGeneratorProps) {
             </SelectContent>
           </Select>
           <Input
-            placeholder="Или введите свой вариант..."
+            placeholder={t('ctaPlaceholder')}
             value={design.ctaText}
             onChange={(e) => setDesign((d) => ({ ...d, ctaText: e.target.value }))}
             className="h-12"
@@ -163,7 +167,7 @@ export function QrGenerator({ shortCode, venueName }: QrGeneratorProps) {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <Label htmlFor="logo-switch" className="text-sm font-heading font-semibold cursor-pointer">
-              Логотип заведения
+              {t('venueLogo')}
             </Label>
             <Switch
               id="logo-switch"
@@ -174,7 +178,7 @@ export function QrGenerator({ shortCode, venueName }: QrGeneratorProps) {
           {design.showLogo && (
             <Button variant="outline" className="w-full h-12 relative overflow-hidden">
               <Upload className="w-4 h-4 mr-2" />
-              {design.logoUrl ? "Изменить логотип" : "Загрузить логотип"}
+              {design.logoUrl ? t('changeLogo') : t('uploadLogo')}
               <input
                 type="file"
                 accept="image/*"
@@ -187,7 +191,7 @@ export function QrGenerator({ shortCode, venueName }: QrGeneratorProps) {
 
         {/* Color Settings */}
         <div className="space-y-3">
-          <Label className="text-sm font-heading font-semibold">Цвет фона</Label>
+          <Label className="text-sm font-heading font-semibold">{t('backgroundColor')}</Label>
           <div className="flex flex-wrap gap-3">
             {PRESET_COLORS.map((c, i) => (
               <button
@@ -243,11 +247,11 @@ export function QrGenerator({ shortCode, venueName }: QrGeneratorProps) {
                   disabled={loading}
                 >
                   {loading ? (
-                    "Генерация..."
+                    t('generating')
                   ) : (
                     <>
                       <Download className="w-5 h-5 mr-2" />
-                      Скачать PDF
+                      {t('downloadPdf')}
                     </>
                   )}
                 </Button>
@@ -255,7 +259,7 @@ export function QrGenerator({ shortCode, venueName }: QrGeneratorProps) {
             </PDFDownloadLink>
           ) : (
             <Button className="w-full h-14" size="lg" disabled>
-              Загрузка...
+              {t('loading')}
             </Button>
           )}
         </div>

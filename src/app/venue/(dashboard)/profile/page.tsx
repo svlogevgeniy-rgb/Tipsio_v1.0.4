@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Eye, EyeOff, Loader2, Upload, X, User } from 'lucide-react'
+import { Eye, EyeOff, Loader2, Upload, X } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import Image from 'next/image'
@@ -10,48 +10,27 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/hooks/use-toast'
 import { useAvatarUpload } from '@/components/venue/staff/use-avatar-upload'
+import { useTranslations } from 'next-intl'
 
-// Схема валидации профиля
-const profileSchema = z.object({
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  email: z.string().email('Неверный формат email'),
-  phone: z.string().optional(),
-  password: z.string().optional(),
-  confirmPassword: z.string().optional(),
-}).refine((data) => {
-  if (data.password && data.password.length > 0 && data.password.length < 6) {
-    return false
-  }
-  return true
-}, {
-  message: 'Пароль должен содержать минимум 6 символов',
-  path: ['password'],
-}).refine((data) => {
-  if (data.password && data.password !== data.confirmPassword) {
-    return false
-  }
-  return true
-}, {
-  message: 'Пароли не совпадают',
-  path: ['confirmPassword'],
-})
-
-type ProfileFormData = z.infer<typeof profileSchema>
+type ProfileFormData = {
+  companyName: string
+  email: string
+  phone?: string
+  password?: string
+  confirmPassword?: string
+}
 
 interface ProfileData {
   email: string
   phone: string | null
-  firstName: string | null
-  lastName: string | null
-  avatarUrl: string | null
   companyName: string
+  logoUrl: string | null
 }
 
 export default function VenueProfilePage() {
+  const t = useTranslations('venue.profile')
   const [isLoading, setIsLoading] = useState(false)
   const [isFetching, setIsFetching] = useState(true)
   const [isUploading, setIsUploading] = useState(false)
@@ -69,11 +48,35 @@ export default function VenueProfilePage() {
     clearAvatar,
   } = useAvatarUpload()
 
+  // Схема валидации с переводами
+  const profileSchema = useMemo(() => z.object({
+    companyName: z.string().min(2, t('validation.companyNameMin')),
+    email: z.string().email(t('validation.emailInvalid')),
+    phone: z.string().optional(),
+    password: z.string().optional(),
+    confirmPassword: z.string().optional(),
+  }).refine((data) => {
+    if (data.password && data.password.length > 0 && data.password.length < 6) {
+      return false
+    }
+    return true
+  }, {
+    message: t('validation.passwordMin'),
+    path: ['password'],
+  }).refine((data) => {
+    if (data.password && data.password !== data.confirmPassword) {
+      return false
+    }
+    return true
+  }, {
+    message: t('validation.passwordMismatch'),
+    path: ['confirmPassword'],
+  }), [t])
+
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
+      companyName: '',
       email: '',
       phone: '',
       password: '',
@@ -91,10 +94,9 @@ export default function VenueProfilePage() {
         if (response.ok && result.success) {
           const data = result.data
           setProfileData(data)
-          setCurrentAvatarUrl(data.avatarUrl)
+          setCurrentAvatarUrl(data.logoUrl)
           form.reset({
-            firstName: data.firstName || '',
-            lastName: data.lastName || '',
+            companyName: data.companyName || '',
             email: data.email || '',
             phone: data.phone || '',
             password: '',
@@ -102,16 +104,16 @@ export default function VenueProfilePage() {
           })
         } else {
           toast({
-            title: 'Ошибка',
-            description: result.message || 'Не удалось загрузить данные профиля',
+            title: t('error'),
+            description: result.message || t('error'),
             variant: 'destructive',
           })
         }
       } catch (error) {
         console.error('Error fetching profile:', error)
         toast({
-          title: 'Ошибка',
-          description: 'Не удалось загрузить данные профиля',
+          title: t('error'),
+          description: t('error'),
           variant: 'destructive',
         })
       } finally {
@@ -120,7 +122,7 @@ export default function VenueProfilePage() {
     }
 
     fetchProfile()
-  }, [form, toast])
+  }, [form, toast, t])
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -130,8 +132,8 @@ export default function VenueProfilePage() {
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png']
     if (!allowedTypes.includes(file.type)) {
       toast({
-        title: 'Ошибка',
-        description: 'Разрешены только файлы JPG или PNG',
+        title: t('error'),
+        description: t('validation.fileType'),
         variant: 'destructive',
       })
       return
@@ -141,8 +143,8 @@ export default function VenueProfilePage() {
     const maxSize = 5 * 1024 * 1024 // 5MB
     if (file.size > maxSize) {
       toast({
-        title: 'Ошибка',
-        description: 'Файл слишком большой. Максимум 5MB',
+        title: t('error'),
+        description: t('validation.fileSize'),
         variant: 'destructive',
       })
       return
@@ -151,7 +153,7 @@ export default function VenueProfilePage() {
     const error = selectFile(file)
     if (error) {
       toast({
-        title: 'Ошибка',
+        title: t('error'),
         description: error,
         variant: 'destructive',
       })
@@ -165,10 +167,13 @@ export default function VenueProfilePage() {
     }
   }
 
-  const getInitials = (firstName?: string | null, lastName?: string | null) => {
-    const first = firstName?.[0]?.toUpperCase() || ''
-    const last = lastName?.[0]?.toUpperCase() || ''
-    return (first + last) || 'U'
+  const getInitials = (companyName?: string | null) => {
+    if (!companyName) return 'C'
+    const words = companyName.trim().split(/\s+/)
+    if (words.length >= 2) {
+      return (words[0][0] + words[1][0]).toUpperCase()
+    }
+    return companyName.substring(0, 2).toUpperCase()
   }
 
   const onSubmit = async (data: ProfileFormData) => {
@@ -198,8 +203,8 @@ export default function VenueProfilePage() {
           avatarUrl = uploadData.url
         } catch (uploadError) {
           toast({
-            title: 'Ошибка',
-            description: uploadError instanceof Error ? uploadError.message : 'Не удалось загрузить изображение',
+            title: t('error'),
+            description: uploadError instanceof Error ? uploadError.message : t('uploadError'),
             variant: 'destructive',
           })
           setIsLoading(false)
@@ -212,19 +217,21 @@ export default function VenueProfilePage() {
 
       // Подготавливаем данные для отправки
       const updateData: {
-        firstName?: string
-        lastName?: string
+        companyName?: string
         email?: string
-        phone?: string
-        avatarUrl?: string | null
+        phone?: string | null
+        logoUrl?: string | null
         password?: string
         confirmPassword?: string
       } = {
-        firstName: data.firstName || undefined,
-        lastName: data.lastName || undefined,
         email: data.email,
-        phone: data.phone || undefined,
-        avatarUrl: avatarUrl || undefined,
+        phone: data.phone || null,
+        logoUrl: avatarUrl || null,
+      }
+
+      // Добавляем companyName только если он заполнен
+      if (data.companyName && data.companyName.trim().length >= 2) {
+        updateData.companyName = data.companyName.trim()
       }
 
       // Добавляем пароль только если он был введен
@@ -245,8 +252,8 @@ export default function VenueProfilePage() {
 
       if (response.ok && result.success) {
         toast({
-          title: 'Успешно',
-          description: 'Профиль успешно обновлен',
+          title: t('success'),
+          description: t('success'),
         })
 
         // Обновляем локальное состояние
@@ -255,7 +262,7 @@ export default function VenueProfilePage() {
           setProfileData({
             ...profileData,
             ...updateData,
-            avatarUrl: avatarUrl || null,
+            logoUrl: avatarUrl || null,
           })
         }
 
@@ -278,16 +285,16 @@ export default function VenueProfilePage() {
         }
 
         toast({
-          title: 'Ошибка',
-          description: result.message || 'Не удалось обновить профиль',
+          title: t('error'),
+          description: result.message || t('error'),
           variant: 'destructive',
         })
       }
     } catch (error) {
       console.error('Error updating profile:', error)
       toast({
-        title: 'Ошибка',
-        description: 'Произошла ошибка при обновлении профиля',
+        title: t('error'),
+        description: t('error'),
         variant: 'destructive',
       })
     } finally {
@@ -297,16 +304,15 @@ export default function VenueProfilePage() {
 
   const displayAvatarUrl = avatarPreview || currentAvatarUrl
   const displayInitials = getInitials(
-    form.watch('firstName') || profileData?.firstName,
-    form.watch('lastName') || profileData?.lastName
+    form.watch('companyName') || profileData?.companyName
   )
 
   return (
     <div className="p-4 md:p-6 space-y-6 max-w-4xl">
       <div>
-        <h1 className="text-2xl font-heading font-bold">Профиль</h1>
+        <h1 className="text-2xl font-heading font-bold">{t('title')}</h1>
         <p className="text-muted-foreground">
-          Управление информацией вашего профиля и учетными данными
+          {t('description')}
         </p>
       </div>
 
@@ -317,45 +323,28 @@ export default function VenueProfilePage() {
           </CardContent>
         </Card>
       ) : (
-        <Tabs defaultValue="settings" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="bonuses">Бонусы</TabsTrigger>
-            <TabsTrigger value="settings">Настройка профиля</TabsTrigger>
-            <TabsTrigger value="referral">Реферальная программа</TabsTrigger>
-          </TabsList>
-
-          {/* Вкладка: Бонусы */}
-          <TabsContent value="bonuses" className="mt-6">
-            <Card className="glass">
-              <CardContent className="py-12 text-center">
-                <p className="text-muted-foreground text-lg">
-                  Скоро здесь появятся предложения от партнёров.
-                </p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Вкладка: Настройка профиля */}
-          <TabsContent value="settings" className="mt-6">
+        <div className="w-full">
+          {/* Настройка профиля */}
+          <div className="mt-6">
             <Card className="glass">
               <CardHeader>
-                <CardTitle>Информация профиля</CardTitle>
+                <CardTitle>{t('profileInfo')}</CardTitle>
                 <CardDescription>
-                  Обновите данные вашего профиля и пароль
+                  {t('profileInfoDesc')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   {/* Загрузка аватара */}
                   <div className="space-y-2">
-                    <Label>Фото профиля</Label>
+                    <Label>{t('companyLogo')}</Label>
                     <div className="flex items-center gap-4">
                       <div className="relative w-24 h-24 rounded-full overflow-hidden bg-muted flex items-center justify-center border-2 border-primary/20">
                         {displayAvatarUrl ? (
                           <>
                             <Image
                               src={displayAvatarUrl}
-                              alt="Avatar"
+                              alt="Logo"
                               width={96}
                               height={96}
                               className="w-full h-full object-cover"
@@ -390,54 +379,38 @@ export default function VenueProfilePage() {
                           className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md transition-colors"
                         >
                           <Upload className="w-4 h-4" />
-                          {displayAvatarUrl ? 'Изменить фото' : 'Загрузить фото'}
+                          {displayAvatarUrl ? t('changeLogo') : t('uploadLogo')}
                         </Label>
                         <p className="text-sm text-muted-foreground mt-2">
-                          JPG или PNG, квадратное фото 1:1, максимум 5MB
+                          {t('logoHelper')}
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Имя */}
+                  {/* Название компании */}
                   <div className="space-y-2">
-                    <Label htmlFor="firstName">Имя</Label>
+                    <Label htmlFor="companyName">{t('companyName')}</Label>
                     <Input
-                      id="firstName"
-                      placeholder="Введите имя"
-                      {...form.register('firstName')}
+                      id="companyName"
+                      placeholder={t('companyNamePlaceholder')}
+                      {...form.register('companyName')}
                       className="h-12"
                     />
-                    {form.formState.errors.firstName && (
+                    {form.formState.errors.companyName && (
                       <p className="text-sm text-destructive">
-                        {form.formState.errors.firstName.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Фамилия */}
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Фамилия</Label>
-                    <Input
-                      id="lastName"
-                      placeholder="Введите фамилию"
-                      {...form.register('lastName')}
-                      className="h-12"
-                    />
-                    {form.formState.errors.lastName && (
-                      <p className="text-sm text-destructive">
-                        {form.formState.errors.lastName.message}
+                        {form.formState.errors.companyName.message}
                       </p>
                     )}
                   </div>
 
                   {/* Email */}
                   <div className="space-y-2">
-                    <Label htmlFor="email">Электронная почта</Label>
+                    <Label htmlFor="email">{t('email')}</Label>
                     <Input
                       id="email"
                       type="email"
-                      placeholder="admin@example.com"
+                      placeholder={t('emailPlaceholder')}
                       {...form.register('email')}
                       className="h-12"
                     />
@@ -450,11 +423,11 @@ export default function VenueProfilePage() {
 
                   {/* Номер телефона */}
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Номер телефона</Label>
+                    <Label htmlFor="phone">{t('phone')}</Label>
                     <Input
                       id="phone"
                       type="tel"
-                      placeholder="+7 (999) 123-45-67"
+                      placeholder={t('phonePlaceholder')}
                       {...form.register('phone')}
                       className="h-12"
                     />
@@ -467,12 +440,12 @@ export default function VenueProfilePage() {
 
                   {/* Пароль */}
                   <div className="space-y-2">
-                    <Label htmlFor="password">Новый пароль</Label>
+                    <Label htmlFor="password">{t('password')}</Label>
                     <div className="relative">
                       <Input
                         id="password"
                         type={showPassword ? 'text' : 'password'}
-                        placeholder="Оставьте пустым, если не хотите менять"
+                        placeholder={t('passwordPlaceholder')}
                         {...form.register('password')}
                         className="h-12 pr-10"
                       />
@@ -497,12 +470,12 @@ export default function VenueProfilePage() {
 
                   {/* Подтверждение пароля */}
                   <div className="space-y-2">
-                    <Label htmlFor="confirmPassword">Подтвердите пароль</Label>
+                    <Label htmlFor="confirmPassword">{t('confirmPassword')}</Label>
                     <div className="relative">
                       <Input
                         id="confirmPassword"
                         type={showConfirmPassword ? 'text' : 'password'}
-                        placeholder="Повторите новый пароль"
+                        placeholder={t('confirmPasswordPlaceholder')}
                         {...form.register('confirmPassword')}
                         className="h-12 pr-10"
                       />
@@ -534,33 +507,17 @@ export default function VenueProfilePage() {
                     {isLoading || isUploading ? (
                       <>
                         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        {isUploading ? 'Загрузка изображения...' : 'Сохранение...'}
+                        {isUploading ? t('uploading') : t('saving')}
                       </>
                     ) : (
-                      'Сохранить'
+                      t('save')
                     )}
                   </Button>
                 </form>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          {/* Вкладка: Реферальная программа */}
-          <TabsContent value="referral" className="mt-6">
-            <Card className="glass">
-              <CardContent className="py-12 text-center">
-                <div className="max-w-md mx-auto space-y-4">
-                  <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
-                    <User className="w-12 h-12 text-primary/60" />
-                  </div>
-                  <p className="text-muted-foreground text-lg">
-                    Скоро вам будет доступна реферальная программа
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
       )}
     </div>
   )

@@ -16,7 +16,7 @@ export async function GET() {
       );
     }
 
-    // Сначала получаем пользователя без новых полей, чтобы проверить, существуют ли они
+    // Получаем пользователя и его первое заведение
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
       select: {
@@ -30,37 +30,12 @@ export async function GET() {
           select: {
             id: true,
             name: true,
+            logoUrl: true,
           },
           take: 1,
         },
       },
     });
-
-    // Пытаемся получить новые поля отдельно через raw query
-    let firstName: string | null = null;
-    let lastName: string | null = null;
-    let avatarUrl: string | null = null;
-
-    try {
-      const userWithNewFields = await prisma.$queryRaw<Array<{
-        firstName: string | null;
-        lastName: string | null;
-        avatarUrl: string | null;
-      }>>`
-        SELECT "firstName", "lastName", "avatarUrl"
-        FROM "User"
-        WHERE id = ${session.user.id}
-        LIMIT 1
-      `;
-      if (userWithNewFields && userWithNewFields.length > 0) {
-        firstName = userWithNewFields[0].firstName;
-        lastName = userWithNewFields[0].lastName;
-        avatarUrl = userWithNewFields[0].avatarUrl;
-      }
-    } catch (fieldError) {
-      // Поля не существуют в БД - используем null значения
-      console.warn("New profile fields not available in database:", fieldError);
-    }
 
     if (!user) {
       return NextResponse.json(
@@ -69,18 +44,17 @@ export async function GET() {
       );
     }
 
-    // Используем название первого заведения как "название компании"
+    // Используем название и логотип первого заведения
     const companyName = user.managedVenues[0]?.name || "";
+    const logoUrl = user.managedVenues[0]?.logoUrl || null;
 
     return NextResponse.json({
       success: true,
       data: {
         email: user.email,
         phone: user.phone,
-        firstName,
-        lastName,
-        avatarUrl,
         companyName,
+        logoUrl,
         role: user.role,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
@@ -108,13 +82,11 @@ export async function GET() {
 
 // Схема валидации для обновления профиля
 const updateProfileSchema = z.object({
-  companyName: z.string().min(2, "Company name must be at least 2 characters").optional(),
+  companyName: z.string().min(2, "Company name must be at least 2 characters").or(z.literal("")).optional(),
   email: z.string().email("Invalid email address").optional(),
-  phone: z.string().optional(),
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  avatarUrl: z.union([
-    z.string().url("Invalid avatar URL"),
+  phone: z.string().nullable().optional(),
+  logoUrl: z.union([
+    z.string().min(1),
     z.literal(""),
     z.null(),
   ]).optional(),
@@ -151,9 +123,12 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json();
+    console.log('Profile update request body:', JSON.stringify(body, null, 2));
+    
     const validation = updateProfileSchema.safeParse(body);
 
     if (!validation.success) {
+      console.error('Validation failed:', validation.error.issues);
       const errors: Record<string, string> = {};
       validation.error.issues.forEach((err) => {
         if (err.path[0]) {
@@ -171,7 +146,7 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const { companyName, email, phone, firstName, lastName, avatarUrl, password } = validation.data;
+    const { companyName, email, phone, logoUrl, password } = validation.data;
 
     // Проверяем, не занят ли email другим пользователем
     if (email && email !== session.user.email) {
@@ -209,13 +184,10 @@ export async function PATCH(request: NextRequest) {
       }
     }
 
-    // Подготавливаем данные для обновления
-    const updateData: {
+    // Подготавливаем данные для обновления пользователя
+    const updateUserData: {
       email?: string;
       phone?: string | null;
-      firstName?: string | null;
-      lastName?: string | null;
-      avatarUrl?: string | null;
       passwordHash?: string;
       updatedAt: Date;
     } = {
@@ -223,45 +195,22 @@ export async function PATCH(request: NextRequest) {
     };
 
     if (email) {
-      updateData.email = email;
+      updateUserData.email = email;
     }
 
+    // Обрабатываем телефон: пустая строка или null = удаление
     if (phone !== undefined) {
-      updateData.phone = phone || null;
-    }
-
-    // Пытаемся обновить новые поля только если они существуют в БД
-    try {
-      // Проверяем, существуют ли поля через raw query
-      await prisma.$queryRaw`
-        SELECT "firstName" FROM "User" LIMIT 1
-      `;
-
-      // Поля существуют - добавляем их в updateData
-      if (firstName !== undefined) {
-        (updateData as Record<string, unknown>).firstName = firstName || null;
-      }
-
-      if (lastName !== undefined) {
-        (updateData as Record<string, unknown>).lastName = lastName || null;
-      }
-
-      if (avatarUrl !== undefined) {
-        (updateData as Record<string, unknown>).avatarUrl = avatarUrl || null;
-      }
-    } catch {
-      // Поля не существуют - пропускаем их обновление
-      console.warn("New profile fields not available in database, skipping update");
+      updateUserData.phone = phone && phone.trim() !== '' ? phone : null;
     }
 
     if (password) {
-      updateData.passwordHash = await bcrypt.hash(password, 10);
+      updateUserData.passwordHash = await bcrypt.hash(password, 10);
     }
 
     // Обновляем пользователя
     const updatedUser = await prisma.user.update({
       where: { id: session.user.id },
-      data: updateData,
+      data: updateUserData,
       select: {
         id: true,
         email: true,
@@ -271,46 +220,41 @@ export async function PATCH(request: NextRequest) {
       },
     });
 
-    // Пытаемся получить новые поля отдельно через raw query
-    let updatedFirstName: string | null = null;
-    let updatedLastName: string | null = null;
-    let updatedAvatarUrl: string | null = null;
-
-    try {
-      const userWithNewFields = await prisma.$queryRaw<Array<{
-        firstName: string | null;
-        lastName: string | null;
-        avatarUrl: string | null;
-      }>>`
-        SELECT "firstName", "lastName", "avatarUrl"
-        FROM "User"
-        WHERE id = ${session.user.id}
-        LIMIT 1
-      `;
-      if (userWithNewFields && userWithNewFields.length > 0) {
-        updatedFirstName = userWithNewFields[0].firstName;
-        updatedLastName = userWithNewFields[0].lastName;
-        updatedAvatarUrl = userWithNewFields[0].avatarUrl;
-      }
-    } catch {
-      updatedFirstName = firstName !== undefined ? (firstName || null) : null;
-      updatedLastName = lastName !== undefined ? (lastName || null) : null;
-      updatedAvatarUrl = avatarUrl !== undefined ? (avatarUrl || null) : null;
-    }
-
-    // Если указано название компании, обновляем первое заведение
-    if (companyName) {
+    // Если указано название компании или логотип, обновляем первое заведение
+    if (companyName !== undefined || logoUrl !== undefined) {
       const venue = await prisma.venue.findFirst({
         where: { managerId: session.user.id },
       });
 
       if (venue) {
+        const updateVenueData: {
+          name?: string;
+          logoUrl?: string | null;
+        } = {};
+
+        if (companyName !== undefined) {
+          updateVenueData.name = companyName;
+        }
+
+        if (logoUrl !== undefined) {
+          updateVenueData.logoUrl = logoUrl || null;
+        }
+
         await prisma.venue.update({
           where: { id: venue.id },
-          data: { name: companyName },
+          data: updateVenueData,
         });
       }
     }
+
+    // Получаем обновленные данные заведения
+    const venue = await prisma.venue.findFirst({
+      where: { managerId: session.user.id },
+      select: {
+        name: true,
+        logoUrl: true,
+      },
+    });
 
     return NextResponse.json({
       success: true,
@@ -318,10 +262,8 @@ export async function PATCH(request: NextRequest) {
       data: {
         email: updatedUser.email,
         phone: updatedUser.phone,
-        firstName: updatedFirstName,
-        lastName: updatedLastName,
-        avatarUrl: updatedAvatarUrl,
-        companyName: companyName || "",
+        companyName: venue?.name || "",
+        logoUrl: venue?.logoUrl || null,
         updatedAt: updatedUser.updatedAt,
       },
     });

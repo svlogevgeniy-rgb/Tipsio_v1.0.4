@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Send } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useTranslations } from '@/i18n/client';
 
@@ -25,13 +25,30 @@ export function LandingFooter() {
           <Badge variant="beta">BETA</Badge>
         </Link>
         <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-sm">
-          <a href="https://wa.me/message" className="hover:text-white transition-colors flex items-center gap-2 min-h-[44px] py-2">
+          <a 
+            href="https://wa.me/79269867393" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-white transition-colors flex items-center gap-2 min-h-[44px] py-2"
+          >
             <MessageCircle size={16} />
             {t('footer.whatsapp')}
           </a>
-          <Link href="#" className="hover:text-white transition-colors min-h-[44px] py-2 flex items-center">
-            {t('footer.terms')}
-          </Link>
+          <a 
+            href="https://t.me/tipsio_support" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-white transition-colors flex items-center gap-2 min-h-[44px] py-2"
+          >
+            <Send size={16} />
+            {t('footer.telegram')}
+          </a>
+          <a 
+            href="mailto:info@tipsio.tech" 
+            className="hover:text-white transition-colors min-h-[44px] py-2 flex items-center"
+          >
+            info@tipsio.tech
+          </a>
           <Link href="#" className="hover:text-white transition-colors min-h-[44px] py-2 flex items-center">
             {t('footer.privacy')}
           </Link>

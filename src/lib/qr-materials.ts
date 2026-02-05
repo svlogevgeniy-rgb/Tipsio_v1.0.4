@@ -18,26 +18,26 @@ export interface QrDesignState {
   customText?: string; // Additional text line
 }
 
-export const MATERIAL_TYPES: { id: MaterialType; label: { ru: string; en: string }; description: { ru: string; en: string } }[] = [
+export const MATERIAL_TYPES: { id: MaterialType; label: { ru: string; en: string; id: string }; description: { ru: string; en: string; id: string } }[] = [
   {
     id: "table-tent",
-    label: { ru: "Тейбл-тент", en: "Table Tent" },
-    description: { ru: "Домик на стол (А4)", en: "Table stand (A4)" }
+    label: { ru: "Тейбл-тент", en: "Table Tent", id: "Tenda Meja" },
+    description: { ru: "Домик на стол (А5)", en: "Table stand (A5)", id: "Dudukan meja (A5)" }
   },
   {
     id: "sticker",
-    label: { ru: "Наклейка", en: "Sticker" },
-    description: { ru: "Для стола или двери", en: "For table or door" }
+    label: { ru: "Наклейка", en: "Sticker", id: "Stiker" },
+    description: { ru: "Для стола или двери", en: "For table or door", id: "Untuk meja atau pintu" }
   },
   {
     id: "card",
-    label: { ru: "Визитка", en: "Business Card" },
-    description: { ru: "Вкладыш в счет", en: "Bill insert" }
+    label: { ru: "Визитка", en: "Business Card", id: "Kartu Nama" },
+    description: { ru: "Вкладыш в счет", en: "Bill insert", id: "Sisipan tagihan" }
   },
   {
     id: "poster",
-    label: { ru: "Плакат", en: "Poster" },
-    description: { ru: "А4/А3 на стену", en: "Wall poster" }
+    label: { ru: "Плакат", en: "Poster", id: "Poster" },
+    description: { ru: "А4/А3 на стену", en: "Wall poster", id: "Poster dinding" }
   }
 ];
 

@@ -9,7 +9,7 @@ import { useTranslations } from '@/i18n/client';
 
 type ViewMode = 'grid' | 'midtrans';
 
-export default function VenueSettingsPage() {
+export default function VenueIntegrationsPage() {
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   

@@ -165,7 +165,7 @@ export default function QrCodesPage() {
       setDeletingQrId(null);
     } catch (err) {
       console.error('Delete failed:', err);
-      setError('Не удалось удалить QR-код');
+      setError(t('failedToDelete'));
     }
   };
 
@@ -187,13 +187,13 @@ export default function QrCodesPage() {
   const getEmptyStateMessage = (filter: QrFilter) => {
     switch (filter) {
       case 'all':
-        return 'У вас пока нет QR-кодов';
+        return t('emptyStateAll');
       case 'team':
-        return 'У вас пока нет командных QR-кодов';
+        return t('emptyStateTeam');
       case 'individual':
-        return 'У вас пока нет индивидуальных QR-кодов';
+        return t('emptyStateIndividual');
       default:
-        return 'У вас пока нет QR-кодов';
+        return t('emptyStateAll');
     }
   };
 
@@ -207,7 +207,7 @@ export default function QrCodesPage() {
         </div>
         <Button onClick={() => setShowCreateDialog(true)} className="gap-2">
           <Plus className="h-4 w-4" />
-          Создать QR
+          {t('createQrButton')}
         </Button>
       </div>
 
@@ -220,10 +220,10 @@ export default function QrCodesPage() {
       {/* Filter Tabs */}
       {qrCodes.length > 0 && (
         <Tabs value={activeFilter} onValueChange={(value) => setActiveFilter(value as QrFilter)}>
-          <TabsList className="grid w-full grid-cols-3 max-w-md">
-            <TabsTrigger value="all">Все</TabsTrigger>
-            <TabsTrigger value="team">Командный QR</TabsTrigger>
-            <TabsTrigger value="individual">Индивидуальный QR</TabsTrigger>
+          <TabsList className="flex overflow-x-auto w-full max-w-md">
+            <TabsTrigger value="all" className="flex-1 whitespace-nowrap">{t('filterAll')}</TabsTrigger>
+            <TabsTrigger value="team" className="flex-1 whitespace-nowrap">{t('filterTeam')}</TabsTrigger>
+            <TabsTrigger value="individual" className="flex-1 whitespace-nowrap">{t('filterIndividual')}</TabsTrigger>
           </TabsList>
         </Tabs>
       )}
@@ -263,7 +263,7 @@ export default function QrCodesPage() {
                         )
                       ) : (
                         <p className="text-sm text-muted-foreground">
-                          {qr.recipients?.length || 0} сотрудников
+                          {qr.recipients?.length || 0} {t('employees')}
                         </p>
                       )}
                     </div>
@@ -281,7 +281,7 @@ export default function QrCodesPage() {
                         onClick={() => setEditingQr(qr)}
                       >
                         <Edit className="h-3 w-3 mr-1" />
-                        Редактировать
+                        {t('edit')}
                       </Button>
                     )}
                     <Button
@@ -292,7 +292,7 @@ export default function QrCodesPage() {
                       }
                     >
                       <ExternalLink className="h-3 w-3 mr-1" />
-                      Открыть
+                      {t('open')}
                     </Button>
                     <Button
                       variant="outline"
@@ -317,7 +317,7 @@ export default function QrCodesPage() {
                       className="text-destructive hover:text-destructive"
                     >
                       <Trash2 className="h-3 w-3 mr-1" />
-                      Удалить
+                      {t('delete')}
                     </Button>
                   </div>
                 </div>
@@ -332,7 +332,7 @@ export default function QrCodesPage() {
             <p className="text-muted-foreground mb-4">{getEmptyStateMessage(activeFilter)}</p>
             <Button onClick={() => setShowCreateDialog(true)} className="gap-2">
               <Plus className="h-4 w-4" />
-              Создать QR
+              {t('createQrButton')}
             </Button>
           </CardContent>
         </Card>
@@ -365,7 +365,7 @@ export default function QrCodesPage() {
                         <span className="text-muted-foreground text-xs">
                           {qr.type === 'INDIVIDUAL' || qr.type === 'PERSONAL' 
                             ? `— ${qr.staff?.displayName || 'Без имени'}` 
-                            : `— ${qr.recipients?.length || 0} сотрудников`}
+                            : `— ${qr.recipients?.length || 0} ${t('employees')}`}
                         </span>
                       </div>
                     </SelectItem>
@@ -407,18 +407,18 @@ export default function QrCodesPage() {
       <AlertDialog open={!!deletingQrId} onOpenChange={(open) => !open && setDeletingQrId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Удалить QR-код?</AlertDialogTitle>
+            <AlertDialogTitle>{t('deleteQrTitle')}</AlertDialogTitle>
             <AlertDialogDescription>
-              Это действие нельзя отменить. QR-код будет удалён навсегда.
+              {t('deleteQrDescription')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Отмена</AlertDialogCancel>
+            <AlertDialogCancel>{t('deleteQrCancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => deletingQrId && handleDelete(deletingQrId)}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Удалить
+              {t('deleteQrConfirm')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

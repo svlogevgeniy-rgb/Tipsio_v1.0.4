@@ -63,7 +63,7 @@ export function VenueLayoutClient({ children }: { children: React.ReactNode }) {
       icon: Wallet,
     },
     {
-      href: '/venue/settings',
+      href: '/venue/integrations',
       labelKey: 'settings',
       icon: Settings,
     },

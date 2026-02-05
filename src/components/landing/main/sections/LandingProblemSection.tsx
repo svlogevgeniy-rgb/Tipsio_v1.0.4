@@ -80,7 +80,7 @@ export function LandingProblemSection() {
                     </div>
                   </div>
                   <div className="flex items-center justify-center gap-2 mt-4">
-                    <p className="text-xs text-slate-600">Безопасная оплата через</p>
+                    <p className="text-xs text-slate-600">secure payment via</p>
                     <Image
                       src="/images/midtrans-dark-3a5ac77cd3110b28b32cb590fc968f296d2123e686591d636bd51b276f6ed034.svg"
                       alt="Midtrans"
