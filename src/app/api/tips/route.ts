@@ -10,7 +10,7 @@ import {
 } from "@/lib/midtrans";
 import { prisma } from "@/lib/prisma";
 
-const PLATFORM_FEE_PERCENT = 5;
+const PLATFORM_FEE_PERCENT = 0; // No platform fee - staff receives 100%
 
 interface CreateTipRequest {
   qrCodeId: string;

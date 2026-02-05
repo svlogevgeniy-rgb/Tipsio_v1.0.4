@@ -7,7 +7,7 @@ import { handleApiError, successResponse, validationError } from "@/lib/api/erro
 import { requireAuth, requireRole } from "@/lib/api/middleware";
 import prisma from "@/lib/prisma";
 
-const PLATFORM_FEE_PERCENT = 5;
+const PLATFORM_FEE_PERCENT = 0; // No platform fee - staff receives 100%
 
 export async function GET(request: NextRequest) {
   try {

@@ -9,7 +9,7 @@ import {
 } from "@/lib/midtrans";
 import { prisma } from "@/lib/prisma";
 
-const PLATFORM_FEE_PERCENT = 5;
+const PLATFORM_FEE_PERCENT = 0; // No platform fee - staff receives 100%
 
 const MIDTRANS_SANDBOX_URL = "https://app.sandbox.midtrans.com/snap/v1/transactions";
 const MIDTRANS_PRODUCTION_URL = "https://app.midtrans.com/snap/v1/transactions";
