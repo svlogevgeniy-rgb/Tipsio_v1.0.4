@@ -5,12 +5,10 @@
  * that don't have a payoutId (unpaid allocations).
  * 
  * Usage:
- *   npx ts-node scripts/fix-staff-balances.ts
+ *   npx tsx scripts/fix-staff-balances.ts
  */
 
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '../src/lib/prisma';
 
 async function main() {
   console.log('🔧 Starting staff balance fix...\n');
