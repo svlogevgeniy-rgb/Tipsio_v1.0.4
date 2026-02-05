@@ -547,7 +547,8 @@
         "messagePlaceholder": "Katakan sesuatu yang baik...",
         "characterCount": "{current}/{max}",
         "continueButton": "Kirim {amount}",
-        "minAmount": "Tip minimum adalah Rp 10",
+        "minAmount": "Tip minimum adalah Rp 10"
+      },
       "staffUnavailable": "Staf Tidak Tersedia",
       "selectAnother": "Pilih Lainnya",
       "selectAnotherStaff": "Pilih anggota staf lainnya!",
@@ -566,7 +567,6 @@
       "failedGooglePay": "Gagal memproses Google Pay. Silakan coba lagi.",
       "staffNotAvailable": "Anggota staf ini tidak tersedia. Silakan coba kode QR lain.",
       "backToStaffSelection": "Kembali ke pemilihan staf"
-      }
     },
     "pending": {
       "title": "Memproses Pembayaran",

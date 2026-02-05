@@ -547,7 +547,8 @@
         "messagePlaceholder": "Напишите что-нибудь приятное...",
         "characterCount": "{current}/{max}",
         "continueButton": "Отправить {amount}",
-        "minAmount": "Минимальная сумма Rp 10",
+        "minAmount": "Минимальная сумма Rp 10"
+      },
       "staffUnavailable": "Сотрудник недоступен",
       "selectAnother": "Выбрать другого",
       "selectAnotherStaff": "Выберите другого сотрудника!",
@@ -566,7 +567,6 @@
       "failedGooglePay": "Не удалось обработать Google Pay. Попробуйте снова.",
       "staffNotAvailable": "Этот сотрудник недоступен. Попробуйте другой QR-код.",
       "backToStaffSelection": "Назад к выбору сотрудника"
-      }
     },
     "pending": {
       "title": "Обработка платежа",

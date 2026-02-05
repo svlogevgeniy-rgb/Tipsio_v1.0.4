@@ -547,7 +547,8 @@
         "messagePlaceholder": "Say something nice...",
         "characterCount": "{current}/{max}",
         "continueButton": "Send {amount}",
-        "minAmount": "Minimum tip is Rp 10",
+        "minAmount": "Minimum tip is Rp 10"
+      },
       "staffUnavailable": "Staff Unavailable",
       "selectAnother": "Select Another",
       "selectAnotherStaff": "Select another staff member!",
@@ -566,7 +567,6 @@
       "failedGooglePay": "Failed to process Google Pay. Please try again.",
       "staffNotAvailable": "This staff member is not available. Please try another QR code.",
       "backToStaffSelection": "Back to staff selection"
-      }
     },
     "pending": {
       "title": "Processing Payment",
