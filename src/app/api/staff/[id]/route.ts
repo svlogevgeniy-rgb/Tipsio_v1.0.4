@@ -191,7 +191,10 @@ export async function DELETE(
         },
         qrCode: true,
         _count: {
-          select: { tips: true },
+          select: { 
+            tips: true,
+            allocations: true,
+          },
         },
       },
     });
@@ -210,8 +213,10 @@ export async function DELETE(
       );
     }
 
-    // If staff has tips, soft delete (set INACTIVE)
-    if (staff._count.tips > 0) {
+    // If staff has tips or allocations, soft delete (set INACTIVE)
+    const hasFinancialHistory = staff._count.tips > 0 || staff._count.allocations > 0;
+    
+    if (hasFinancialHistory) {
       await prisma.$transaction([
         prisma.staff.update({
           where: { id },
@@ -226,23 +231,46 @@ export async function DELETE(
       ]);
 
       return NextResponse.json({
-        message: "Staff deactivated (has tip history)",
+        message: "Staff deactivated (has financial history)",
         softDeleted: true,
       });
     }
 
-    // If no tips, hard delete
-    await prisma.$transaction([
-      ...(staff.qrCode ? [
-        prisma.qrCode.delete({ where: { id: staff.qrCode.id } }),
-      ] : []),
-      prisma.staff.delete({ where: { id } }),
-    ]);
+    // If no financial history, hard delete
+    try {
+      await prisma.$transaction([
+        ...(staff.qrCode ? [
+          prisma.qrCode.delete({ where: { id: staff.qrCode.id } }),
+        ] : []),
+        prisma.staff.delete({ where: { id } }),
+      ]);
 
-    return NextResponse.json({
-      message: "Staff deleted successfully",
-      softDeleted: false,
-    });
+      return NextResponse.json({
+        message: "Staff deleted successfully",
+        softDeleted: false,
+      });
+    } catch (deleteError) {
+      // If hard delete fails due to constraints, fall back to soft delete
+      console.error("Hard delete failed, performing soft delete:", deleteError);
+      
+      await prisma.$transaction([
+        prisma.staff.update({
+          where: { id },
+          data: { status: "INACTIVE" },
+        }),
+        ...(staff.qrCode ? [
+          prisma.qrCode.update({
+            where: { id: staff.qrCode.id },
+            data: { status: "INACTIVE" },
+          }),
+        ] : []),
+      ]);
+
+      return NextResponse.json({
+        message: "Staff deactivated (has related records)",
+        softDeleted: true,
+      });
+    }
   } catch (error) {
     console.error("Delete staff error:", error);
     return NextResponse.json(
