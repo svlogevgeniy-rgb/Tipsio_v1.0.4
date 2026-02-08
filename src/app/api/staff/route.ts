@@ -37,9 +37,16 @@ export async function GET(request: NextRequest) {
     const venueResult = await requireVenueAccess(venueId, session);
     if ('error' in venueResult) return venueResult.error;
 
-    // Fetch staff list
+    // Check if we should include inactive staff
+    const url = new URL(request.url);
+    const includeInactive = url.searchParams.get('includeInactive') === 'true';
+
+    // Fetch staff list (exclude INACTIVE by default)
     const staffList = await prisma.staff.findMany({
-      where: { venueId },
+      where: { 
+        venueId,
+        ...(includeInactive ? {} : { status: 'ACTIVE' }),
+      },
       include: {
         qrCode: {
           select: {
