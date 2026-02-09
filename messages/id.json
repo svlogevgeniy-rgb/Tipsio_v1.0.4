@@ -26,13 +26,32 @@
       "subheadline": "Terima tip tanpa tunai melalui Google Pay, GoPay atau kartu bank. Uang langsung masuk ke rekening Anda berkat TIPSIO.",
       "cta": "Mulai gratis dalam 1 jam",
       "ctaPrimary": "Hubungkan tempat usaha",
-      "ctaSecondary": "Berikan tip atau ulasan",
-      "dialogTitle": "Selamat datang!",
-      "dialogDescription": "Untuk memberikan tip atau ulasan, masukkan kode staf",
-      "dialogSubmit": "Lanjutkan",
+      "ctaSecondary": "Hubungkan",
       "trust1": "Pembayaran langsung (tanpa perantara)",
       "trust2": "Tamu tidak perlu aplikasi",
       "imageAlt": "Antarmuka platform tip digital TIPSIO menampilkan staf dan opsi pembayaran"
+    },
+    "connectionForm": {
+      "dialogTitle": "Hubungkan Tipsio",
+      "purposeLabel": "Tujuan",
+      "purposeConnection": "Koneksi",
+      "purposeSupport": "Dukungan Teknis",
+      "businessNameLabel": "Nama bisnis dan kota Anda",
+      "businessNamePlaceholder": "mis. Cafe Organic, Ubud",
+      "contactNameLabel": "Nama Anda",
+      "contactNamePlaceholder": "John Doe",
+      "phoneLabel": "Telepon",
+      "phonePlaceholder": "+62 atau +7",
+      "submitButton": "Hubungkan bisnis",
+      "successMessage": "Terima kasih! Kami akan menghubungi Anda segera.",
+      "errors": {
+        "required": "Bidang ini wajib diisi",
+        "phoneInvalid": "Masukkan nomor dalam format +62 atau +7",
+        "minLength": "Minimum {min} karakter",
+        "maxLength": "Maksimum {max} karakter",
+        "networkError": "Kesalahan jaringan. Silakan coba lagi.",
+        "serverError": "Terjadi kesalahan. Silakan coba nanti."
+      }
     },
     "dashboard": {
       "today": "Hari Ini",

@@ -81,6 +81,11 @@ enum UserRole {
   STAFF
 }
 
+enum ConnectionPurpose {
+  CONNECTION
+  SUPPORT
+}
+
 // ==================== MODELS ====================
 
 model User {
@@ -296,6 +301,18 @@ model WebhookLog {
 
   @@index([provider])
   @@index([processed])
+}
+
+model ConnectionRequest {
+  id           String            @id @default(cuid())
+  purpose      ConnectionPurpose
+  businessName String
+  contactName  String
+  phone        String
+  createdAt    DateTime          @default(now())
+
+  @@index([createdAt])
+  @@index([purpose])
 }
 
 

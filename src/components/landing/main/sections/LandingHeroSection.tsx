@@ -3,28 +3,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { useTranslations } from '@/i18n/client';
+import { ConnectionFormDialog } from '@/components/landing/ConnectionFormDialog';
 
 export function LandingHeroSection() {
   const t = useTranslations('landingV3');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [staffCode, setStaffCode] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Stub: здесь будет логика перехода на страницу чаевых по коду
-    if (staffCode.trim()) {
-      window.location.href = `/tip/${staffCode.trim()}`;
-    }
-  };
 
   return (
     <>
@@ -73,37 +57,8 @@ export function LandingHeroSection() {
         </div>
       </section>
 
-      {/* Tip/Review Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-md rounded-[10px]">
-          <DialogHeader className="text-center sm:text-center">
-            <DialogTitle className="text-2xl sm:text-3xl font-heading font-bold">
-              {t('hero.dialogTitle')}
-            </DialogTitle>
-            <DialogDescription className="text-base mt-2">
-              {t('hero.dialogDescription')}
-            </DialogDescription>
-          </DialogHeader>
-
-          <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-            <Input
-              type="text"
-              placeholder="000 000"
-              value={staffCode}
-              onChange={(e) => setStaffCode(e.target.value)}
-              className="h-14 text-center text-lg rounded-[10px] bg-slate-100 border-0 placeholder:text-slate-400"
-              maxLength={10}
-            />
-            <Button
-              type="submit"
-              className="w-full h-14 text-base rounded-[10px] bg-blue-600 hover:bg-blue-700 text-white"
-              disabled={!staffCode.trim()}
-            >
-              {t('hero.dialogSubmit')}
-            </Button>
-          </form>
-        </DialogContent>
-      </Dialog>
+      {/* Connection Form Dialog */}
+      <ConnectionFormDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
     </>
   );
 }

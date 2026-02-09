@@ -26,13 +26,32 @@
       "subheadline": "Бесплатное подключение. Гостям вашего заведения будет удобнее, а\u00A0персоналу\u00A0— проще.",
       "cta": "Запустить бесплатно за 1 час",
       "ctaPrimary": "Подключить заведение",
-      "ctaSecondary": "Оставить чаевые или отзыв",
-      "dialogTitle": "Добро пожаловать!",
-      "dialogDescription": "Чтобы оставить чаевые или отзыв, введите код персонала",
-      "dialogSubmit": "Продолжить",
+      "ctaSecondary": "Подключить",
       "imageAlt": "Интерфейс платформы цифровых чаевых TIPSIO с персоналом и вариантами оплаты",
       "trust1": "Безопасные платежи через Midtrans",
       "trust2": "Гостям не нужно приложение"
+    },
+    "connectionForm": {
+      "dialogTitle": "Подключить Tipsio",
+      "purposeLabel": "Цель обращения",
+      "purposeConnection": "Подключение",
+      "purposeSupport": "Техподдержка",
+      "businessNameLabel": "Название вашего заведения и город",
+      "businessNamePlaceholder": "Например: Cafe Organic, Убуд",
+      "contactNameLabel": "Ваше имя",
+      "contactNamePlaceholder": "Иван Иванов",
+      "phoneLabel": "Телефон",
+      "phonePlaceholder": "+62 или +7",
+      "submitButton": "Подключить заведение",
+      "successMessage": "Спасибо! Мы свяжемся с вами в ближайшее время.",
+      "errors": {
+        "required": "Это поле обязательно",
+        "phoneInvalid": "Введите номер в формате +62 или +7",
+        "minLength": "Минимум {min} символов",
+        "maxLength": "Максимум {max} символов",
+        "networkError": "Ошибка сети. Попробуйте снова.",
+        "serverError": "Что-то пошло не так. Попробуйте позже."
+      }
     },
     "dashboard": {
       "today": "Сегодня",

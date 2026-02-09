@@ -26,13 +26,32 @@
       "subheadline": "Free to connect. More convenient for your guests, easier for your staff.",
       "cta": "Launch free in 1 hour",
       "ctaPrimary": "Connect venue",
-      "ctaSecondary": "Leave tip or review",
-      "dialogTitle": "Welcome!",
-      "dialogDescription": "To leave a tip or review, enter staff code",
-      "dialogSubmit": "Continue",
+      "ctaSecondary": "Connect",
       "imageAlt": "TIPSIO digital tipping platform interface showing staff and payment options",
       "trust1": "Secure payments via Midtrans",
       "trust2": "No app required for guests"
+    },
+    "connectionForm": {
+      "dialogTitle": "Connect Tipsio",
+      "purposeLabel": "Purpose",
+      "purposeConnection": "Connection",
+      "purposeSupport": "Technical Support",
+      "businessNameLabel": "Your business name and city",
+      "businessNamePlaceholder": "e.g. Cafe Organic, Ubud",
+      "contactNameLabel": "Your name",
+      "contactNamePlaceholder": "John Doe",
+      "phoneLabel": "Phone",
+      "phonePlaceholder": "+62 or +7",
+      "submitButton": "Connect business",
+      "successMessage": "Thank you! We'll contact you soon.",
+      "errors": {
+        "required": "This field is required",
+        "phoneInvalid": "Enter number in +62 or +7 format",
+        "minLength": "Minimum {min} characters",
+        "maxLength": "Maximum {max} characters",
+        "networkError": "Network error. Please try again.",
+        "serverError": "Something went wrong. Please try later."
+      }
     },
     "dashboard": {
       "today": "Today",

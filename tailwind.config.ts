@@ -11,8 +11,8 @@ const config: Config = {
   theme: {
   	extend: {
   		fontFamily: {
-  			sans: ["var(--font-inter)", ...fontFamily.sans],
-  			heading: ["var(--font-urbanist)", ...fontFamily.sans],
+  			sans: ["var(--font-inter)", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", ...fontFamily.sans],
+  			heading: ["var(--font-urbanist)", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", ...fontFamily.sans],
   		},
   		colors: {
   			success: 'hsl(var(--success))',
