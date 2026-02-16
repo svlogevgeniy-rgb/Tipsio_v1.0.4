@@ -5,91 +5,160 @@
 @layer base {
   /* Light theme */
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    /* Neutral Scale */
+    --neutral-50: 0 0% 98%;      /* #fafafa */
+    --neutral-100: 0 0% 96%;     /* #f5f5f5 */
+    --neutral-200: 0 0% 90%;     /* #e5e5e5 */
+    --neutral-300: 0 0% 83%;     /* #d4d4d4 */
+    --neutral-400: 0 0% 64%;     /* #a3a3a3 */
+    --neutral-500: 0 0% 45%;     /* #737373 */
+    --neutral-600: 0 0% 32%;     /* #525252 */
+    --neutral-700: 0 0% 25%;     /* #404040 */
+    --neutral-800: 0 0% 15%;     /* #262626 */
+    --neutral-900: 0 0% 9%;      /* #171717 */
+    --neutral-950: 0 0% 4%;      /* #0a0a0a */
 
+    /* Accent Color (Teal - brand color) */
+    --accent-50: 166 76% 97%;    /* #f0fdfa */
+    --accent-100: 167 85% 89%;   /* #ccfbf1 */
+    --accent-200: 168 84% 78%;   /* #99f6e4 */
+    --accent-300: 171 77% 64%;   /* #5eead4 */
+    --accent-400: 172 66% 50%;   /* #2dd4bf */
+    --accent-500: 173 80% 40%;   /* #14b8a6 */
+    --accent-600: 175 84% 32%;   /* #0d9488 */
+    --accent-700: 175 77% 26%;   /* #0f766e */
+    --accent-800: 176 69% 22%;   /* #115e59 */
+    --accent-900: 176 61% 19%;   /* #134e4a */
+
+    /* Semantic Colors */
+    --success: 142 71% 45%;      /* Green */
+    --warning: 38 92% 50%;       /* Amber */
+    --error: 0 84% 60%;          /* Red */
+    --info: 217 91% 60%;         /* Blue */
+
+    /* Background & Foreground */
+    --background: 0 0% 100%;     /* White */
+    --foreground: 0 0% 9%;       /* Near black */
+    
+    /* Component Backgrounds */
+    --surface: 0 0% 100%;        /* White */
+    --surface-elevated: 0 0% 98%; /* Slightly elevated */
+    
+    /* Borders */
+    --border: 0 0% 90%;          /* #e5e5e5 */
+    --border-strong: 0 0% 83%;   /* #d4d4d4 */
+
+    /* Legacy compatibility (mapped to new tokens) */
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
- 
+    --card-foreground: 0 0% 9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-
-    --primary: 161 52% 25%;
+    --popover-foreground: 0 0% 9%;
+    --primary: 173 80% 40%;      /* accent-500 */
     --primary-foreground: 0 0% 100%;
-
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 222 47% 11%;
-
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
-
-    --accent: 220 14% 96%;
-    --accent-foreground: 222 47% 11%;
-
+    --secondary: 0 0% 96%;       /* neutral-100 */
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96%;           /* neutral-100 */
+    --muted-foreground: 0 0% 45%; /* neutral-500 */
+    --accent: 0 0% 96%;          /* neutral-100 */
+    --accent-foreground: 0 0% 9%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --success: 142 71% 45%;
+    --input: 0 0% 90%;           /* border */
+    --ring: 173 80% 40%;         /* accent-500 */
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 161 52% 25%;
+    /* Chart colors */
+    --chart-1: 173 80% 40%;      /* accent-500 */
+    --chart-2: 0 84% 60%;        /* error */
+    --chart-3: 142 71% 45%;      /* success */
+    --chart-4: 38 92% 50%;       /* warning */
+    --chart-5: 217 91% 60%;      /* info */
 
-    --chart-1: 161 52% 25%;
-    --chart-2: 0 91% 71%;
-    --chart-3: 142 71% 45%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    /* Border radius */
+    --radius-sm: 4px;
+    --radius: 8px;
+    --radius-lg: 12px;
 
-    --radius: 0.75rem;
-
-    /* Brand colors for tip payment UI */
-    --brand: 162 52% 25%;
-    --brand-hover: 163 53% 18%;
-    --brand-active: 163 55% 13%;
+    /* Brand colors for tip payment UI (legacy) */
+    --brand: 173 80% 40%;
+    --brand-hover: 175 84% 32%;
+    --brand-active: 175 77% 26%;
     --brand-foreground: 0 0% 100%;
   }
 
   /* Dark theme */
   .dark {
-    --background: 222 47% 5%;
-    --foreground: 210 40% 98%;
+    /* Neutral Scale (inverted) */
+    --neutral-50: 0 0% 4%;       /* #0a0a0a */
+    --neutral-100: 0 0% 9%;      /* #171717 */
+    --neutral-200: 0 0% 15%;     /* #262626 */
+    --neutral-300: 0 0% 25%;     /* #404040 */
+    --neutral-400: 0 0% 32%;     /* #525252 */
+    --neutral-500: 0 0% 45%;     /* #737373 */
+    --neutral-600: 0 0% 64%;     /* #a3a3a3 */
+    --neutral-700: 0 0% 83%;     /* #d4d4d4 */
+    --neutral-800: 0 0% 90%;     /* #e5e5e5 */
+    --neutral-900: 0 0% 96%;     /* #f5f5f5 */
+    --neutral-950: 0 0% 98%;     /* #fafafa */
 
-    --card: 222 47% 7%;
-    --card-foreground: 210 40% 98%;
- 
-    --popover: 222 47% 5%;
-    --popover-foreground: 210 40% 98%;
+    /* Accent colors remain the same */
+    --accent-50: 166 76% 97%;
+    --accent-100: 167 85% 89%;
+    --accent-200: 168 84% 78%;
+    --accent-300: 171 77% 64%;
+    --accent-400: 172 66% 50%;
+    --accent-500: 173 80% 40%;
+    --accent-600: 175 84% 32%;
+    --accent-700: 175 77% 26%;
+    --accent-800: 176 69% 22%;
+    --accent-900: 176 61% 19%;
 
-    --primary: 161 52% 25%;
-    --primary-foreground: 222 47% 7%;
-
-    --secondary: 0 91% 71%;
-    --secondary-foreground: 222 47% 5%;
-
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    /* Semantic Colors */
     --success: 142 71% 45%;
+    --warning: 38 92% 50%;
+    --error: 0 84% 60%;
+    --info: 217 91% 60%;
 
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 161 52% 25%;
+    /* Background & Foreground */
+    --background: 0 0% 9%;       /* #171717 */
+    --foreground: 0 0% 98%;      /* #fafafa */
+    
+    /* Component Backgrounds */
+    --surface: 0 0% 11%;         /* #1c1c1c */
+    --surface-elevated: 0 0% 14%; /* #242424 */
+    
+    /* Borders */
+    --border: 0 0% 18%;          /* #2e2e2e */
+    --border-strong: 0 0% 24%;   /* #3d3d3d */
 
-    --chart-1: 161 52% 25%;
-    --chart-2: 0 91% 71%;
+    /* Legacy compatibility */
+    --card: 0 0% 11%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 173 80% 40%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 84% 60%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 64%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --input: 0 0% 18%;
+    --ring: 173 80% 40%;
+
+    /* Chart colors */
+    --chart-1: 173 80% 40%;
+    --chart-2: 0 84% 60%;
     --chart-3: 142 71% 45%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --chart-4: 38 92% 50%;
+    --chart-5: 217 91% 60%;
 
-    /* Brand colors for tip payment UI */
-    --brand: 162 52% 25%;
-    --brand-hover: 163 53% 18%;
-    --brand-active: 163 55% 13%;
+    /* Brand colors */
+    --brand: 173 80% 40%;
+    --brand-hover: 175 84% 32%;
+    --brand-active: 175 77% 26%;
     --brand-foreground: 0 0% 100%;
   }
 
@@ -110,17 +179,20 @@
     text-wrap: balance;
   }
 
-  /* Утилита для Стекла (Glassmorphism) */
-  .glass {
-    @apply bg-white/80 dark:bg-white/5 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-lg dark:shadow-xl;
-  }
-  
-  /* Утилита для сильного стекла (для модалок) */
-  .glass-heavy {
-    @apply bg-white/95 dark:bg-[#020617]/80 backdrop-blur-xl border border-gray-200 dark:border-white/5;
+  /* Admin Panel Utilities */
+  .admin-card {
+    @apply bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-sm;
   }
 
-  /* Живой градиент текста */
+  .admin-surface {
+    @apply bg-surface dark:bg-surface border border-border dark:border-border;
+  }
+
+  .admin-surface-elevated {
+    @apply bg-surface-elevated dark:bg-surface-elevated border border-border dark:border-border shadow;
+  }
+
+  /* Legacy utilities for landing page (keep for now) */
   .text-gradient {
     color: #1E5F4B;
     background-image: linear-gradient(90deg, #1E5F4B, #1E5F4B);
@@ -128,7 +200,6 @@
     background-clip: text;
   }
 
-  /* Анимация пульсации для фоновых элементов */
   .animate-pulse-slow {
     animation: pulse-slow 8s ease-in-out infinite;
   }
