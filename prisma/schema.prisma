@@ -308,6 +308,7 @@ model ConnectionRequest {
   purpose      ConnectionPurpose
   businessName String
   contactName  String
+  email        String
   phone        String
   createdAt    DateTime          @default(now())
 
