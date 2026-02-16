@@ -9,11 +9,10 @@ import { prisma } from "@/lib/prisma";
 // Validation schema
 const connectionRequestSchema = z.object({
   purpose: z.enum(["CONNECTION", "SUPPORT"]),
-  businessName: z.string().min(2).max(100),
-  contactName: z.string().min(2).max(50),
-  phone: z.string().regex(/^\+(?:62|7)\d{10,11}$/, {
-    message: "Phone must be in +62 or +7 format",
-  }),
+  businessName: z.string().min(1).max(100),
+  contactName: z.string().min(1).max(50),
+  email: z.string().min(1).email(),
+  phone: z.string().min(1).max(20),
 });
 
 export async function POST(request: NextRequest) {
@@ -28,16 +27,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: "Validation failed",
-          details: validationResult.error.errors.map((err) => ({
-            field: err.path.join("."),
-            message: err.message,
+          details: validationResult.error.issues.map((issue) => ({
+            field: issue.path.join("."),
+            message: issue.message,
           })),
         },
         { status: 400 }
       );
     }
 
-    const { purpose, businessName, contactName, phone } = validationResult.data;
+    const { purpose, businessName, contactName, email, phone } = validationResult.data;
 
     // Create connection request in database
     const connectionRequest = await prisma.connectionRequest.create({
@@ -45,6 +44,7 @@ export async function POST(request: NextRequest) {
         purpose,
         businessName,
         contactName,
+        email,
         phone,
       },
     });
