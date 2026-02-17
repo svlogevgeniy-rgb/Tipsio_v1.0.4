@@ -40,9 +40,11 @@
       "businessNamePlaceholder": "Например: Cafe Organic, Убуд",
       "contactNameLabel": "Ваше имя",
       "contactNamePlaceholder": "Иван Иванов",
+      "emailLabel": "Email",
+      "emailPlaceholder": "example@email.com",
       "phoneLabel": "Телефон",
-      "phonePlaceholder": "+62 или +7",
-      "submitButton": "Подключить заведение",
+      "phonePlaceholder": "Введите номер телефона",
+      "submitButton": "Отправить заявку",
       "successMessage": "Спасибо! Мы свяжемся с вами в ближайшее время.",
       "errors": {
         "required": "Это поле обязательно",

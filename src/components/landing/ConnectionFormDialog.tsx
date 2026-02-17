@@ -8,7 +8,6 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
 } from '@/components/ui/dialog';
 import {
   Form,
@@ -37,11 +36,10 @@ interface ConnectionFormDialogProps {
 
 const formSchema = z.object({
   purpose: z.enum(['CONNECTION', 'SUPPORT']),
-  businessName: z.string().min(2).max(100),
-  contactName: z.string().min(2).max(50),
-  phone: z.string().regex(/^\+(?:62|7)\d{10,11}$/, {
-    message: 'Phone must be in +62 or +7 format',
-  }),
+  businessName: z.string().min(1, 'Required field').max(100),
+  contactName: z.string().min(1, 'Required field').max(50),
+  email: z.string().min(1, 'Required field').email('Invalid email format'),
+  phone: z.string().min(1, 'Required field').max(20),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -57,6 +55,7 @@ export function ConnectionFormDialog({ open, onOpenChange }: ConnectionFormDialo
       purpose: 'CONNECTION',
       businessName: '',
       contactName: '',
+      email: '',
       phone: '',
     },
   });
@@ -100,25 +99,30 @@ export function ConnectionFormDialog({ open, onOpenChange }: ConnectionFormDialo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md rounded-[10px]">
-        <DialogHeader className="text-center sm:text-center">
-          <DialogTitle className="text-2xl sm:text-3xl font-heading font-bold">
-            {t('dialogTitle')}
-          </DialogTitle>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader className="space-y-3 pb-2">
+          <div className="flex items-center justify-center gap-3">
+            <span className="text-3xl font-heading font-bold tracking-tight text-[#1e5a4a]">
+              TIPSIO
+            </span>
+            <span className="rounded-full bg-[#1e5a4a] px-4 py-1 text-xs font-semibold uppercase tracking-wider text-white">
+              BETA
+            </span>
+          </div>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="mt-4 space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {/* Purpose Select */}
             <FormField
               control={form.control}
               name="purpose"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('purposeLabel')}</FormLabel>
+                  <FormLabel className="text-sm font-medium">{t('purposeLabel')}</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger className="h-12 rounded-[10px]">
+                      <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                     </FormControl>
@@ -138,11 +142,10 @@ export function ConnectionFormDialog({ open, onOpenChange }: ConnectionFormDialo
               name="businessName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('businessNameLabel')}</FormLabel>
+                  <FormLabel className="text-sm font-medium">{t('businessNameLabel')}</FormLabel>
                   <FormControl>
                     <Input
                       placeholder={t('businessNamePlaceholder')}
-                      className="h-12 rounded-[10px]"
                       {...field}
                     />
                   </FormControl>
@@ -157,11 +160,29 @@ export function ConnectionFormDialog({ open, onOpenChange }: ConnectionFormDialo
               name="contactName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('contactNameLabel')}</FormLabel>
+                  <FormLabel className="text-sm font-medium">{t('contactNameLabel')}</FormLabel>
                   <FormControl>
                     <Input
                       placeholder={t('contactNamePlaceholder')}
-                      className="h-12 rounded-[10px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Email Input */}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-medium">{t('emailLabel')}</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder={t('emailPlaceholder')}
                       {...field}
                     />
                   </FormControl>
@@ -176,12 +197,11 @@ export function ConnectionFormDialog({ open, onOpenChange }: ConnectionFormDialo
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('phoneLabel')}</FormLabel>
+                  <FormLabel className="text-sm font-medium">{t('phoneLabel')}</FormLabel>
                   <FormControl>
                     <Input
                       type="tel"
                       placeholder={t('phonePlaceholder')}
-                      className="h-12 rounded-[10px]"
                       {...field}
                     />
                   </FormControl>
@@ -193,7 +213,7 @@ export function ConnectionFormDialog({ open, onOpenChange }: ConnectionFormDialo
             {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full h-14 text-base rounded-[10px] bg-blue-600 hover:bg-blue-700 text-white"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
               disabled={isSubmitting}
             >
               {isSubmitting ? '...' : t('submitButton')}

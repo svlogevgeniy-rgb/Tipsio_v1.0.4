@@ -3,6 +3,7 @@
 import { useSession } from 'next-auth/react'
 import { useRouter, usePathname } from 'next/navigation'
 import { useEffect } from 'react'
+import { AdminLayout } from './AdminLayout'
 
 interface AdminGuardProps {
   children: React.ReactNode
@@ -47,10 +48,10 @@ export function AdminGuard({ children, loadingComponent }: AdminGuardProps) {
   // Show loading state while checking authentication
   if (status === 'loading') {
     return loadingComponent || (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[#020617]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-gray-400">Loading...</p>
         </div>
       </div>
     )
@@ -61,6 +62,6 @@ export function AdminGuard({ children, loadingComponent }: AdminGuardProps) {
     return null
   }
 
-  // User is authenticated and authorized - render children
-  return <>{children}</>
+  // User is authenticated and authorized - render children with layout
+  return <AdminLayout>{children}</AdminLayout>
 }
