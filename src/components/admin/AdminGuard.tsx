@@ -63,5 +63,6 @@ export function AdminGuard({ children, loadingComponent }: AdminGuardProps) {
   }
 
   // User is authenticated and authorized - render children with layout
+  // AdminLayout is inside SessionProvider context, so useSession will work
   return <AdminLayout>{children}</AdminLayout>
 }
